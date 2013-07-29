@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>xunit.extensions</id>
     <version>1.9.1</version>
@@ -11,14 +11,8 @@
     <iconUrl>http://download.codeplex.com/Download?ProjectName=xunit&amp;DownloadId=365445</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Extensions for the xUnit.net framework, including data theories (data-driven tests) and several extension attributes.</description>
-    <releaseNotes />
-    <copyright />
-    <language />
     <dependencies>
       <dependency id="xunit" version="[1.9.1]" />
     </dependencies>
-    <references>
-      <reference file="xunit.extensions.dll" />
-    </references>
   </metadata>
 </package>

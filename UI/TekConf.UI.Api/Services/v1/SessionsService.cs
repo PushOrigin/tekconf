@@ -8,7 +8,7 @@ using TekConf.RemoteData.Dtos.v1;
 using TekConf.RemoteData.v1;
 using TekConf.UI.Api.Services.Requests.v1;
 using TekConf.UI.Api.UrlResolvers.v1;
-using FluentMongo.Linq;
+
 using ServiceStack.CacheAccess;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceHost;
@@ -17,18 +17,18 @@ namespace TekConf.UI.Api.Services.v1
 {
 	public class SessionsService : MongoServiceBase
 	{
-		private readonly IConfiguration _configuration;
+		private readonly IEntityConfiguration _configuration;
 
 		private readonly IRepository<ConferenceEntity> _conferenceRepository;
 
 		public ICacheClient CacheClient { get; set; }
-		static HttpError ConferenceNotFound = HttpError.NotFound("Conference not found") as HttpError;
-		static HashSet<string> NonExistingConferences = new HashSet<string>();
+		static readonly HttpError ConferenceNotFound = HttpError.NotFound("Conference not found") as HttpError;
+		static readonly HashSet<string> NonExistingConferences = new HashSet<string>();
 
 		static HttpError SessionNotFound = HttpError.NotFound("Session not found") as HttpError;
 		static HashSet<string> NonExistingSessions = new HashSet<string>();
 
-		public SessionsService(IConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository)
+		public SessionsService(IEntityConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository)
 		{
 			_configuration = configuration;
 			_conferenceRepository = conferenceRepository;
@@ -60,7 +60,7 @@ namespace TekConf.UI.Api.Services.v1
 				var conference = _conferenceRepository
 				.AsQueryable()
 					//.Where(c => c.isLive)
-				.SingleOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
+				.FirstOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
 
 				if (conference.IsNull())
 				{

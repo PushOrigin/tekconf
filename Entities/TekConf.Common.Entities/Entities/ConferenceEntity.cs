@@ -7,26 +7,28 @@ using MongoDB.Bson.Serialization.IdGenerators;
 using TekConf.Common.Entities;
 using TinyMessenger;
 
-namespace TekConf.UI.Api
+namespace TekConf.Common.Entities
 {
 	public class ConferenceEntity : ISupportInitialize, IEntity
 	{
 		private readonly ITinyMessengerHub _hub;
-		private readonly IRepository<ConferenceEntity> _repository;
+		private readonly IConferenceRepository _repository;
 		private bool _isInitializingFromBson;
-		private List<ConferenceCreatedMessage> _conferenceCreatedMessages;
-		private List<ConferenceStartDateChangedMessage> _conferenceStartDateChangedMessages;
-		private List<ConferenceEndDateChangedMessage> _conferenceEndDateChangedMessages;
-		private List<ConferenceLocationChangedMessage> _conferenceLocationChangedMessages;
-		private List<ConferencePublishedMessage> _conferencePublishedMessages;
-		private List<ConferenceUpdatedMessage> _conferenceUpdatedMessages;
-		private List<SessionAddedMessage> _sessionAddedMessages;
-		private List<SessionRemovedMessage> _sessionRemovedMessages;
-		private List<SpeakerAddedMessage> _speakerAddedMessages;
-		private List<SpeakerRemovedMessage> _speakerRemovedMessages;
-		private List<SessionRoomChangedMessage> _sessionRoomChangedMessages;
+		private readonly List<ConferenceCreatedMessage> _conferenceCreatedMessages;
+		private readonly List<ConferenceStartDateChangedMessage> _conferenceStartDateChangedMessages;
+		private readonly List<ConferenceEndDateChangedMessage> _conferenceEndDateChangedMessages;
+		private readonly List<ConferenceLocationChangedMessage> _conferenceLocationChangedMessages;
+		private readonly List<ConferencePublishedMessage> _conferencePublishedMessages;
+		private readonly List<ConferenceUpdatedMessage> _conferenceUpdatedMessages;
+		private readonly List<SessionAddedMessage> _sessionAddedMessages;
+		private readonly List<SessionRemovedMessage> _sessionRemovedMessages;
+		private readonly List<SpeakerAddedMessage> _speakerAddedMessages;
+		private readonly List<SpeakerRemovedMessage> _speakerRemovedMessages;
+		private readonly List<SessionRoomChangedMessage> _sessionRoomChangedMessages;
+		private readonly List<SessionStartDateChangedMessage> _sessionStartDateChangedMessages;
+		private readonly List<SessionEndDateChangedMessage> _sessionEndDateChangedMessages;
 
-		public ConferenceEntity(ITinyMessengerHub hub, IRepository<ConferenceEntity> repository)
+		public ConferenceEntity(ITinyMessengerHub hub, IConferenceRepository repository)
 		{
 			_hub = hub;
 			_repository = repository;
@@ -40,8 +42,254 @@ namespace TekConf.UI.Api
 			_sessionAddedMessages = new List<SessionAddedMessage>();
 			_sessionRemovedMessages = new List<SessionRemovedMessage>();
 			_sessionRoomChangedMessages = new List<SessionRoomChangedMessage>();
+			_sessionStartDateChangedMessages = new List<SessionStartDateChangedMessage>();
+			_sessionEndDateChangedMessages = new List<SessionEndDateChangedMessage>();
 			_speakerAddedMessages = new List<SpeakerAddedMessage>();
 			_speakerRemovedMessages = new List<SpeakerRemovedMessage>();
+		}
+
+		[BsonId(IdGenerator = typeof(CombGuidGenerator))]
+		public Guid _id { get; set; }
+		public bool isLive { get; private set; }
+		public double[] position { get; set; }
+		public string slug { get; set; }
+		public DateTime datePublished { get; private set; }
+		public bool isSaved { get; private set; }
+		public int defaultTalkLength { get; set; }
+		public List<string> rooms { get; set; }
+		public List<string> sessionTypes { get; set; } 
+
+		public string name
+		{
+			get { return _name; }
+			set { _name = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		private DateTime? _start;
+		public DateTime? start
+		{
+			get { return _start; }
+			set
+			{
+				if (!_isInitializingFromBson && isSaved && _start != value)
+				{
+					_conferenceStartDateChangedMessages.Add(new ConferenceStartDateChangedMessage() { ConferenceSlug = this.slug, ConferenceName = this.name, OldValue = _start, NewValue = value });
+				}
+
+				_start = value;
+			}
+		}
+
+		private DateTime? _end;
+		public DateTime? end
+		{
+			get { return _end; }
+			set
+			{
+				if (!_isInitializingFromBson && isSaved && _end != value)
+					_conferenceEndDateChangedMessages.Add(new ConferenceEndDateChangedMessage() { ConferenceName = this.name, ConferenceSlug = this.slug, OldValue = _end, NewValue = value });
+
+				_end = value;
+			}
+		}
+
+		public DateTime callForSpeakersOpens { get; set; }
+		public DateTime callForSpeakersCloses { get; set; }
+		public DateTime registrationOpens { get; set; }
+		public DateTime registrationCloses { get; set; }
+		public DateTime dateAdded { get; set; }
+		private string _location;
+		public string location
+		{
+			get { return _location; }
+			set
+			{
+				if (!_isInitializingFromBson && isSaved && _location != value)
+					_conferenceLocationChangedMessages.Add(new ConferenceLocationChangedMessage() { ConferenceSlug = this.slug, ConferenceName = this.name, OldValue = _location, NewValue = value });
+
+				_location = value.IsNullOrWhiteSpace() ? value : value.Trim();
+			}
+		}
+
+		public bool? isOnline { get; set; }
+		public AddressEntity address { get; set; }
+		public string description
+		{
+			get { return _description; }
+			set { _description = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string imageUrl
+		{
+			get { return _imageUrl; }
+			set { _imageUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string tagLine
+		{
+			get { return _tagLine; }
+			set { _tagLine = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string facebookUrl
+		{
+			get { return _facebookUrl; }
+			set { _facebookUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string homepageUrl
+		{
+			get { return _homepageUrl; }
+			set { _homepageUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string lanyrdUrl
+		{
+			get { return _lanyrdUrl; }
+			set { _lanyrdUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string twitterHashTag
+		{
+			get { return _twitterHashTag; }
+			set { _twitterHashTag = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string twitterName
+		{
+			get { return _twitterName; }
+			set
+			{
+				if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("@"))
+					value = "@" + value;
+
+				_twitterName = value.IsNullOrWhiteSpace() ? value : value.Trim();
+			}
+		}
+
+		public string meetupUrl
+		{
+			get { return _meetupUrl; }
+			set { _meetupUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string googlePlusUrl
+		{
+			get { return _googlePlusUrl; }
+			set { _googlePlusUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string vimeoUrl
+		{
+			get { return _vimeoUrl; }
+			set { _vimeoUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string youtubeUrl
+		{
+			get { return _youtubeUrl; }
+			set { _youtubeUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string githubUrl
+		{
+			get { return _githubUrl; }
+			set { _githubUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		public string linkedInUrl
+		{
+			get { return _linkedInUrl; }
+			set { _linkedInUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
+		}
+
+		[BsonIgnore]
+		public double distance { get; set; }
+		private IList<SessionEntity> _sessions = new List<SessionEntity>();
+		public IEnumerable<SessionEntity> sessions
+		{
+			get
+			{
+				if (_sessions == null) _sessions = new List<SessionEntity>();
+				return _sessions.AsEnumerable();
+			}
+			set
+			{
+				if (value == null)
+					value = new List<SessionEntity>();
+
+				_sessions = value.ToList();
+				foreach (var session in _sessions)
+				{
+					session.RoomChanged += SessionRoomChangedHandler;
+					session.StartDateChanged += SessionStartDateChangedHandler;
+					session.EndDateChanged += SessionEndDateChangedHandler;
+					
+				}
+			}
+		}
+
+		private IList<string> _tags = new List<string>();
+		public IEnumerable<string> tags
+		{
+			get
+			{
+				return _tags.AsEnumerable();
+			}
+			set
+			{
+				if (value == null)
+					value = new List<string>();
+
+				_tags = value.ToList();
+			}
+		}
+
+		private IList<string> _subjects = new List<string>();
+		private string _twitterName;
+		private string _name;
+		private string _description;
+		private string _imageUrl;
+		private string _tagLine;
+		private string _facebookUrl;
+		private string _homepageUrl;
+		private string _lanyrdUrl;
+		private string _twitterHashTag;
+		private string _meetupUrl;
+		private string _googlePlusUrl;
+		private string _vimeoUrl;
+		private string _youtubeUrl;
+		private string _githubUrl;
+		private string _linkedInUrl;
+
+		public IEnumerable<string> subjects
+		{
+			get { return _subjects.AsEnumerable(); }
+			set
+			{
+				if (value == null)
+					value = new List<string>();
+
+				_subjects = value.ToList();
+			}
+		}
+
+		private void SessionRoomChangedHandler(SessionEntity sessionEntity, RoomChangedArgs e)
+		{
+			if (!_isInitializingFromBson && isSaved)
+				_sessionRoomChangedMessages.Add(new SessionRoomChangedMessage() { ConferenceSlug = this.slug, SessionSlug = e.SessionSlug, SessionTitle = sessionEntity.title, OldValue = e.OldValue, NewValue = e.NewValue });
+		}
+
+		private void SessionStartDateChangedHandler(SessionEntity sessionEntity, StartDateChangedArgs e)
+		{
+			if (!_isInitializingFromBson && isSaved)
+				_sessionStartDateChangedMessages.Add(new SessionStartDateChangedMessage() { ConferenceSlug = this.slug, SessionSlug = e.SessionSlug, SessionTitle = sessionEntity.title, OldValue = e.OldValue, NewValue = e.NewValue });
+		}
+
+		private void SessionEndDateChangedHandler(SessionEntity sessionEntity, EndDateChangedArgs e)
+		{
+			if (!_isInitializingFromBson && isSaved)
+				_sessionEndDateChangedMessages.Add(new SessionEndDateChangedMessage() { ConferenceSlug = this.slug, SessionSlug = e.SessionSlug, SessionTitle = sessionEntity.title, OldValue = e.OldValue, NewValue = e.NewValue });
 		}
 
 
@@ -53,12 +301,13 @@ namespace TekConf.UI.Api
 				if (_id == default(Guid))
 				{
 					_id = Guid.NewGuid();
+					isNew = true;
 				}
-				slug = name.GenerateSlug();
+
 				dateAdded = DateTime.Now;
 				isSaved = true;
-				isNew = true;
 			}
+			slug = name.GenerateSlug();
 			_repository.Save(this);
 
 			if (isNew)
@@ -129,6 +378,18 @@ namespace TekConf.UI.Api
 			}
 			_sessionRoomChangedMessages.Clear();
 
+			foreach (var message in _sessionStartDateChangedMessages)
+			{
+				_hub.Publish(message);
+			}
+			_sessionStartDateChangedMessages.Clear();
+
+			foreach (var message in _sessionEndDateChangedMessages)
+			{
+				_hub.Publish(message);
+			}
+			_sessionEndDateChangedMessages.Clear();
+
 			foreach (var message in _speakerAddedMessages)
 			{
 				_hub.Publish(message);
@@ -153,11 +414,11 @@ namespace TekConf.UI.Api
 		public void AddSession(SessionEntity session)
 		{
 			if (_sessions == null)
-			{
 				_sessions = new List<SessionEntity>();
-			}
 
 			session.RoomChanged += SessionRoomChangedHandler;
+			session.StartDateChanged += SessionStartDateChangedHandler;
+			session.EndDateChanged += SessionEndDateChangedHandler;
 
 			_sessions.Add(session);
 
@@ -207,237 +468,6 @@ namespace TekConf.UI.Api
 			if (!_isInitializingFromBson && isSaved)
 				_speakerRemovedMessages.Add(new SpeakerRemovedMessage() { SessionSlug = sessionSlug, SessionTitle = session.title, SpeakerSlug = speaker.slug, SpeakerName = speaker.fullName });
 		}
-
-
-		[BsonId(IdGenerator = typeof(CombGuidGenerator))]
-		public Guid _id { get; private set; }
-		public bool isLive { get; private set; }
-		public double[] position { get; set; }
-		public string slug { get; set; }
-		public DateTime datePublished { get; private set; }
-		public bool isSaved { get; private set; }
-		public int defaultTalkLength { get; set; }
-		public List<string> rooms { get; set; }
-		public List<string> sessionTypes { get; set; } 
-
-		public string name
-		{
-			get { return _name; }
-			set { _name = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
-		}
-
-		private DateTime? _start;
-		public DateTime? start
-		{
-			get { return _start; }
-			set
-			{
-				if (!_isInitializingFromBson && isSaved && _start != value)
-				{
-					_conferenceStartDateChangedMessages.Add(new ConferenceStartDateChangedMessage() { ConferenceSlug = this.slug, ConferenceName = this.name, OldValue = _start, NewValue = value });
-				}
-
-				_start = value;
-			}
-		}
-
-		private DateTime? _end;
-		public DateTime? end
-		{
-			get { return _end; }
-			set
-			{
-				if (!_isInitializingFromBson && isSaved && _end != value)
-					_conferenceEndDateChangedMessages.Add(new ConferenceEndDateChangedMessage() { ConferenceName = this.name, ConferenceSlug = this.slug, OldValue = _end, NewValue = value });
-
-				_end = value;
-			}
-		}
-
-		public DateTime callForSpeakersOpens { get; set; }
-		public DateTime callForSpeakersCloses { get; set; }
-		public DateTime registrationOpens { get; set; }
-		public DateTime registrationCloses { get; set; }
-		public DateTime dateAdded { get; set; }
-		private string _location;
-		public string location
-		{
-			get { return _location; }
-			set
-			{
-				if (!_isInitializingFromBson && isSaved && _location != value)
-					_conferenceLocationChangedMessages.Add(new ConferenceLocationChangedMessage() { ConferenceSlug = this.slug, ConferenceName = this.name, OldValue = _location, NewValue = value });
-
-				_location = value.IsNullOrWhiteSpace() ? value : value.Trim(); ;
-			}
-		}
-
-		public AddressEntity address { get; set; }
-		public string description
-		{
-			get { return _description; }
-			set { _description = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string imageUrl
-		{
-			get { return _imageUrl; }
-			set { _imageUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string tagLine
-		{
-			get { return _tagLine; }
-			set { _tagLine = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string facebookUrl
-		{
-			get { return _facebookUrl; }
-			set { _facebookUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string homepageUrl
-		{
-			get { return _homepageUrl; }
-			set { _homepageUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string lanyrdUrl
-		{
-			get { return _lanyrdUrl; }
-			set { _lanyrdUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string twitterHashTag
-		{
-			get { return _twitterHashTag; }
-			set { _twitterHashTag = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string twitterName
-		{
-			get { return _twitterName; }
-			set
-			{
-				if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("@"))
-					value = "@" + value;
-
-				_twitterName = value.IsNullOrWhiteSpace() ? value : value.Trim(); ;
-			}
-		}
-
-		public string meetupUrl
-		{
-			get { return _meetupUrl; }
-			set { _meetupUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string googlePlusUrl
-		{
-			get { return _googlePlusUrl; }
-			set { _googlePlusUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string vimeoUrl
-		{
-			get { return _vimeoUrl; }
-			set { _vimeoUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string youtubeUrl
-		{
-			get { return _youtubeUrl; }
-			set { _youtubeUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string githubUrl
-		{
-			get { return _githubUrl; }
-			set { _githubUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		public string linkedInUrl
-		{
-			get { return _linkedInUrl; }
-			set { _linkedInUrl = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
-		}
-
-		[BsonIgnore]
-		public double distance { get; set; }
-		private IList<SessionEntity> _sessions = new List<SessionEntity>();
-		public IEnumerable<SessionEntity> sessions
-		{
-			get
-			{
-				if (_sessions == null) _sessions = new List<SessionEntity>();
-				return _sessions.AsEnumerable();
-			}
-			set
-			{
-				if (value == null)
-					value = new List<SessionEntity>();
-
-				_sessions = value.ToList();
-				foreach (var session in _sessions)
-				{
-					session.RoomChanged += SessionRoomChangedHandler;
-				}
-			}
-		}
-
-		private IList<string> _tags = new List<string>();
-		public IEnumerable<string> tags
-		{
-			get
-			{
-				return _tags.AsEnumerable();
-			}
-			set
-			{
-				if (value == null)
-					value = new List<string>();
-
-				_tags = value.ToList();
-			}
-		}
-
-		private IList<string> _subjects = new List<string>();
-		private string _twitterName;
-		private string _name;
-		private string _description;
-		private string _imageUrl;
-		private string _tagLine;
-		private string _facebookUrl;
-		private string _homepageUrl;
-		private string _lanyrdUrl;
-		private string _twitterHashTag;
-		private string _meetupUrl;
-		private string _googlePlusUrl;
-		private string _vimeoUrl;
-		private string _youtubeUrl;
-		private string _githubUrl;
-		private string _linkedInUrl;
-
-		public IEnumerable<string> subjects
-		{
-			get { return _subjects.AsEnumerable(); }
-			set
-			{
-				if (value == null)
-					value = new List<string>();
-
-				_subjects = value.ToList();
-			}
-		}
-
-		private void SessionRoomChangedHandler(SessionEntity sessionEntity, RoomChangedArgs e)
-		{
-			if (!_isInitializingFromBson && isSaved)
-				_sessionRoomChangedMessages.Add(new SessionRoomChangedMessage() { ConferenceSlug = this.slug, SessionSlug = e.SessionSlug, SessionTitle = sessionEntity.title, OldValue = e.OldValue, NewValue = e.NewValue });
-		}
-
-
 
 		public void BeginInit()
 		{

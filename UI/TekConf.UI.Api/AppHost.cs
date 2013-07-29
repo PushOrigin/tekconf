@@ -30,46 +30,53 @@ namespace TekConf.UI.Api
 
 		public override void Configure(Funq.Container container)
 		{
-				SetConfig(new EndpointHostConfig
-				{
-						MetadataPageBodyHtml = "<script>window.location = 'swagger-ui/index.html';</script>",
-				});
+			//SetConfig(new EndpointHostConfig
+			//{
+			//	MetadataPageBodyHtml = "<script>window.location = 'swagger-ui/index.html';</script>",
+			//});
 
 			ServiceStack.Text.JsConfig.EmitCamelCaseNames = true;
 			Plugins.Add(new SwaggerFeature());
 			//Enable Authentication
 			ConfigureAuth(container);
-			IConfiguration configuration = new Configuration();
+			IEntityConfiguration entityConfiguration = new EntityConfiguration();
 
-			container.Register<IConfiguration>(configuration);
-			container.Register<IRepository<ConferenceEntity>>(new ConferenceRepository(configuration));
-			container.Register<IRepository<ScheduleEntity>>(new ScheduleRepository(configuration));
-			container.Register<IRepository<UserEntity>>(new UserRepository(configuration));
-			container.Register<IRepository<GeoLocationEntity>>(new GeoLocationRepository(configuration));
-            container.Register<IRepository<PresentationEntity>>(new GenericRepository<PresentationEntity>(configuration));
+			container.Register<IEntityConfiguration>(entityConfiguration);
 
-			container.Register<IRepository<SessionRoomChangedMessage>>(new GenericRepository<SessionRoomChangedMessage>(configuration));
-			container.Register<IRepository<ConferenceLocationChangedMessage>>(new GenericRepository<ConferenceLocationChangedMessage>(configuration));
-			container.Register<IRepository<ConferenceEndDateChangedMessage>>(new GenericRepository<ConferenceEndDateChangedMessage>(configuration));
-			container.Register<IRepository<ConferencePublishedMessage>>(new GenericRepository<ConferencePublishedMessage>(configuration));
-			container.Register<IRepository<ConferenceUpdatedMessage>>(new GenericRepository<ConferenceUpdatedMessage>(configuration));
-			container.Register<IRepository<ConferenceCreatedMessage>>(new GenericRepository<ConferenceCreatedMessage>(configuration));
-			container.Register<IRepository<ConferenceStartDateChangedMessage>>(new GenericRepository<ConferenceStartDateChangedMessage>(configuration));
-			container.Register<IRepository<SessionAddedMessage>>(new GenericRepository<SessionAddedMessage>(configuration));
-			container.Register<IRepository<SessionRemovedMessage>>(new GenericRepository<SessionRemovedMessage>(configuration));
-			container.Register<IRepository<SpeakerAddedMessage>>(new GenericRepository<SpeakerAddedMessage>(configuration));
-			container.Register<IRepository<SpeakerRemovedMessage>>(new GenericRepository<SpeakerRemovedMessage>(configuration));
-			container.Register<IRepository<ScheduleCreatedMessage>>(new GenericRepository<ScheduleCreatedMessage>(configuration));
-			container.Register<IRepository<SessionAddedToScheduleMessage>>(new GenericRepository<SessionAddedToScheduleMessage>(configuration));
+			container.Register<IConferenceRepository>(new ConferenceRepository(entityConfiguration));
+			container.Register<IRepository<ScheduleEntity>>(new ScheduleRepository(entityConfiguration));
+			container.Register<IRepository<UserEntity>>(new UserRepository(entityConfiguration));
+			container.Register<IRepository<GeoLocationEntity>>(new GeoLocationRepository(entityConfiguration));
+			container.Register<IRepository<PresentationEntity>>(new GenericRepository<PresentationEntity>(entityConfiguration));
+			container.Register<IRepository<ConferenceEntity>>(new ConferenceRepository(entityConfiguration));
+
+			container.Register<IRepository<SubscriptionEntity>>(new GenericRepository<SubscriptionEntity>(entityConfiguration));
+			container.Register<IRepository<SessionRoomChangedMessage>>(new GenericRepository<SessionRoomChangedMessage>(entityConfiguration));
+			container.Register<IRepository<ConferenceLocationChangedMessage>>(new GenericRepository<ConferenceLocationChangedMessage>(entityConfiguration));
+			container.Register<IRepository<ConferenceEndDateChangedMessage>>(new GenericRepository<ConferenceEndDateChangedMessage>(entityConfiguration));
+			container.Register<IRepository<ConferencePublishedMessage>>(new GenericRepository<ConferencePublishedMessage>(entityConfiguration));
+			container.Register<IRepository<ConferenceUpdatedMessage>>(new GenericRepository<ConferenceUpdatedMessage>(entityConfiguration));
+			container.Register<IRepository<ConferenceCreatedMessage>>(new GenericRepository<ConferenceCreatedMessage>(entityConfiguration));
+			container.Register<IRepository<ConferenceStartDateChangedMessage>>(new GenericRepository<ConferenceStartDateChangedMessage>(entityConfiguration));
+			container.Register<IRepository<SessionAddedMessage>>(new GenericRepository<SessionAddedMessage>(entityConfiguration));
+			container.Register<IRepository<SessionRemovedMessage>>(new GenericRepository<SessionRemovedMessage>(entityConfiguration));
+
+			container.Register<IRepository<SessionStartDateChangedMessage>>(new GenericRepository<SessionStartDateChangedMessage>(entityConfiguration));
+			container.Register<IRepository<SessionEndDateChangedMessage>>(new GenericRepository<SessionEndDateChangedMessage>(entityConfiguration));
+
+			container.Register<IRepository<SpeakerAddedMessage>>(new GenericRepository<SpeakerAddedMessage>(entityConfiguration));
+			container.Register<IRepository<SpeakerRemovedMessage>>(new GenericRepository<SpeakerRemovedMessage>(entityConfiguration));
+			container.Register<IRepository<ScheduleCreatedMessage>>(new GenericRepository<ScheduleCreatedMessage>(entityConfiguration));
+			container.Register<IRepository<SessionAddedToScheduleMessage>>(new GenericRepository<SessionAddedToScheduleMessage>(entityConfiguration));
 
 
 
-			container.Register<IEmailSender>(new EmailSender(container.Resolve<IConfiguration>()));
+			container.Register<IEmailSender>(new EmailSender(container.Resolve<IEntityConfiguration>()));
 			container.Register<ICacheClient>(new MemoryCacheClient());
 			var hub = new TinyMessengerHub();
 			container.Register<ITinyMessengerHub>(hub);
 
-			var subscriptions = new HubSubscriptions(hub, 
+			var subscriptions = new HubSubscriptions(hub,
 								container.Resolve<IRepository<SessionRoomChangedMessage>>(),
 								container.Resolve<IRepository<ConferenceLocationChangedMessage>>(),
 								container.Resolve<IRepository<ConferenceEndDateChangedMessage>>(),
@@ -83,8 +90,13 @@ namespace TekConf.UI.Api
 								container.Resolve<IRepository<ConferenceCreatedMessage>>(),
 								container.Resolve<IRepository<ScheduleCreatedMessage>>(),
 								container.Resolve<IRepository<SessionAddedToScheduleMessage>>(),
+								container.Resolve<IRepository<SessionStartDateChangedMessage>>(),
+								container.Resolve<IRepository<SessionEndDateChangedMessage>>(),
+								container.Resolve<IRepository<SubscriptionEntity>>(),
+								container.Resolve<IRepository<UserEntity>>(),
+								container.Resolve<IRepository<ScheduleEntity>>(),
 								container.Resolve<IEmailSender>(),
-								container.Resolve<IConfiguration>()
+								container.Resolve<IEntityConfiguration>()
 
 				);
 

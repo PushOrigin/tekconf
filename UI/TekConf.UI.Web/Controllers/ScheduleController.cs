@@ -1,41 +1,37 @@
-﻿using System.Configuration;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using TekConf.UI.Web.ViewModels;
 
 namespace TekConf.UI.Web.Controllers
 {
+	using TekConf.RemoteData.v1;
+
 	public class ScheduleController : Controller
 	{
-		private RemoteDataRepositoryAsync _repository;
+		private readonly IRemoteDataRepository _remoteDataRepository;
 
-		public ScheduleController()
+		public ScheduleController(IRemoteDataRepository remoteDataRepository)
 		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-
-			_repository = new RemoteDataRepositoryAsync(baseUrl);
+			_remoteDataRepository = remoteDataRepository;
 		}
 
 		[Authorize]
 		public async Task<ActionResult> Index()
 		{
-			if (Request.IsAuthenticated)
+			if (!Request.IsAuthenticated || System.Web.HttpContext.Current.User == null)
 			{
-				if (System.Web.HttpContext.Current.User != null && System.Web.HttpContext.Current.User.Identity != null)
-				{
-					var conferencesTask = _repository.GetSchedules(System.Web.HttpContext.Current.User.Identity.Name);
-					await conferencesTask;
-
-					var model = new ScheduleViewModel()
-						{
-							Conferences = conferencesTask.Result
-						};
-
-					return View(model);
-
-				}
+				return View();
 			}
-			return View();
+
+			var conferences = await this._remoteDataRepository.GetSchedules(System.Web.HttpContext.Current.User.Identity.Name);
+
+			var model = new ScheduleViewModel()
+									{
+										Conferences = conferences
+									};
+
+			return View(model);
+
 		}
 
 		[HttpPost]
@@ -44,9 +40,9 @@ namespace TekConf.UI.Web.Controllers
 		{
 			if (Request.IsAuthenticated)
 			{
-				if (System.Web.HttpContext.Current.User != null && System.Web.HttpContext.Current.User.Identity != null)
+				if (System.Web.HttpContext.Current.User != null)
 				{
-					await _repository.RemoveSessionFromSchedule(conferenceSlug, sessionSlug, System.Web.HttpContext.Current.User.Identity.Name, "");
+					await _remoteDataRepository.RemoveSessionFromSchedule(conferenceSlug, sessionSlug, System.Web.HttpContext.Current.User.Identity.Name);
 				}
 			}
 
@@ -59,9 +55,9 @@ namespace TekConf.UI.Web.Controllers
 		{
 			if (Request.IsAuthenticated)
 			{
-				if (System.Web.HttpContext.Current.User != null && System.Web.HttpContext.Current.User.Identity != null)
+				if (System.Web.HttpContext.Current.User != null)
 				{
-					await _repository.AddSessionToSchedule(conferenceSlug, sessionSlug, System.Web.HttpContext.Current.User.Identity.Name, "");
+					await _remoteDataRepository.AddSessionToSchedule(conferenceSlug, sessionSlug, System.Web.HttpContext.Current.User.Identity.Name);
 				}
 			}
 

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace TekConf.RemoteData.Dtos.v1
 {
@@ -31,18 +33,61 @@ namespace TekConf.RemoteData.Dtos.v1
 		public string linkedInUrl { get; set; }
 		public string twitterHashTag { get; set; }
 		public string twitterName { get; set; }
+
 		public double[] position { get; set; }
 		public int defaultTalkLength { get; set; }
 		public List<string> rooms { get; set; }
 		public List<string> sessionTypes { get; set; }
 		public List<string> subjects { get; set; }
 		public List<string> tags { get; set; }
+
 		public List<FullSessionDto> sessions { get; set; }
+
 		public int numberOfSessions { get; set; }
+		public bool? isAddedToSchedule { get; set; }
+		public bool? isOnline { get; set; }
+
+		public string DateRange
+		{
+			get
+			{
+
+				string range;
+				if (start == default(DateTime) || end == default(DateTime))
+				{
+					range = "No Date Set";
+				}
+				else if (start.Month == end.Month && start.Year == end.Year)
+				{
+					// They begin and end in the same month
+					if (start.Date == end.Date)
+					{
+						range = start.ToString("MMMM") + " " + start.Day + ", " + start.Year;
+					}
+					else
+						range = start.ToString("MMMM") + " " + start.Day + " - " + end.Day + ", " + start.Year;
+				}
+				else
+				{
+					// They begin and end in different months
+					if (start.Year == end.Year)
+					{
+						range = start.ToString("MMMM") + " " + start.Day + " - " + end.ToString("MMMM") + " " + end.Day + ", " + start.Year;
+					}
+					else
+					{
+						range = start.ToString("MMMM") + " " + start.Day + ", " + start.Year + " - " + end.ToString("MMMM") + " " + end.Day + ", " + end.Year;
+					}
+
+				}
+
+				return range;
+			}
+		}
 
 		public bool IsOnSale()
 		{
-			bool isOnSale = this.registrationOpens <= DateTime.Now && this.registrationCloses >= DateTime.Now;
+			bool isOnSale = registrationOpens <= DateTime.Now && registrationCloses >= DateTime.Now;
 
 			return isOnSale;
 		}
@@ -50,9 +95,43 @@ namespace TekConf.RemoteData.Dtos.v1
 
 		public bool IsOpenCallForSpeakers()
 		{
-			bool isOpenCall = this.callForSpeakersOpens <= DateTime.Now && this.callForSpeakersCloses >= DateTime.Now;
+			var isOpenCall = callForSpeakersOpens > DateTime.Now || callForSpeakersCloses < DateTime.Now;
 
 			return isOpenCall;
+		}
+
+		public string FormattedAddress
+		{
+			get
+			{
+				string formattedAddress;
+				if (isOnline == true)
+				{
+					formattedAddress = "online";
+				}
+				else if (address == null)
+				{
+					formattedAddress = "No location set";
+				}
+				else if (!string.IsNullOrWhiteSpace(address.City) && !string.IsNullOrWhiteSpace(address.State))
+				{
+					formattedAddress = address.City + ", " + address.State;
+				}
+				else if (!string.IsNullOrWhiteSpace(address.City) && !string.IsNullOrWhiteSpace(address.Country))
+				{
+					formattedAddress = address.City + ", " + address.Country;
+				}
+				else if (!string.IsNullOrWhiteSpace(address.City))
+				{
+					formattedAddress = address.City;
+				}
+				else
+				{
+					formattedAddress = "No location set";
+				}
+
+				return formattedAddress;
+			}
 		}
 
 		public string CalculateConferenceDates(FullConferenceDto conference)
@@ -68,7 +147,7 @@ namespace TekConf.RemoteData.Dtos.v1
 				{
 					if (conference.start.Month == conference.end.Month)
 					{
-						//@startDate.ToString("MMMM")<text> </text>@startDate.Day<text> - </text>@endDate.Day<text>, </text>@startDate.Year
+						//@this.start.ToString("MMMM")<text> </text>@this.start.Day<text> - </text>@this.end.Day<text>, </text>@this.start.Year
 						conferenceDates = conference.start.ToString("MMMM d") + " - " + conference.end.Day + ", " + conference.end.Year;
 					}
 					else

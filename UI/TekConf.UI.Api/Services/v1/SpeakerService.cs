@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using AutoMapper;
-using FluentMongo.Linq;
+
 using ServiceStack.CacheAccess;
 using ServiceStack.Common.Web;
 using TekConf.Common.Entities;
@@ -16,19 +16,19 @@ namespace TekConf.UI.Api.Services.v1
 {
 	public class SpeakerService : MongoServiceBase
 	{
-		private readonly IConfiguration _configuration;
+		private readonly IEntityConfiguration _configuration;
 
 		private readonly IRepository<ConferenceEntity> _conferenceRepository;
 		private readonly IRepository<PresentationEntity> _presentationRepository;
 
 		public ICacheClient CacheClient { get; set; }
-		static HttpError ConferenceNotFound = HttpError.NotFound("Conference not found") as HttpError;
-		static HashSet<string> NonExistingConferences = new HashSet<string>();
+		static readonly HttpError ConferenceNotFound = HttpError.NotFound("Conference not found") as HttpError;
+		static readonly HashSet<string> NonExistingConferences = new HashSet<string>();
 
-		static HttpError SpeakerNotFound = HttpError.NotFound("Speaker not found") as HttpError;
-		static HashSet<string> NonExistingSpeakers = new HashSet<string>();
+		static readonly HttpError SpeakerNotFound = HttpError.NotFound("Speaker not found") as HttpError;
+		static readonly HashSet<string> NonExistingSpeakers = new HashSet<string>();
 
-		public SpeakerService(IConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository, IRepository<PresentationEntity> presentationRepository)
+		public SpeakerService(IEntityConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository, IRepository<PresentationEntity> presentationRepository)
 		{
 			_configuration = configuration;
 			_conferenceRepository = conferenceRepository;
@@ -73,7 +73,7 @@ namespace TekConf.UI.Api.Services.v1
 					var presentation = _presentationRepository
 						.AsQueryable()
 						.Where(p => p.SpeakerSlug == request.speakerSlug)
-						.SingleOrDefault(p => p.slug.ToLower() == request.slug.ToLower());
+						.FirstOrDefault(p => p.slug.ToLower() == request.slug.ToLower());
 
 					var presentationDto = Mapper.Map<PresentationEntity, PresentationDto>(presentation);
 
@@ -112,7 +112,7 @@ namespace TekConf.UI.Api.Services.v1
 				var conference = _conferenceRepository
 						 .AsQueryable()
 					//.Where(c => c.isLive)
-						 .SingleOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
+						 .FirstOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
 
 				if (conference.IsNull())
 				{

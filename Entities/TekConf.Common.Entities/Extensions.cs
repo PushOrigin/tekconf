@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using TekConf.UI.Api;
+using System.Threading.Tasks;
 
 namespace TekConf.Common.Entities
 {
@@ -9,6 +10,11 @@ namespace TekConf.Common.Entities
 		public static bool IsNotNull(this object value)
 		{
 			return value != null;
+		}
+
+		public static Task<List<T>> ToListAsync<T>(this IQueryable<T> list)
+		{
+			return Task.Run(() => list.ToList());
 		}
 
 		public static bool IsNull(this object value)
@@ -29,7 +35,7 @@ namespace TekConf.Common.Entities
 			foreach (var stringProperty in stringProperties)
 			{
 				var currentValue = (string)stringProperty.GetValue(entity, null);
-				if (!currentValue.IsNullOrWhiteSpace())
+				if (!currentValue.IsNullOrWhiteSpace() && stringProperty.CanWrite)
 				{
 					stringProperty.SetValue(entity, currentValue.Trim().Substring(0, currentValue.Length > 5000 ? 5000 : currentValue.Length), null);
 				}

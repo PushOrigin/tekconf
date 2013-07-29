@@ -13,12 +13,11 @@ namespace TekConf.UI.Web.Controllers
 	[Authorize]
 	public class AdminSpeakerController : Controller
 	{
-		private readonly RemoteDataRepositoryAsync _repository;
-		public AdminSpeakerController()
-		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+		private readonly IRemoteDataRepository _remoteDataRepository;
 
-			_repository = new RemoteDataRepositoryAsync(baseUrl);
+		public AdminSpeakerController(IRemoteDataRepository remoteDataRepository)
+		{
+			_remoteDataRepository = remoteDataRepository;
 		}
 
 		[HttpGet]
@@ -51,11 +50,12 @@ namespace TekConf.UI.Web.Controllers
 																				 }, null);
 			}
 
-			var addSpeakerTask = _repository.AddSpeakerToSession(speaker);
+			var speakerTask = _remoteDataRepository.AddSpeakerToSession(speaker, "user", "password");
 
-			await Task.WhenAll(addSpeakerTask, imageTask);
+			await Task.WhenAll(speakerTask, imageTask);
 
-			return RedirectToAction("Detail", "Session", new { conferenceSlug = speaker.conferenceSlug, sessionSlug = speaker.sessionSlug });
+			return RedirectToAction("Detail", "Session", new { conferenceSlug = speaker.conferenceSlug, 
+																													sessionSlug = speaker.sessionSlug });
 		}
 
 		public Task SaveSpeakerImage(string url, HttpPostedFileBase file)
@@ -73,10 +73,10 @@ namespace TekConf.UI.Web.Controllers
 		[HttpGet]
 		public async Task<ActionResult> EditSpeaker(string conferenceSlug, string speakerSlug)
 		{
-			var speakerTask = _repository.GetSpeaker(conferenceSlug, speakerSlug);
-			await speakerTask;
+			var speaker = await _remoteDataRepository.GetSpeaker(conferenceSlug, speakerSlug);
 
-			var createSpeaker = Mapper.Map<CreateSpeaker>(speakerTask.Result);
+			var createSpeaker = Mapper.Map<CreateSpeaker>(speaker);
+
 			return View(createSpeaker);
 		}
 
@@ -92,7 +92,7 @@ namespace TekConf.UI.Web.Controllers
 			}
 
 			var imageTask = SaveSpeakerImage(url, file);
-			var speakerTask = _repository.EditSpeaker(speaker);
+			var speakerTask = _remoteDataRepository.EditSpeaker(speaker, "user", "password");
 
 			await Task.WhenAll(imageTask, speakerTask);
 

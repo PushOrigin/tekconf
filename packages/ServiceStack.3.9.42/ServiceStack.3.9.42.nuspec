@@ -23,9 +23,5 @@
       <dependency id="ServiceStack.Redis" />
       <dependency id="ServiceStack.OrmLite.SqlServer" />
     </dependencies>
-    <references>
-      <reference file="ServiceStack.dll" />
-      <reference file="ServiceStack.ServiceInterface.dll" />
-    </references>
   </metadata>
 </package>

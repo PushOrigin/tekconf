@@ -9,8 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TekConf.RemoteData.Shared</RootNamespace>
     <AssemblyName>TekConf.RemoteData.Shared</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,22 +34,37 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Azure|AnyCPU'">
+    <OutputPath>bin\Azure\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ServiceStack.Common, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Common.3.9.42\lib\net35\ServiceStack.Common.dll</HintPath>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Common, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Common.3.9.42\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Common.3.9.55\lib\net35\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\ServiceStack.Common.3.9.55\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.ServiceInterface">
       <HintPath>..\..\packages\ServiceStack.3.9.42\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Text, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.3.9.42\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.3.9.55\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -58,18 +79,24 @@
     <Compile Include="v1\Dtos\AddressDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\ConferenceCreatedDto.cs" />
-    <Compile Include="v1\Dtos\ConferenceDto.cs">
+    <Compile Include="v1\Dtos\ConferenceCreatedDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\ConferenceEndDateChangedDto.cs" />
-    <Compile Include="v1\Dtos\ConferenceLocationChangedDto.cs" />
-    <Compile Include="v1\Dtos\ConferencePublishedDto.cs" />
-    <Compile Include="v1\Dtos\ConferencesDto.cs">
+    <Compile Include="v1\Dtos\ConferenceEndDateChangedDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\ConferenceStartDateChangedDto.cs" />
-    <Compile Include="v1\Dtos\ConferenceUpdatedDto.cs" />
+    <Compile Include="v1\Dtos\ConferenceLocationChangedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\ConferencePublishedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\ConferenceStartDateChangedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\ConferenceUpdatedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\FullConferenceDto.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -79,43 +106,70 @@
     <Compile Include="v1\Dtos\FullSpeakerDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\HistoryDto.cs" />
+    <Compile Include="v1\Dtos\HistoryDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\PresentationDto.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="v1\Dtos\PresentingSpeakerDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\ScheduleCreatedDto.cs" />
+    <Compile Include="v1\Dtos\ScheduleCreatedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\ScheduleDto.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="v1\Dtos\SchedulesDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\SearchResultDto.cs" />
-    <Compile Include="v1\Dtos\SessionAddedDto.cs" />
-    <Compile Include="v1\Dtos\SessionAddedToScheduleDto.cs" />
+    <Compile Include="v1\Dtos\SearchResultDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\SessionAddedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\SessionAddedToScheduleDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\SessionDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\SessionRemovedDto.cs" />
-    <Compile Include="v1\Dtos\SessionRoomChangedDto.cs" />
+    <Compile Include="v1\Dtos\SessionRemovedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\SessionRoomChangedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\SessionsDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\SpeakerAddedDto.cs" />
+    <Compile Include="v1\Dtos\SpeakerAddedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\SpeakerDto.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Dtos\SpeakerRemovedDto.cs" />
+    <Compile Include="v1\Dtos\SpeakerRemovedDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Dtos\SpeakersDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Dtos\SubscriptionDto.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="v1\Dtos\UserDto.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="v1\Helpers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\IRemoteDataRepository.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\JsonServiceClientExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="v1\RemoteDataRepository.cs">
@@ -130,13 +184,28 @@
     <Compile Include="v1\Requests\Conferences.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Requests\CreatePresentation.cs" />
-    <Compile Include="v1\Requests\CreatePresentationHistory.cs" />
+    <Compile Include="v1\Requests\CreatePresentation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Requests\CreatePresentationHistory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Requests\CreateSubscription.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Requests\EventRequests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Requests\FeaturedSpeakers.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Requests\Presentation.cs" />
-    <Compile Include="v1\Requests\Presentations.cs" />
+    <Compile Include="v1\Requests\Presentation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Requests\Presentations.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="v1\Requests\Registration.cs" />
     <Compile Include="v1\Requests\Schedule.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,9 +221,6 @@
     <Compile Include="v1\Requests\SessionResources.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="v1\Requests\EventRequests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="v1\Requests\Sessions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -164,9 +230,16 @@
     <Compile Include="v1\Requests\Speakers.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="v1\Requests\Subscription.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="v1\Requests\Users.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="v1\Requests\WindowsPhonePushRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Entities\TekConf.Common.Entities\TekConf.Common.Entities.csproj">
@@ -174,14 +247,12 @@
       <Name>TekConf.Common.Entities</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\libs\TinyMessenger\TinyMessenger.csproj">
-      <Project>{7c6925bc-f644-4d3e-9c66-f1593ecbf522}</Project>
+      <Project>{7C6925BC-F644-4D3E-9C66-F1593ECBF522}</Project>
       <Name>TinyMessenger</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

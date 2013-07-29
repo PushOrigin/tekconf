@@ -18,8 +18,8 @@ namespace TekConf.UI.Api
 		{
 			var hub = container.Resolve<ITinyMessengerHub>();
 
-			var repository = new ConferenceRepository(new Configuration());
-			
+			var repository = new ConferenceRepository(new EntityConfiguration());
+
 			BsonClassMap.RegisterClassMap<ConferenceEntity>()
 					.SetCreator(() => new ConferenceEntity(hub, repository));
 		}
@@ -28,25 +28,14 @@ namespace TekConf.UI.Api
 		{
 			Mapper.AddFormatter<TrimmingFormatter>();
 
-
-			//Mapper.CreateMap<ConferenceEntity, ConferencesDto>()
-			//				.ForMember(dest => dest.url, opt => opt.Ignore())
-			//				.ForMember(dest => dest.imageUrl, opt => opt.ResolveUsing<ImageResolver>())
-			//				.ForMember(dest => dest.numberOfSessions, opt => opt.ResolveUsing<SessionsCounterResolver>());
-
 			Mapper.CreateMap<ConferenceEntity, ConferenceEntity>()
 							.ForMember(c => c._id, opt => opt.Ignore())
 							.ForMember(dest => dest.imageUrl, opt => opt.ResolveUsing<ImageResolver>())
-							.ConstructUsing((Func<ResolutionContext, ConferenceEntity>)(r => new ConferenceEntity(container.Resolve<ITinyMessengerHub>(), container.Resolve<IRepository<ConferenceEntity>>())));
-
-			//Mapper.CreateMap<ConferenceEntity, ConferenceDto>()
-			//				.ForMember(dest => dest.url, opt => opt.Ignore())
-			//				.ForMember(dest => dest.sessionsUrl, opt => opt.Ignore())
-			//				.ForMember(dest => dest.speakersUrl, opt => opt.Ignore());
+							.ConstructUsing((Func<ResolutionContext, ConferenceEntity>)(r => new ConferenceEntity(container.Resolve<ITinyMessengerHub>(), container.Resolve<IConferenceRepository>())));
 
 			Mapper.CreateMap<ConferenceEntity, FullConferenceDto>()
 							.ForMember(dest => dest.imageUrl, opt => opt.ResolveUsing<ImageResolver>())
-							.ForMember(dest => dest.numberOfSessions, opt => opt.ResolveUsing<SessionsCounterResolver>()); ;
+							.ForMember(dest => dest.numberOfSessions, opt => opt.ResolveUsing<SessionsCounterResolver>());
 
 			Mapper.CreateMap<SessionEntity, SessionsDto>()
 							.ForMember(dest => dest.url, opt => opt.Ignore());
@@ -60,16 +49,26 @@ namespace TekConf.UI.Api
 			Mapper.CreateMap<SpeakerEntity, SpeakersDto>()
 							.ForMember(dest => dest.url, opt => opt.Ignore());
 
+
+
 			Mapper.CreateMap<AddSession, SessionEntity>()
 							.ForMember(s => s._id, opt => opt.UseValue(Guid.NewGuid()))
 							.ForMember(s => s.speakers, opt => opt.UseValue(new List<SpeakerEntity>()))
+							.ForMember(dest => dest.start, opt => opt.ResolveUsing<SessionStartTimeZoneResolver>())
+							.ForMember(dest => dest.end, opt => opt.ResolveUsing<SessionEndTimeZoneResolver>())
 							;
+
+			Mapper.CreateMap<SessionEntity, SessionEntity>()
+				.ForMember(s => s._id, opt => opt.Ignore())
+				.ForMember(s => s.speakers, opt => opt.Ignore())
+				;
 
 			Mapper.CreateMap<CreatePresentation, PresentationEntity>()
 						.ForMember(p => p._id, opt => opt.UseValue(Guid.NewGuid()))
 						.ForMember(p => p.slug, opt => opt.ResolveUsing<PresentationSlugResolver>());
 
 			Mapper.CreateMap<CreatePresentationHistory, HistoryEntity>();
+
 			Mapper.CreateMap<HistoryEntity, HistoryDto>();
 
 			Mapper.CreateMap<PresentationEntity, PresentationDto>();
@@ -80,8 +79,10 @@ namespace TekConf.UI.Api
 
 			Mapper.CreateMap<CreateConference, ConferenceEntity>()
 							.ForMember(c => c._id, opt => opt.Ignore())
+							.ForMember(dest => dest.start, opt => opt.ResolveUsing<ConferenceStartTimeZoneResolver>())
+							.ForMember(dest => dest.end, opt => opt.ResolveUsing<ConferenceEndTimeZoneResolver>())
 							.ForMember(c => c.position, opt => opt.ResolveUsing<PositionResolver>())
-							.ConstructUsing((Func<ResolutionContext, ConferenceEntity>)(r => new ConferenceEntity(container.Resolve<ITinyMessengerHub>(), container.Resolve<IRepository<ConferenceEntity>>())));
+							.ConstructUsing((Func<ResolutionContext, ConferenceEntity>)(r => new ConferenceEntity(container.Resolve<ITinyMessengerHub>(), container.Resolve<IConferenceRepository>())));
 
 
 			Mapper.CreateMap<CreateSpeaker, SpeakerEntity>()
@@ -136,6 +137,43 @@ namespace TekConf.UI.Api
 		}
 	}
 
+	public class SessionStartTimeZoneResolver : ValueResolver<AddSession, DateTime>
+	{
+		protected override DateTime ResolveCore(AddSession source)
+		{
+			TimeZoneInfo est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+			return TimeZoneInfo.ConvertTimeFromUtc(source.start, est);
+		}
+	}
+
+	public class SessionEndTimeZoneResolver : ValueResolver<AddSession, DateTime>
+	{
+		protected override DateTime ResolveCore(AddSession source)
+		{
+			TimeZoneInfo est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+			return TimeZoneInfo.ConvertTimeFromUtc(source.end, est);
+		}
+	}
+
+	public class ConferenceStartTimeZoneResolver : ValueResolver<CreateConference, DateTime?>
+	{
+		protected override DateTime? ResolveCore(CreateConference source)
+		{
+			TimeZoneInfo est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+			return TimeZoneInfo.ConvertTimeFromUtc(source.start, est);
+		}
+	}
+
+	public class ConferenceEndTimeZoneResolver : ValueResolver<CreateConference, DateTime?>
+	{
+		protected override DateTime? ResolveCore(CreateConference source)
+		{
+
+			TimeZoneInfo est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+			return TimeZoneInfo.ConvertTimeFromUtc(source.end, est);
+		}
+	}
+
 	public class SessionsCounterResolver : ValueResolver<ConferenceEntity, int>
 	{
 		protected override int ResolveCore(ConferenceEntity source)
@@ -150,9 +188,9 @@ namespace TekConf.UI.Api
 		{
 			var conferenceName = string.Empty;
 
-			var repository = new ConferenceRepository(new Configuration());
+			var repository = new ConferenceRepository(new EntityConfiguration());
 			var conference = repository.AsQueryable()
-																.SingleOrDefault(c => c.slug.ToLower() == source.ConferenceSlug.ToLower());
+																.FirstOrDefault(c => c.slug.ToLower() == source.ConferenceSlug.ToLower());
 			if (conference.IsNotNull())
 			{
 				conferenceName = conference.name;
@@ -167,13 +205,13 @@ namespace TekConf.UI.Api
 		{
 			var sessions = new List<FullSessionDto>();
 
-			var repository = new ConferenceRepository(new Configuration());
+			var repository = new ConferenceRepository(new EntityConfiguration());
 			var conference = repository.AsQueryable()
-															.SingleOrDefault(c => c.slug.ToLower() == source.ConferenceSlug.ToLower());
+															.FirstOrDefault(c => c.slug.ToLower() == source.ConferenceSlug.ToLower());
 
 			foreach (var sessionSlug in source.SessionSlugs)
 			{
-				var session = conference.sessions.SingleOrDefault(c => c.slug == sessionSlug);
+				var session = conference.sessions.FirstOrDefault(c => c.slug == sessionSlug);
 				var sessionDto = Mapper.Map<FullSessionDto>(session);
 				sessions.Add(sessionDto);
 			}

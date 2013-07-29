@@ -105,9 +105,6 @@
     <Compile Include="..\Shared\v1\Dtos\ConferenceCreatedDto.cs">
       <Link>v1\Dtos\ConferenceCreatedDto.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\v1\Dtos\ConferenceDto.cs">
-      <Link>v1\Dtos\ConferenceDto.cs</Link>
-    </Compile>
     <Compile Include="..\Shared\v1\Dtos\ConferenceEndDateChangedDto.cs">
       <Link>v1\Dtos\ConferenceEndDateChangedDto.cs</Link>
     </Compile>
@@ -116,9 +113,6 @@
     </Compile>
     <Compile Include="..\Shared\v1\Dtos\ConferencePublishedDto.cs">
       <Link>v1\Dtos\ConferencePublishedDto.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\v1\Dtos\ConferencesDto.cs">
-      <Link>v1\Dtos\ConferencesDto.cs</Link>
     </Compile>
     <Compile Include="..\Shared\v1\Dtos\ConferenceStartDateChangedDto.cs">
       <Link>v1\Dtos\ConferenceStartDateChangedDto.cs</Link>
@@ -186,11 +180,20 @@
     <Compile Include="..\Shared\v1\Dtos\SpeakersDto.cs">
       <Link>v1\Dtos\SpeakersDto.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\v1\Dtos\SubscriptionDto.cs">
+      <Link>v1\Dtos\SubscriptionDto.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\v1\Dtos\UserDto.cs">
       <Link>v1\Dtos\UserDto.cs</Link>
     </Compile>
     <Compile Include="..\Shared\v1\Helpers.cs">
       <Link>v1\Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\v1\IRemoteDataRepository.cs">
+      <Link>v1\IRemoteDataRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\v1\JsonServiceClientExtensions.cs">
+      <Link>v1\JsonServiceClientExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Shared\v1\RemoteDataRepository.cs">
       <Link>v1\RemoteDataRepository.cs</Link>
@@ -209,6 +212,9 @@
     </Compile>
     <Compile Include="..\Shared\v1\Requests\CreatePresentationHistory.cs">
       <Link>v1\Requests\CreatePresentationHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\v1\Requests\CreateSubscription.cs">
+      <Link>v1\Requests\CreateSubscription.cs</Link>
     </Compile>
     <Compile Include="..\Shared\v1\Requests\EventRequests.cs">
       <Link>v1\Requests\EventRequests.cs</Link>
@@ -246,6 +252,9 @@
     <Compile Include="..\Shared\v1\Requests\Speakers.cs">
       <Link>v1\Requests\Speakers.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\v1\Requests\Subscription.cs">
+      <Link>v1\Requests\Subscription.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\v1\Requests\Users.cs">
       <Link>v1\Requests\Users.cs</Link>
     </Compile>
@@ -257,18 +266,58 @@
       <Link>packages.config</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\ServiceStack\src\ServiceStack.Common.WinRT\ServiceStack.Common.WinRT.csproj">
-      <Project>{27b20313-1994-469b-ac59-1ae7e89cfe33}</Project>
-      <Name>ServiceStack.Common.WinRT</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ServiceStack\src\ServiceStack.Interfaces.WinRT\ServiceStack.Interfaces.WinRT.csproj">
-      <Project>{7a5d5904-5a5f-4fd9-abb4-9dcb3861adc8}</Project>
-      <Name>ServiceStack.Interfaces.WinRT</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Azure|AnyCPU'">
+    <OutputPath>bin\Azure\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Azure|ARM'">
+    <OutputPath>bin\ARM\Azure\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Azure|x64'">
+    <OutputPath>bin\x64\Azure\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Azure|x86'">
+    <OutputPath>bin\x86\Azure\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <ProjectExtensions>

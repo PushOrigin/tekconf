@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using AutoMapper;
-using FluentMongo.Linq;
+
 using ServiceStack.CacheAccess;
 using ServiceStack.Common.Web;
 using TekConf.Common.Entities;
@@ -15,13 +15,13 @@ namespace TekConf.UI.Api.Services.v1
 {
 	public class SessionSpeakerService : MongoServiceBase
 	{
-		private readonly IConfiguration _configuration;
+		private readonly IEntityConfiguration _configuration;
 
 		private readonly IRepository<ConferenceEntity> _conferenceRepository;
 
 		public ICacheClient CacheClient { get; set; }
 
-		public SessionSpeakerService(IConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository)
+		public SessionSpeakerService(IEntityConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository)
 		{
 			_configuration = configuration;
 			_conferenceRepository = conferenceRepository;
@@ -41,14 +41,14 @@ namespace TekConf.UI.Api.Services.v1
 			var conference = _conferenceRepository
 					.AsQueryable()
 				//.Where(c => c.isLive)
-					.SingleOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
+					.FirstOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
 
 			if (conference.IsNull())
 			{
 				throw new HttpError() { StatusCode = HttpStatusCode.NotFound };
 			}
 
-			var session = conference.sessions.SingleOrDefault(s => s.slug.ToLower() == request.sessionSlug.ToLower());
+			var session = conference.sessions.FirstOrDefault(s => s.slug.ToLower() == request.sessionSlug.ToLower());
 
 			if (session.IsNull())
 			{

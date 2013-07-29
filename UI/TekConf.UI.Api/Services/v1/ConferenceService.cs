@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using AutoMapper;
-using FluentMongo.Linq;
+
 using ServiceStack.CacheAccess;
 using ServiceStack.Common.Web;
 using TekConf.Common.Entities;
@@ -18,21 +18,21 @@ namespace TekConf.UI.Api.Services.v1
 		private readonly ITinyMessengerHub _hub;
 		private readonly IRepository<ConferenceEntity> _conferenceRepository;
 		private readonly IRepository<ScheduleEntity> _scheduleRepository;
-		private readonly IConfiguration _configuration;
+		private readonly IEntityConfiguration _entityConfiguration;
 		public ICacheClient CacheClient { get; set; }
 
-		public ConferenceService(ITinyMessengerHub hub, IRepository<ConferenceEntity> conferenceRepository, IRepository<ScheduleEntity> scheduleRepository, IConfiguration configuration)
+		public ConferenceService(ITinyMessengerHub hub, IRepository<ConferenceEntity> conferenceRepository, IRepository<ScheduleEntity> scheduleRepository, IEntityConfiguration entityConfiguration)
 		{
 			_hub = hub;
 			this._conferenceRepository = conferenceRepository;
 			this._scheduleRepository = scheduleRepository;
-			_configuration = configuration;
+			this._entityConfiguration = entityConfiguration;
 		}
 
 		public object Get(Conference request)
 		{
 			var cacheKey = "GetFullSingleConference-" + request.conferenceSlug;
-			var expireInTimespan = new TimeSpan(0, 0, _configuration.cacheTimeout);
+			var expireInTimespan = new TimeSpan(0, 0, this._entityConfiguration.cacheTimeout);
 
 			return base.RequestContext.ToOptimizedResultUsingCache(this.CacheClient, cacheKey, expireInTimespan, () =>
 			{
@@ -40,7 +40,7 @@ namespace TekConf.UI.Api.Services.v1
 				var conference = this._conferenceRepository
 						.AsQueryable()
 					//.Where(c => c.isLive)
-						.SingleOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
+						.FirstOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
 
 				if (conference.IsNull())
 				{
@@ -54,7 +54,7 @@ namespace TekConf.UI.Api.Services.v1
 				{
 					var schedule = _scheduleRepository.AsQueryable()
 											.Where(x => x.ConferenceSlug == request.conferenceSlug)
-											.SingleOrDefault(x => x.UserName == request.userName);
+											.FirstOrDefault(x => x.UserName == request.userName);
 					if (schedule.IsNotNull())
 					{
 						foreach (var sessionSlug in schedule.SessionSlugs)
@@ -99,9 +99,7 @@ namespace TekConf.UI.Api.Services.v1
 					}
 				}
 
-
 				var entity = Mapper.Map<SpeakerEntity>(speaker);
-
 
 				var conference = this._conferenceRepository.AsQueryable()
 													.FirstOrDefault(c => c.slug.ToLower() == speaker.conferenceSlug.ToLower());
@@ -194,6 +192,7 @@ namespace TekConf.UI.Api.Services.v1
 
 				conferenceEntity.TrimAllProperties();
 				conferenceEntity.Save();
+				
 				this.CacheClient.FlushAll();
 
 				conferenceDto = Mapper.Map<ConferenceEntity, FullConferenceDto>(conferenceEntity);

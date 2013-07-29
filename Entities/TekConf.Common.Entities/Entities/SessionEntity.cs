@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
-using TekConf.Common.Entities;
-using TinyMessenger;
 
-namespace TekConf.UI.Api
+namespace TekConf.Common.Entities
 {
 	public class SessionEntity : IEntity
 	{
 		public event RoomChangedHandler RoomChanged;
+		public event StartDateChangedHandler StartDateChanged;
+		public event EndDateChangedHandler EndDateChanged;
+
 		public delegate void RoomChangedHandler(SessionEntity m, RoomChangedArgs e);
+		public delegate void StartDateChangedHandler(SessionEntity m, StartDateChangedArgs e);
+		public delegate void EndDateChangedHandler(SessionEntity m, EndDateChangedArgs e);
 
 		[BsonId(IdGenerator = typeof(CombGuidGenerator))]
 		public Guid _id { get; set; }
@@ -19,11 +22,47 @@ namespace TekConf.UI.Api
 		public string title
 		{
 			get { return _title; }
-			set { _title = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
+			set { _title = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
 		}
 
-		public DateTime start { get; set; }
-		public DateTime end { get; set; }
+		private DateTime _startDate;
+		public DateTime start 
+		{
+			get { return _startDate; }
+			set
+			{
+				if (_startDate != value)
+				{
+					if (StartDateChanged != null)
+					{
+						var args = new StartDateChangedArgs(this.slug, _startDate, value);
+
+						StartDateChanged(this, args);
+					}
+				}
+				_startDate = value;
+			} 
+		}
+
+		private DateTime _endDate;
+		public DateTime end
+		{
+			get { return _endDate; }
+			set
+			{
+				if (_endDate != value)
+				{
+					if (EndDateChanged != null)
+					{
+						var args = new EndDateChangedArgs(this.slug, _startDate, value);
+
+						EndDateChanged(this, args);
+					}
+				}
+				_endDate = value;
+			}
+		}
+
 		private string _room;
 		public string room
 		{
@@ -39,32 +78,32 @@ namespace TekConf.UI.Api
 						RoomChanged(this, roomChanged);
 					}
 				}
-				_room = value.IsNullOrWhiteSpace() ? value : value.Trim(); ;
+				_room = value.IsNullOrWhiteSpace() ? value : value.Trim();
 			}
 		}
 
 		public string difficulty
 		{
 			get { return _difficulty; }
-			set { _difficulty = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
+			set { _difficulty = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
 		}
 
 		public string description
 		{
 			get { return _description; }
-			set { _description = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
+			set { _description = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
 		}
 
 		public string twitterHashTag
 		{
 			get { return _twitterHashTag; }
-			set { _twitterHashTag = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
+			set { _twitterHashTag = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
 		}
 
 		public string sessionType
 		{
 			get { return _sessionType; }
-			set { _sessionType = value.IsNullOrWhiteSpace() ? value : value.Trim(); ; }
+			set { _sessionType = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
 		}
 
 		public List<string> links { get; set; }

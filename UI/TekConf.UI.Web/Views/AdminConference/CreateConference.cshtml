@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using System.Web.Mvc.Html
 @using System.Web.Optimization
 @model TekConf.UI.Api.Services.Requests.v1.CreateConference
 @{
@@ -21,14 +22,16 @@
 
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 	@Scripts.Render("~/bundles/jquery")
 	@Scripts.Render("~/bundles/jqueryMigrate")
 	@Scripts.Render("~/bundles/jqueryUI")
 	@Scripts.Render("~/js/common")
 	@Scripts.Render("~/scripts/conferences/detail")
 
+	<link href="~/Scripts/bootstrap-tagmanager.css" rel="stylesheet" type="text/css"></link>
+	<script src="~/Scripts/bootstrap-tagmanager.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 </head>
 
@@ -96,6 +99,9 @@
 					<div class="span4">
 						<label>Location</label>
 						@Html.TextBoxFor(c => c.location)
+
+						<label>Is Online</label>
+						@Html.CheckBoxFor(c => c.isOnline)
 
 						<label>Address</label>
 						@Html.EditorFor(c => c.address)
@@ -182,52 +188,29 @@
 		 
 				<div class="row">
 					<div class="span4">
-						<table class="table table-bordered table-condensed table-striped" id="sessionTypesTable">
-							<caption style="text-align: left">Session Types</caption>
-							<tbody>
-								<tr>
-									<td><a href="#" class="addSessionType">Add</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>	
-				<div class="row">
-					<div class="span4">
-						<table class="table table-bordered table-condensed table-striped" id="roomsTable">
-							<caption style="text-align: left">Rooms</caption>
-							<tbody>
-								<tr>
-									<td><a href="#" class="addRoom">Add</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>	 
-				<div class="row">
-					<div class="span4">
-						<table class="table table-bordered table-condensed table-striped" id="subjectsTable">
-							<caption style="text-align: left">Subjects</caption>
-							<tbody>
-								<tr>
-									<td><a href="#" class="addSubject">Add</a></td>
-								</tr>
-							</tbody>
-						</table>
+						<label>Session Types</label>
+						<input type="text" name="sessionTypes" placeholder="Add Session Type <Enter>" class="sessionTypeTagManager" />
 					</div>
 				</div>
 				<div class="row">
 					<div class="span4">
-						<table class="table table-bordered table-condensed table-striped" id="tagsTable">
-							<caption style="text-align: left">Tags</caption>
-							<tbody>
-								<tr>
-									<td><a href="#" class="addTag">Add</a></td>
-								</tr>
-							</tbody>
-						</table>
+						<label>Rooms</label>
+						<input type="text" name="rooms" placeholder="Add Room <Enter>" class="roomTagManager" />
 					</div>
 				</div>
+				<div class="row">
+					<div class="span4">
+						<label>Tags</label>
+						<input type="text" name="tags" placeholder="Add Tag <Enter>" class="tagTagManager" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="span4">
+						<label>Subjects</label>
+						<input type="text" name="subjects" placeholder="Add Subject <Enter>" class="subjectTagManager" />
+					</div>
+				</div>
+								
 				<div class="row">
 					<input type="submit" class="btn-large btn btn-success" value="Save Conference" />
 				</div>      
@@ -259,9 +242,7 @@
 			} else if (city.length != 0 && country.length != 0) {
 				address = city + ",+" + country;
 			}
-			//address = encodeURIComponent(address);
-			//address = address.replace(" ", "+");
-			//alert(address);
+
 			geocoder.geocode({ 'address': address }, function (results, status) {
 				if (status == google.maps.GeocoderStatus.OK) {
 					$('#latitude').val(results[0].geometry.location.lat());
@@ -274,6 +255,11 @@
 		}
 
 		$(function () {
+			$(".tagTagManager").tagsManager();
+			$(".subjectTagManager").tagsManager();
+			$(".roomTagManager").tagsManager();
+			$(".sessionTypeTagManager").tagsManager();
+
 			geocoder = new google.maps.Geocoder();
 
 			$('#start').datetimepicker();
@@ -296,59 +282,6 @@
 
 				codeAddress(streetNumber, streetName, city, state, postalArea, country);
 			});
-
-			$(document).on("click", ".addSubject", function (e) {
-				e.preventDefault();
-
-				$(this).closest('tr').after('<tr><td><input type="text" /><span></span></td></tr>');
-
-				$('#subjectsTable td').each(function (index, el) {
-					var element = index - 1;
-					$('input', this).attr('id', 'subjects[' + element + ']');
-					$('input', this).attr('name', 'subjects[' + element + ']');
-
-				});
-			});
-
-			$(document).on("click", ".addTag", function (e) {
-				e.preventDefault();
-
-				$(this).closest('tr').after('<tr><td><input type="text" /><span></span></td></tr>');
-
-				$('#tagsTable td').each(function (index, el) {
-					var element = index - 1;
-					$('input', this).attr('id', 'tags[' + element + ']');
-					$('input', this).attr('name', 'tags[' + element + ']');
-
-				});
-			});
-
-			$(document).on("click", ".addRoom", function (e) {
-				e.preventDefault();
-
-				$(this).closest('tr').after('<tr><td><input type="text" /><span></span></td></tr>');
-
-				$('#roomsTable td').each(function (index, el) {
-					var element = index - 1;
-					$('input', this).attr('id', 'rooms[' + element + ']');
-					$('input', this).attr('name', 'rooms[' + element + ']');
-
-				});
-			});
-
-			$(document).on("click", ".addSessionType", function (e) {
-				e.preventDefault();
-
-				$(this).closest('tr').after('<tr><td><input type="text" /><span></span></td></tr>');
-
-				$('#sessionTypesTable td').each(function (index, el) {
-					var element = index - 1;
-					$('input', this).attr('id', 'sessionTypes[' + element + ']');
-					$('input', this).attr('name', 'sessionTypes[' + element + ']');
-
-				});
-			});
-
 
 		});
 	</script>

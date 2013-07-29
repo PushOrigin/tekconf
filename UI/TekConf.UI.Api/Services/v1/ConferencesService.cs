@@ -1,9 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using AutoMapper;
+using MongoDB.Driver;
+using ServiceStack.Messaging;
+using ServiceStack.Redis;
+using ServiceStack.ServiceInterface;
+using ServiceStack.WebHost.Endpoints;
 using TekConf.Common.Entities;
 using TekConf.RemoteData.Dtos.v1;
 using TekConf.UI.Api.Services.Requests.v1;
@@ -13,47 +20,46 @@ using TinyMessenger;
 
 namespace TekConf.UI.Api.Services.v1
 {
+	public interface IConferencesService
+	{
+		ICacheClient CacheClient { get; set; }
+		IRequestContext RequestContext { get; set; }
+		ICacheClient Cache { get; }
+		IDbConnection Db { get; }
+		IRedisClient Redis { get; }
+		IMessageProducer MessageProducer { get; }
+		ISessionFactory SessionFactory { get; }
+		ISession Session { get; }
 
-	public class ConferencesService : MongoServiceBase
+		object Get(ConferencesCount request);
+		object Get(Search request);
+		object Get(Conferences request);
+	}
+
+	public class ConferencesService : MongoServiceBase, IConferencesService
 	{
 		private readonly ITinyMessengerHub _hub;
-		private readonly IRepository<ConferenceEntity> _conferenceRepository;
+		private readonly IConferenceRepository _conferenceRepository;
 		private readonly IRepository<GeoLocationEntity> _geolocationRepository;
-		private readonly IConfiguration _configuration;
+		private readonly IRepository<ScheduleEntity> _scheduleRepository;
+		private readonly IEntityConfiguration _configuration;
 		public ICacheClient CacheClient { get; set; }
 
-		public ConferencesService(ITinyMessengerHub hub, IRepository<ConferenceEntity> conferenceRepository, IRepository<GeoLocationEntity> geolocationRepository, IConfiguration configuration)
+		public ConferencesService(ITinyMessengerHub hub, IConferenceRepository conferenceRepository, 
+			IRepository<GeoLocationEntity> geolocationRepository, 
+			IRepository<ScheduleEntity> scheduleRepository, 
+			IEntityConfiguration configuration)
 		{
 			_hub = hub;
 			_conferenceRepository = conferenceRepository;
 			_geolocationRepository = geolocationRepository;
+			_scheduleRepository = scheduleRepository;
 			_configuration = configuration;
 		}
 
 		public object Get(ConferencesCount request)
 		{
-			//TODO : Add search back in
-			var showPastConferences = GetShowPastConferences(request.showPastConferences);
-			var query = _conferenceRepository.AsQueryable()
-								 .Where(c => c.isLive);
-
-			if (!string.IsNullOrWhiteSpace(request.searchTerm))
-			{
-				var searchTerm = request.searchTerm.ToLower();
-				var search = GetSearchTermSearchForMongo(searchTerm);
-				if (search.IsNotNull())
-				{
-					query = query.Where(search);
-				}
-			}
-
-			if (showPastConferences.IsNotNull())
-			{
-				query = query.Where(showPastConferences);
-			}
-
-			var count = query
-								 .Count();
+			var count = _conferenceRepository.GetConferenceCount(request.searchTerm, request.showPastConferences);
 
 			return count;
 		}
@@ -78,10 +84,10 @@ namespace TekConf.UI.Api.Services.v1
 					request.country = "US";
 
 				var city = _geolocationRepository.AsQueryable()
-																				 .Where(g => Regex.IsMatch(g.name, request.city, RegexOptions.IgnoreCase))
-																				 .Where(g => Regex.IsMatch(g.fipscode, request.state, RegexOptions.IgnoreCase))
-																				 .ToList()
-																				 .FirstOrDefault(x => x.name.ToLower() == request.city.ToLower());
+																																				 .Where(g => Regex.IsMatch(g.name, request.city, RegexOptions.IgnoreCase))
+																																				 .Where(g => Regex.IsMatch(g.fipscode, request.state, RegexOptions.IgnoreCase))
+																																				 .ToList()
+																																				 .FirstOrDefault(x => x.name.ToLower() == request.city.ToLower());
 
 				if (city.IsNotNull())
 					searchResults = SearchByLatLong(city.latitude, city.longitude, request.distance.Value, request.searchTerm, request.showPastConferences);
@@ -95,8 +101,8 @@ namespace TekConf.UI.Api.Services.v1
 				var showPastConferences = GetShowPastConferences(request.showPastConferences);
 
 				var query = _conferenceRepository.AsQueryable()
-											.Where(c => c.isLive)
-											;
+																		.Where(c => c.isLive)
+																		;
 
 				if (searchTermSearch.IsNotNull())
 				{
@@ -109,10 +115,10 @@ namespace TekConf.UI.Api.Services.v1
 				}
 
 				searchResults = query
-										.Select(c => new SearchResultDto() { label = c.name, value = c.slug })
-									 .ToList()
-									 .OrderBy(s => s.label)
-									 .ToList();
+																.Select(c => new SearchResultDto() { label = c.name, value = c.slug })
+														 .ToList()
+														 .OrderBy(s => s.label)
+														 .ToList();
 
 
 			}
@@ -122,13 +128,13 @@ namespace TekConf.UI.Api.Services.v1
 
 		private List<SearchResultDto> SearchByLatLong(double latitude, double longitude, double distance, string searchTerm, bool? showPastConferences)
 		{
-			var conferences = (_conferenceRepository as ConferenceRepository).GeoSearch(latitude,
-																																				longitude,
-																																				distance);
+			var conferences = _conferenceRepository.GeoSearch(latitude,
+																											longitude,
+																											distance);
 
 
 			var query = conferences.AsQueryable()
-				 .Where(c => c.isLive);
+					 .Where(c => c.isLive);
 
 			if (!string.IsNullOrWhiteSpace(searchTerm))
 			{
@@ -146,15 +152,15 @@ namespace TekConf.UI.Api.Services.v1
 			}
 
 			var searchResults = query
-									.Select(c => new SearchResultDto() { label = c.name, value = c.slug })
-								 .ToList()
-								 .OrderBy(s => s.label)
-								 .ToList();
+															.Select(c => new SearchResultDto() { label = c.name, value = c.slug })
+													 .ToList()
+													 .OrderBy(s => s.label)
+													 .ToList();
 
 			return searchResults;
 		}
 
-		
+
 		public object Get(Conferences request)
 		{
 			if (request.showOnlyFeatured)
@@ -168,64 +174,35 @@ namespace TekConf.UI.Api.Services.v1
 			var cacheKey = GetCacheKey(request);
 
 			var expireInTimespan = new TimeSpan(0, 0, _configuration.cacheTimeout);
-			List<FullConferenceDto> conferencesDtos = null;
 
 			var result = base.RequestContext.ToOptimizedResultUsingCache(this.CacheClient, cacheKey, expireInTimespan, () =>
-				{
-					if (request.latitude.HasValue && request.longitude.HasValue)
 					{
-						if (!request.distance.HasValue)
+						var conferenceEntities = _conferenceRepository.GetConferences(request.search, request.sortBy,
+																																																		request.showPastConferences,
+																																																		request.showOnlyWithOpenCalls,
+																																																		request.showOnlyOnSale,
+																																																		request.showOnlyFeatured,
+																																																		request.longitude,
+																																																		request.latitude,
+																																																		request.distance,
+																																																		request.city,
+																																																		request.state,
+																																																		request.country);
+
+						var conferencesDtos = Mapper.Map<List<FullConferenceDto>>(conferenceEntities);
+						var schedules = _scheduleRepository.AsQueryable().Where(x => x.UserName == request.userName).ToList();
+						foreach (var conferenceDto in conferencesDtos)
 						{
-							request.distance = 100.0;
+							conferenceDto.isAddedToSchedule = schedules.Any(x => x.ConferenceSlug == conferenceDto.slug);
 						}
-
-						var conferences = (_conferenceRepository as ConferenceRepository).GeoSearch(request.latitude.Value,
-																																				request.longitude.Value,
-																																				request.distance.Value);
-						var searchExpression = GetSearchTermSearchForInMemory(request.search);
-						conferencesDtos = BuildConferencesSearch(conferences.AsQueryable(), searchExpression, request.sortBy, request.search, request.showPastConferences, request.showOnlyWithOpenCalls, request.showOnlyOnSale);
-					}
-					else if (!string.IsNullOrWhiteSpace(request.city) && !string.IsNullOrWhiteSpace(request.state))
-					{
-						if (!request.distance.HasValue)
-							request.distance = 100.0;
-
-						if (string.IsNullOrWhiteSpace(request.country))
-							request.country = "US";
-
-						var city = _geolocationRepository.AsQueryable()
-																						 .Where(g => Regex.IsMatch(g.name, request.city, RegexOptions.IgnoreCase))
-																						 .Where(g => Regex.IsMatch(g.fipscode, request.state, RegexOptions.IgnoreCase))
-																						 .ToList()
-																						 .FirstOrDefault(x => x.name.ToLower() == request.city.ToLower());
-
-						if (city.IsNotNull())
-						{
-							var conferences = (_conferenceRepository as ConferenceRepository).GeoSearch(city.latitude,
-																														city.longitude,
-																														request.distance.Value);
-							var searchExpression = GetSearchTermSearchForInMemory(request.search);
-
-							conferencesDtos = BuildConferencesSearch(conferences.AsQueryable(), searchExpression, request.sortBy, request.search, request.showPastConferences, request.showOnlyWithOpenCalls, request.showOnlyOnSale);
-						}
-
-					}
-					else
-					{
-						var searchExpression = GetSearchTermSearchForMongo(request.search);
-
-						conferencesDtos = BuildConferencesSearch(_conferenceRepository.AsQueryable(), searchExpression, request.sortBy, request.search, request.showPastConferences, request.showOnlyWithOpenCalls, request.showOnlyOnSale);
-					}
-
-
-					return conferencesDtos;
-				});
+						return conferencesDtos;
+					});
 
 			return result;
 		}
 
 
-		private List<FullConferenceDto> BuildConferencesSearch(IQueryable<ConferenceEntity> query, Expression<Func<ConferenceEntity, bool>> searchExpression, string sortBy, string searchTerm, bool? showPastConferences, bool? showOnlyWithOpenCalls, bool? showOnlyOnSale)
+		private List<ConferenceEntity> BuildConferencesSearch(IQueryable<ConferenceEntity> query, Expression<Func<ConferenceEntity, bool>> searchExpression, string sortBy, string searchTerm, bool? showPastConferences, bool? showOnlyWithOpenCalls, bool? showOnlyOnSale)
 		{
 			var orderByFunc = GetOrderByFunc(sortBy);
 			var showPastConferencesExpression = GetShowPastConferences(showPastConferences);
@@ -257,7 +234,6 @@ namespace TekConf.UI.Api.Services.v1
 
 			query = query.Where(c => c.isLive);
 
-			List<FullConferenceDto> conferencesDtos = null;
 			List<ConferenceEntity> conferences = null;
 
 			if (sortBy == "dateAdded")
@@ -269,11 +245,9 @@ namespace TekConf.UI.Api.Services.v1
 				query = query.OrderBy(orderByFunc).ThenBy(c => c.start).AsQueryable();
 			}
 
-			conferences = query
-				.ToList();
+			conferences = query.ToList();
 
-			conferencesDtos = Mapper.Map<List<FullConferenceDto>>(conferences);
-			return conferencesDtos;
+			return conferences;
 		}
 
 		private static string GetCacheKey(Conferences request)
@@ -291,53 +265,35 @@ namespace TekConf.UI.Api.Services.v1
 			string distanceCacheKey = request.distance.HasValue ? request.distance.Value.ToString() : string.Empty;
 
 
-			var cacheKey = "GetAllConferences-" + 
-										searchCacheKey + "-" + 
-										sortByCacheKey + "-" + 
-										showPastConferencesCacheKey + "-" +
-										 showOnlyOnSaleCacheKey + "-" + 
-										 openCallsCacheKey + "-" +
-										 cityCacheKey + "-" +
-										 stateCacheKey + "-" +
-										 countryCacheKey + "-" +
-										 latitudeCacheKey + "-" +
-										 longitudeCacheKey + "-" +
-										 distanceCacheKey
-										 ;
+			var cacheKey = "GetAllConferences-" +
+																	searchCacheKey + "-" +
+																	sortByCacheKey + "-" +
+																	showPastConferencesCacheKey + "-" +
+																	 showOnlyOnSaleCacheKey + "-" +
+																	 openCallsCacheKey + "-" +
+																	 cityCacheKey + "-" +
+																	 stateCacheKey + "-" +
+																	 countryCacheKey + "-" +
+																	 latitudeCacheKey + "-" +
+																	 longitudeCacheKey + "-" +
+																	 distanceCacheKey
+																	 ;
 			return cacheKey;
 		}
 
 		private object GetFeaturedConferences(Conferences request)
 		{
-			var cacheKey = "GetFeaturedConferences";
+			const string cacheKey = "GetFeaturedConferences";
 			var expireInTimespan = new TimeSpan(0, 0, _configuration.cacheTimeout);
 
 			return base.RequestContext.ToOptimizedResultUsingCache(this.CacheClient, cacheKey, expireInTimespan, () =>
-			{
-				List<ConferenceEntity> conferences;
-				try
-				{
-					conferences = _conferenceRepository
-							.AsQueryable()
-							.Where(c => c.end >= DateTime.Now.AddDays(-7))
-							.Where(c => c.isLive)
-							.OrderBy(c => c.start)
-							.ToList()
-							.Where(c => !string.IsNullOrWhiteSpace(c.description))
-							.Take(4)
-							.ToList();
-				}
-				catch (Exception ex)
-				{
-					var s = ex.Message;
-					throw;
-				}
+					{
+						var conferences = _conferenceRepository.GetFeaturedConferences();
 
+						var conferencesDtos = Mapper.Map<List<FullConferenceDto>>(conferences);
 
-				var conferencesDtos = Mapper.Map<List<FullConferenceDto>>(conferences);
-
-				return conferencesDtos.ToList();
-			});
+						return conferencesDtos.ToList();
+					});
 		}
 
 
@@ -388,16 +344,16 @@ namespace TekConf.UI.Api.Services.v1
 				//var regex = new Regex(search, RegexOptions.IgnoreCase);
 
 				searchBy = c => c.name.ToLower().Contains(search)
-						|| (c.slug.IsNull() || c.slug.ToLower().Contains(search))
-						|| (c.description.IsNull() || c.description.ToLower().Contains(search))
-						|| (c.address.IsNull() || c.address.City.IsNull() || c.address.City.ToLower().Contains(search))
-						|| (c.address.IsNull() || c.address.Country.IsNull() || c.address.Country.ToLower().Contains(search))
-						|| c.sessions.Any(s => (s.description.IsNull() || s.description.ToLower().Contains(search)))
-						|| c.sessions.Any(s => (s.title.IsNull() || s.title.ToLower().Contains(search)))
-						|| c.sessions.Any(s => s.speakers.Any(sp => (sp.lastName.IsNull() || sp.lastName.ToLower().Contains(search))))
-						|| c.sessions.Any(s => s.speakers.Any(sp => (sp.twitterName.IsNull() || sp.twitterName.ToLower().Contains(search))))
-						;
-			
+								|| (c.slug.IsNull() || c.slug.ToLower().Contains(search))
+								|| (c.description.IsNull() || c.description.ToLower().Contains(search))
+								|| (c.address.IsNull() || c.address.City.IsNull() || c.address.City.ToLower().Contains(search))
+								|| (c.address.IsNull() || c.address.Country.IsNull() || c.address.Country.ToLower().Contains(search))
+								|| c.sessions.Any(s => (s.description.IsNull() || s.description.ToLower().Contains(search)))
+								|| c.sessions.Any(s => (s.title.IsNull() || s.title.ToLower().Contains(search)))
+								|| c.sessions.Any(s => s.speakers.Any(sp => (sp.lastName.IsNull() || sp.lastName.ToLower().Contains(search))))
+								|| c.sessions.Any(s => s.speakers.Any(sp => (sp.twitterName.IsNull() || sp.twitterName.ToLower().Contains(search))))
+								;
+
 			}
 
 			return searchBy;
@@ -413,15 +369,15 @@ namespace TekConf.UI.Api.Services.v1
 				var regex = new Regex(search, RegexOptions.IgnoreCase);
 
 				searchBy = c => Regex.IsMatch(c.name, search, RegexOptions.IgnoreCase)
-						|| Regex.IsMatch(c.slug, search, RegexOptions.IgnoreCase)
-						|| Regex.IsMatch(c.description, search, RegexOptions.IgnoreCase)
-						|| Regex.IsMatch(c.address.City, search, RegexOptions.IgnoreCase)
-						|| Regex.IsMatch(c.address.Country, search, RegexOptions.IgnoreCase)
-						|| c.sessions.Any(s => Regex.IsMatch(s.description, search, RegexOptions.IgnoreCase))
-						|| c.sessions.Any(s => Regex.IsMatch(s.title, search, RegexOptions.IgnoreCase))
-						|| c.sessions.Any(s => s.speakers.Any(sp => Regex.IsMatch(sp.lastName, search, RegexOptions.IgnoreCase)))
-						|| c.sessions.Any(s => s.speakers.Any(sp => Regex.IsMatch(sp.twitterName, search, RegexOptions.IgnoreCase)))
-						;
+								|| Regex.IsMatch(c.slug, search, RegexOptions.IgnoreCase)
+								|| Regex.IsMatch(c.description, search, RegexOptions.IgnoreCase)
+								|| Regex.IsMatch(c.address.City, search, RegexOptions.IgnoreCase)
+								|| Regex.IsMatch(c.address.Country, search, RegexOptions.IgnoreCase)
+								|| c.sessions.Any(s => Regex.IsMatch(s.description, search, RegexOptions.IgnoreCase))
+								|| c.sessions.Any(s => Regex.IsMatch(s.title, search, RegexOptions.IgnoreCase))
+								|| c.sessions.Any(s => s.speakers.Any(sp => Regex.IsMatch(sp.lastName, search, RegexOptions.IgnoreCase)))
+								|| c.sessions.Any(s => s.speakers.Any(sp => Regex.IsMatch(sp.twitterName, search, RegexOptions.IgnoreCase)))
+								;
 			}
 
 			return searchBy;

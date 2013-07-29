@@ -15,15 +15,16 @@ using TekConf.UI.Web.App_Start;
 
 namespace TekConf.UI.Web.Controllers
 {
+	using System;
+
 	[Authorize]
 	public class AdminConferenceController : AsyncController
 	{
-		private RemoteDataRepositoryAsync _repository;
-		public AdminConferenceController()
-		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+		private readonly IRemoteDataRepository _remoteDataRepository;
 
-			_repository = new RemoteDataRepositoryAsync(baseUrl);
+		public AdminConferenceController(IRemoteDataRepository remoteDataRepository)
+		{
+			_remoteDataRepository = remoteDataRepository;
 		}
 
 		#region Add Conference
@@ -39,6 +40,18 @@ namespace TekConf.UI.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult> CreateConference(CreateConference conference, HttpPostedFileBase file)
 		{
+			if (Request.Form["hidden-tags"] != null)
+				conference.tags = Request.Form["hidden-tags"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+
+			if (Request.Form["hidden-sessionTypes"] != null)
+				conference.sessionTypes = Request.Form["hidden-sessionTypes"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+
+			if (Request.Form["hidden-subjects"] != null)
+				conference.subjects = Request.Form["hidden-subjects"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+
+			if (Request.Form["hidden-rooms"] != null)
+				conference.rooms = Request.Form["hidden-rooms"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+
 			string url = string.Empty;
 
 			if (file != null)
@@ -57,11 +70,9 @@ namespace TekConf.UI.Web.Controllers
 				conference.imageUrl = url;
 			}
 
-			var conferenceTask = _repository.CreateConference(conference);
+			var fullConferenceDto = await _remoteDataRepository.CreateConference(conference, "user", "password");
 
-			await Task.WhenAll(conferenceTask);
-
-			return RedirectToAction("Detail", "Conferences", new { conferenceSlug = conference.slug });
+			return RedirectToAction("Detail", "Conferences", new { conferenceSlug = fullConferenceDto.slug });
 
 		}
 
@@ -71,49 +82,40 @@ namespace TekConf.UI.Web.Controllers
 		#region Edit Conference
 
 		[HttpGet]
-		public void EditConferenceAsync(string conferenceSlug)
+		public async Task<ActionResult> EditConference(string conferenceSlug)
 		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-
-			var repository = new RemoteDataRepository(baseUrl);
-
 			string userName = string.Empty;
 			if (Request.IsAuthenticated)
 			{
-					userName = System.Web.HttpContext.Current.User.Identity.Name;
+				userName = System.Web.HttpContext.Current.User.Identity.Name;
 			}
-			AsyncManager.OutstandingOperations.Increment();
-			repository.GetFullConference(conferenceSlug, userName, conference =>
-			{
-				AsyncManager.Parameters["conference"] = conference;
-				AsyncManager.OutstandingOperations.Decrement();
-			});
-		}
 
-		public ActionResult EditConferenceCompleted(FullConferenceDto conference)
-		{
+			var conference = await _remoteDataRepository.GetFullConference(conferenceSlug, userName);
 			var createConference = Mapper.Map<CreateConference>(conference);
 			return View(createConference);
 		}
 
 		[HttpPost]
-		public void EditConfAsync(CreateConference conference, HttpPostedFileBase file)
+		public async Task<ActionResult> EditConf(CreateConference conference, HttpPostedFileBase file)
 		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+			if (Request.Form["hidden-tags"] != null)
+				conference.tags = Request.Form["hidden-tags"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+			if (Request.Form["hidden-subjects"] != null)
+				conference.subjects = Request.Form["hidden-subjects"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+			if (Request.Form["hidden-sessionTypes"] != null)
+				conference.sessionTypes = Request.Form["hidden-sessionTypes"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
 
-			var repository = new RemoteDataRepository(baseUrl);
+			if (Request.Form["hidden-rooms"] != null)
+				conference.rooms = Request.Form["hidden-rooms"].Trim().Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
 
 			if (file != null)
-			{
-				AsyncManager.OutstandingOperations.Increment(2);
-			}
-			else
 			{
 				AsyncManager.OutstandingOperations.Increment(1);
 			}
 
 			if (file != null)
 			{
+				//TODO : Make async
 				IImageSaverConfiguration configuration = new ImageSaverConfiguration();
 				var imageName = conference.name.GenerateSlug() + Path.GetExtension(file.FileName);
 				conference.imageUrl = configuration.ImageUrl + imageName;
@@ -126,11 +128,8 @@ namespace TekConf.UI.Web.Controllers
 								}, null);
 			}
 
-			repository.EditConference(conference, "user", "password", c =>
-			{
-				AsyncManager.Parameters["conference"] = c;
-				AsyncManager.OutstandingOperations.Decrement();
-			});
+			var c = await _remoteDataRepository.EditConference(conference, "user", "password");
+			return RedirectToAction("Detail", "Conferences", new { conferenceSlug = c.slug });
 
 		}
 
@@ -160,31 +159,16 @@ namespace TekConf.UI.Web.Controllers
 			}
 		}
 
-		public ActionResult EditConfCompleted(FullConferenceDto conference)
-		{
-			return RedirectToAction("Detail", "Conferences", new { conferenceSlug = conference.slug });
-		}
 
 		#endregion
 
-		public void EditConferencesIndexAsync(string sortBy, bool? showPastConferences, string search)
+		public async Task<ActionResult> EditConferencesIndex(string sortBy, bool? showPastConferences, string search)
 		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+			var conferences = await _remoteDataRepository.GetConferencesAsync(sortBy: sortBy, showPastConferences: showPastConferences, search: search);
 
-			var repository = new RemoteDataRepository(baseUrl);
-
-			AsyncManager.OutstandingOperations.Increment();
-
-			repository.GetConferences(sortBy: sortBy, showPastConferences: showPastConferences, search: search, callback: conferences =>
-			{
-				AsyncManager.Parameters["conferences"] = conferences;
-				AsyncManager.OutstandingOperations.Decrement();
-			});
-		}
-
-		public ActionResult EditConferencesIndexCompleted(List<FullConferenceDto> conferences)
-		{
 			return View(conferences.OrderBy(c => c.name).ToList());
+
 		}
+
 	}
 }

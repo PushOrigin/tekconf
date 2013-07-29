@@ -5,21 +5,21 @@ using TekConf.UI.Web.App_Start;
 
 namespace TekConf.UI.Web.Controllers
 {
+	using TekConf.RemoteData.v1;
+
 	public class SessionController : Controller
 	{
-		private RemoteDataRepositoryAsync _repository;
+		private readonly IRemoteDataRepository _remoteDataRepository;
 
-		public SessionController()
+		public SessionController(IRemoteDataRepository remoteDataRepository)
 		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-
-			_repository = new RemoteDataRepositoryAsync(baseUrl);
+			_remoteDataRepository = remoteDataRepository;
 		}
 
 		[CompressFilter]
 		public async Task<ActionResult> Index(string conferenceSlug)
 		{
-			var sessionsTask = _repository.GetSessions(conferenceSlug);
+			var sessionsTask = _remoteDataRepository.GetSessionsAsync(conferenceSlug);
 			await sessionsTask;
 			return View(sessionsTask.Result);
 		}
@@ -27,16 +27,14 @@ namespace TekConf.UI.Web.Controllers
 		[CompressFilter]
 		public async Task<ActionResult> Detail(string conferenceSlug, string sessionSlug)
 		{
-			var sessionDetailTask = _repository.GetSessionDetail(conferenceSlug, sessionSlug);
+			var sessionDto = await _remoteDataRepository.GetSession(conferenceSlug, sessionSlug);
 
-			await sessionDetailTask;
-
-			if (sessionDetailTask.Result == null)
+			if (sessionDto == null)
 			{
 				return RedirectToAction("NotFound", "Error");
 			}
 
-			return View(sessionDetailTask.Result);
+			return View(sessionDto);
 		}
 	}
 }

@@ -91,7 +91,10 @@
 																		.Select(s => new { DateKey = s.Key, Sessions = s })
 																		.ToList();
 					}
-
+					@if (Request.IsAuthenticated)
+					{
+						<div class="well"><a href="#" id="showHideMySessions">Show/Hide unscheduled sessions</a></div>
+					}
 					@foreach (var dayGroup in sessionGroup.OrderBy(s => s.DateKey.Year).ThenBy(s => s.DateKey.Month).ThenBy(s => s.DateKey.Day))
 		 {
 			 var date = DateTime.Parse(dayGroup.DateKey.Month + "/" + dayGroup.DateKey.Day + "/" + dayGroup.DateKey.Year);
@@ -109,7 +112,7 @@
 							<table class="table">
 								<tbody>
 									@{
-			 var sessionTimes = dayGroup.Sessions
+			                                    var sessionTimes = dayGroup.Sessions
 																	.GroupBy(s => new { s.start })
 																	.Select(s => new { DateKey = s.Key, Sessions = s })
 																	.OrderBy(s => s.DateKey.start)
@@ -125,23 +128,25 @@
                                 
 										<tr>
 											@if (Request.IsAuthenticated)
-					 {
-						 if (session.isAddedToSchedule.HasValue && session.isAddedToSchedule.Value)
-						 {
-												<td style="width: 20px;">
-													<i class="icon-star icon-2x icon-selected" id="remove-@session.slug" onclick="javascript:toggleSessionOnSchedule('@Model.slug', '@session.slug', '#remove-@session.slug')"></i>
-												</td>
-						 }
-						 else
-						 {
-												<td style="width: 20px;">
-													<i class="icon-star-empty icon-2x" id="add-@session.slug" onclick="javascript:toggleSessionOnSchedule('@Model.slug', '@session.slug', '#add-@session.slug')"></i>
-												</td>																										
-						 }
-					 }
+											 {
+												 if (session.isAddedToSchedule.HasValue && session.isAddedToSchedule.Value)
+												 {
+														<td class="scheduled" style="width: 20px;">
+															<i class="icon-star icon-2x icon-selected" id="remove-@session.slug" onclick="javascript:toggleSessionOnSchedule('@Model.slug', '@session.slug', '#remove-@session.slug')"></i>
+														</td>
+												 }
+												 else
+												 {
+														<td class="unscheduled" style="width: 20px;">
+															<i class="icon-star-empty icon-2x" id="add-@session.slug" onclick="javascript:toggleSessionOnSchedule('@Model.slug', '@session.slug', '#add-@session.slug')"></i>
+														</td>																										
+												 }
+											 }
 
 											<td>
 												@Html.RouteLink(session.title, "SessionDetail", new { conferenceSlug = Model.slug, sessionSlug = session.slug }, null)
+												<br />
+												@session.room
 											</td>
 											<td>
 												@foreach (var speaker in session.speakers)
@@ -163,94 +168,95 @@
 				<div class="span4">
 					<div class="sidebar">
 						<h4><span class="slash">//</span> More Information</h4>
-						<p>
-							@HtmlHelpers.FormatDateRange(Model.start, Model.end)<br />
-							<br />
-							@if (!string.IsNullOrWhiteSpace(Model.location))
-			 {
-								@Model.location<br />
-			 }
-							@if (Model.address != null)
-			 {
-				 if (Model.address.StreetNumber != 0)
-				 {
-								@Model.address.StreetNumber<text> </text>
-				 }
-				 if (!string.IsNullOrWhiteSpace(Model.address.StreetName))
-				 {
-								@Model.address.StreetName<br />
-				 }
+					    <p>
+					        @HtmlHelpers.FormatDateRange(Model.start, Model.end)<br />
+					        <br />
+					        @if (!string.IsNullOrWhiteSpace(Model.location))
+					        {
+					            @Model.location<br />
+					        }
+					        @if (Model.address != null)
+					        {
+					            if (Model.address.StreetNumber != 0)
+					            {
+					                @Model.address.StreetNumber<text> </text>
+					            }
+					            if (!string.IsNullOrWhiteSpace(Model.address.StreetName))
+					            {
+					                @Model.address.StreetName<br />
+					            }
 														
-								@Model.address.City<text> </text>@Model.address.State<text> </text>@Model.address.Country<br />
-								<br />
-			 }
+					            @Model.address.City<text> </text>@Model.address.State<text> </text>@Model.address.Country<br />
+					            <br />
+					        }
 
 
-							@if (Model.callForSpeakersOpens != default(DateTime))
-			 {
-								<text>Call for Speakers : </text><br />
-								@HtmlHelpers.FormatDateRange(Model.callForSpeakersOpens, Model.callForSpeakersCloses)
-			 }
-							<h4><span class="slash">//</span> Connect</h4>
-							@if (!string.IsNullOrWhiteSpace(Model.homepageUrl))
-			 {
-								<img src="~/img/social/website-16x16.png" alt="Website" /> @HtmlHelpers.SimpleLink(Model.homepageUrl, Model.homepageUrl.Replace("http://", ""))<br />
-			 }
+					        @if (Model.callForSpeakersOpens != default(DateTime))
+					        {
+					            <text>Call for Speakers : </text><br />
+					            @HtmlHelpers.FormatDateRange(Model.callForSpeakersOpens, Model.callForSpeakersCloses)
+					        }
+					        <h4><span class="slash">//</span> Connect</h4>
+					        @if (!string.IsNullOrWhiteSpace(Model.homepageUrl))
+					        {
+					            <img src="~/img/social/website-16x16.png" alt="Website" /> @HtmlHelpers.SimpleLink(Model.homepageUrl, Model.homepageUrl.Replace("http://", ""))<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.twitterName))
-			 {
-								<img src="~/img/social/twitter-16x16.png" alt="Twitter Name" /> @HtmlHelpers.TwitterUserLink(Model.twitterName)<br />
-			 }
-							@if (!string.IsNullOrWhiteSpace(Model.twitterHashTag))
-			 {
-								<img src="~/img/social/twitter-16x16.png" alt="Twitter Hashtag" /> @HtmlHelpers.SimpleLink("https://twitter.com/#!/search/" + Model.twitterHashTag.Replace("#", "%23"), Model.twitterHashTag)<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.twitterName))
+					        {
+					            <img src="~/img/social/twitter-16x16.png" alt="Twitter Name" /> @HtmlHelpers.TwitterUserLink(Model.twitterName)<br />
+					        }
+					        @if (!string.IsNullOrWhiteSpace(Model.twitterHashTag))
+					        {
+					            <img src="~/img/social/twitter-16x16.png" alt="Twitter Hashtag" /> @HtmlHelpers.SimpleLink("https://twitter.com/#!/search/" + Model.twitterHashTag.Replace("#", "%23"), Model.twitterHashTag)<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.facebookUrl))
-			 {
-								<img src="~/img/social/facebook-16x16.png" alt="Facebook" /> @HtmlHelpers.SimpleLink(Model.facebookUrl, "Facebook")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.facebookUrl))
+					        {
+					            <img src="~/img/social/facebook-16x16.png" alt="Facebook" /> @HtmlHelpers.SimpleLink(Model.facebookUrl, "Facebook")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.lanyrdUrl))
-			 {
-								<img src="~/img/social/lanyrd-16x16.png" alt="Lanyrd" /> @HtmlHelpers.SimpleLink(Model.lanyrdUrl, "Lanyrd")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.lanyrdUrl))
+					        {
+					            <img src="~/img/social/lanyrd-16x16.png" alt="Lanyrd" /> @HtmlHelpers.SimpleLink(Model.lanyrdUrl, "Lanyrd")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.meetupUrl))
-			 {
-								<img src="~/img/social/meetup-16x16.png" alt="Meetup" /> @HtmlHelpers.SimpleLink(Model.meetupUrl, "Meetup")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.meetupUrl))
+					        {
+					            <img src="~/img/social/meetup-16x16.png" alt="Meetup" /> @HtmlHelpers.SimpleLink(Model.meetupUrl, "Meetup")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.googlePlusUrl))
-			 {
-								<img src="~/img/social/googlePlus-16x16.png" alt="Google Plus" /> @HtmlHelpers.SimpleLink(Model.googlePlusUrl, "Google+")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.googlePlusUrl))
+					        {
+					            <img src="~/img/social/googlePlus-16x16.png" alt="Google Plus" /> @HtmlHelpers.SimpleLink(Model.googlePlusUrl, "Google+")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.vimeoUrl))
-			 {
-								<img src="~/img/social/vimeo-16x16.png" alt="Vimeo" /> @HtmlHelpers.SimpleLink(Model.vimeoUrl, "Vimeo")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.vimeoUrl))
+					        {
+					            <img src="~/img/social/vimeo-16x16.png" alt="Vimeo" /> @HtmlHelpers.SimpleLink(Model.vimeoUrl, "Vimeo")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.youtubeUrl))
-			 {
-								<img src="~/img/social/youtube-16x16.png" alt="Youtube" /> @HtmlHelpers.SimpleLink(Model.youtubeUrl, "YouTube")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.youtubeUrl))
+					        {
+					            <img src="~/img/social/youtube-16x16.png" alt="Youtube" /> @HtmlHelpers.SimpleLink(Model.youtubeUrl, "YouTube")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.githubUrl))
-			 {
-								<img src="~/img/social/github-16x16.png" alt="GitHub" /> @HtmlHelpers.SimpleLink(Model.googlePlusUrl, "Github")<br />
-			 }
+					        @if (!string.IsNullOrWhiteSpace(Model.githubUrl))
+					        {
+					            <img src="~/img/social/github-16x16.png" alt="GitHub" /> @HtmlHelpers.SimpleLink(Model.googlePlusUrl, "Github")<br />
+					        }
 
-							@if (!string.IsNullOrWhiteSpace(Model.linkedInUrl))
-			 {
-								<img src="~/img/social/linkedin-16x16.png" alt="LinkedIn" /> @HtmlHelpers.SimpleLink(Model.linkedInUrl, "LinkedIn")<br />
-			 }
-						</p>
+					        @if (!string.IsNullOrWhiteSpace(Model.linkedInUrl))
+					        {
+					            <img src="~/img/social/linkedin-16x16.png" alt="LinkedIn" /> @HtmlHelpers.SimpleLink(Model.linkedInUrl, "LinkedIn")<br />
+					        }
+					    </p>
+
 						@if (Html.IsAdmin())
-			{
+      {
 							@Html.RouteLink("Edit Conference", "AdminEditConference", new { conferenceSlug = Model.slug }, new { @class = "btn btn-info" })	
 							@Html.RouteLink("Add Session", "AdminAddSession", new { conferenceSlug = Model.slug }, new { @class = "btn" })	
-			}
+      }
 						<br />
 					</div>
 					<!-- /sidebar -->
@@ -284,6 +290,14 @@
 	@Scripts.Render("~/bundles/jqueryUI")
 
 	<script>
+		$(function () {
+			$(document).on("click", "#showHideMySessions", function (e) {
+				e.preventDefault();
+
+				$('td.unscheduled').parent().toggle();
+			});
+		});
+		
 		function toggleSessionOnSchedule(conferenceSlug, sessionSlug, element) {
 			if ($(element).hasClass("icon-star")) {
 				removeSessionFromSchedule(conferenceSlug, sessionSlug, element);
@@ -294,29 +308,32 @@
 
 		function removeSessionFromSchedule(conferenceSlug, sessionSlug, element) {
 			$(element).removeClass("icon-star").removeClass("icon-selected").addClass("icon-exchange");
+			$(element).parent().removeClass("scheduled").addClass("unscheduled");
+			
 			var jqxhr = $.post("@Url.Action("Delete", "Schedule")", { conferenceSlug: conferenceSlug, sessionSlug: sessionSlug }, function () {
-    		})
-						.done(function () {
-							$(element).removeClass("icon-star").removeClass("icon-selected").removeClass("icon-exchange").addClass("icon-star-empty");
-						})
-						.fail(function () { alert("error"); })
-						.always(function () {
-							$(element).removeClass("icon-exchange");
-						});
-			}
+			})
+				.done(function () {
+					$(element).removeClass("icon-star").removeClass("icon-selected").removeClass("icon-exchange").addClass("icon-star-empty");
+				})
+				.fail(function () { alert("error"); })
+				.always(function () {
+					$(element).removeClass("icon-exchange");
+				});
+		}
 
-			function addSessionToSchedule(conferenceSlug, sessionSlug, element) {
-				$(element).removeClass("icon-star-empty").addClass("icon-exchange");
-				var jqxhr = $.post("@Url.Action("Add", "Schedule")", { conferenceSlug: conferenceSlug, sessionSlug: sessionSlug }, function () {
-						})
-						.done(function () {
-							$(element).removeClass("icon-star-empty").removeClass("icon-exchange").addClass("icon-star").addClass("icon-selected");
-						})
-						.fail(function () { alert("error"); })
-						.always(function () {
-							$(element).removeClass("icon-exchange");
-						});
-					}
+		function addSessionToSchedule(conferenceSlug, sessionSlug, element) {
+			$(element).removeClass("icon-star-empty").addClass("icon-exchange");
+			$(element).parent().removeClass("unscheduled").addClass("scheduled");
+			var jqxhr = $.post("@Url.Action("Add", "Schedule")", { conferenceSlug: conferenceSlug, sessionSlug: sessionSlug }, function () {
+			})
+				.done(function () {
+					$(element).removeClass("icon-star-empty").removeClass("icon-exchange").addClass("icon-star").addClass("icon-selected");
+				})
+				.fail(function () { alert("error"); })
+				.always(function () {
+					$(element).removeClass("icon-exchange");
+				});
+		}
 	</script>
 </body>
 </html>

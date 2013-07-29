@@ -1,24 +1,25 @@
-//using Glimpse.AspNet.Extensions;
-//using Glimpse.Core.Extensibility;
+using Glimpse.AspNet.Extensions;
+using Glimpse.Core.Extensibility;
 
-//namespace TekConf.UI.Web
-//{
-//	public class GlimpseSecurityPolicy : IRuntimePolicy
-//	{
-//		public RuntimePolicy Execute(IRuntimePolicyContext policyContext)
-//		{
-//			var httpContext = policyContext.GetHttpContext();
-//			if (httpContext.User != null && httpContext.User.Identity.Name == "RobGibbens")
-//			{
-//				return RuntimePolicy.Off;
-//			}
+namespace TekConf.UI.Web
+{
+	public class GlimpseSecurityPolicy : IRuntimePolicy
+	{
+		public RuntimePolicy Execute(IRuntimePolicyContext policyContext)
+		{
 
-//			return RuntimePolicy.On;
-//		}
+			var httpContext = policyContext.GetHttpContext();
+			if (httpContext.User.Identity.Name.ToLower() != "robgibbens")
+			{
+				return RuntimePolicy.Off;
+			}
 
-//		public RuntimeEvent ExecuteOn
-//		{
-//			get { return RuntimeEvent.EndRequest; }
-//		}
-//	}
-//}
+			return RuntimePolicy.On;
+		}
+
+		public RuntimeEvent ExecuteOn
+		{
+			get { return RuntimeEvent.EndRequest; }
+		}
+	}
+}

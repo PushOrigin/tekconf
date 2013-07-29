@@ -7,25 +7,23 @@ using TekConf.UI.Web.App_Start;
 
 namespace TekConf.UI.Web.Controllers
 {
+	using TekConf.RemoteData.v1;
+
 	public class SpeakerController : Controller
 	{
-		private RemoteDataRepositoryAsync _repository;
+		private readonly IRemoteDataRepository _remoteDataRepository;
 
-		public SpeakerController()
+		public SpeakerController(IRemoteDataRepository remoteDataRepository)
 		{
-			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-
-			_repository = new RemoteDataRepositoryAsync(baseUrl);
+			_remoteDataRepository = remoteDataRepository;
 		}
 
 		[CompressFilter]
 		public async Task<ActionResult> Index(string conferenceSlug, string sessionSlug)
 		{
-			var sessionSpeakersTask = _repository.GetSessionSpeakers(conferenceSlug, sessionSlug);
+			var sessionSpeakers = await _remoteDataRepository.GetSessionSpeakers(conferenceSlug, sessionSlug);
 
-			await sessionSpeakersTask;
-
-			return View(sessionSpeakersTask.Result);
+			return View(sessionSpeakers);
 		}
 
 
@@ -33,13 +31,13 @@ namespace TekConf.UI.Web.Controllers
 		[CompressFilter]
 		public async Task<ActionResult> Detail(string conferenceSlug, string sessionSlug, string speakerSlug)
 		{
-			var speakerTask = _repository.GetSpeaker(conferenceSlug, speakerSlug);
+			var speakerTask = _remoteDataRepository.GetSpeaker(conferenceSlug, speakerSlug);
 			string userName = string.Empty;
 			if (Request.IsAuthenticated)
 			{
 					userName = System.Web.HttpContext.Current.User.Identity.Name;
 			}
-			var conferenceTask = _repository.GetFullConference(conferenceSlug, userName);
+			var conferenceTask = _remoteDataRepository.GetFullConference(conferenceSlug, userName);
 
 			await Task.WhenAll(speakerTask, conferenceTask);
 

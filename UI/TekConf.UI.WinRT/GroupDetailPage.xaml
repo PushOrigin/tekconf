@@ -13,7 +13,6 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="itemsViewSource"
@@ -37,13 +36,13 @@
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Background="#FF556828" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding name}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1"/>
         </Grid>
 
         <!-- Horizontal scrolling grid used in most view states -->
@@ -53,19 +52,22 @@
             AutomationProperties.Name="Items In Group"
             TabIndex="1"
             Grid.Row="1"
+            Background="White"
             Margin="0,-14,0,0"
             Padding="120,0,120,50"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
+            ItemTemplate="{StaticResource LargeSessionListItemTemplate}"
             SelectionMode="None"
             IsItemClickEnabled="True"
             ItemClick="ItemView_ItemClick">
 
             <GridView.Header>
                 <StackPanel Width="480" Margin="0,4,14,0">
-                    <TextBlock Text="{Binding Subtitle}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
-                    <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill"/>
-                    <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
+                    <!--<TextBlock Text="{Binding name}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>-->
+                    <Border Background="White">
+                        <Image Source="{Binding imageUrl}" Height="260" Margin="10,0" Stretch="None"/>
+                    </Border>
+                    <TextBlock Text="{Binding description}" Margin="0,15,18,0" Style="{StaticResource ConferenceDetailDescriptionBodyTextStyle}" Foreground="Black" />
                 </StackPanel>
             </GridView.Header>
             <GridView.ItemContainerStyle>
@@ -82,10 +84,11 @@
             AutomationProperties.Name="Items In Group"
             TabIndex="1"
             Grid.Row="1"
+            Background="White"
             Visibility="Collapsed"
             Padding="10,0,0,60"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard80ItemTemplate}"
+            ItemTemplate="{StaticResource SmallSessionListItemTemplate}"
             SelectionMode="None"
             IsItemClickEnabled="True"
             ItemClick="ItemView_ItemClick">

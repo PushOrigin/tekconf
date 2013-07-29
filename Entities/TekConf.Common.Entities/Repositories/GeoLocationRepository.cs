@@ -1,21 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
-using TekConf.UI.Api;
 
 namespace TekConf.Common.Entities.Repositories
 {
-	public class GeoLocationRepository : IRepository<GeoLocationEntity>
-	{
-		private readonly IConfiguration _configuration;
+    public interface IGeoLocationRepository : IRepository<GeoLocationEntity>
+    {
+        
+    }
 
-		public GeoLocationRepository(IConfiguration configuration)
+    public class GeoLocationRepository : IGeoLocationRepository
+	{
+		private readonly IEntityConfiguration _entityConfiguration;
+
+		public GeoLocationRepository(IEntityConfiguration entityConfiguration)
 		{
-			_configuration = configuration;
+			this._entityConfiguration = entityConfiguration;
 			CreateIndexes();
 		}
 
@@ -59,7 +61,7 @@ namespace TekConf.Common.Entities.Repositories
 			{
 				if (_localServer == null)
 				{
-					var mongoServer = _configuration.MongoServer;
+					var mongoServer = this._entityConfiguration.MongoServer;
 					_localServer = MongoServer.Create(mongoServer);
 				}
 

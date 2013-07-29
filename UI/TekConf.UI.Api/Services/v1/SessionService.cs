@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using AutoMapper;
-using FluentMongo.Linq;
 using ServiceStack.CacheAccess;
 using ServiceStack.Common.Web;
 using TekConf.Common.Entities;
@@ -20,17 +19,17 @@ namespace TekConf.UI.Api.Services.v1
 	{
 		public ICacheClient CacheClient { get; set; }
 		private ITinyMessengerHub _hub;
-		private readonly IConfiguration _configuration;
+		private readonly IEntityConfiguration _configuration;
 
-		private readonly IRepository<ConferenceEntity> _conferenceRepository;
+		private readonly IConferenceRepository _conferenceRepository;
 
-		static HttpError ConferenceNotFound = HttpError.NotFound("Conference not found") as HttpError;
-		static HashSet<string> NonExistingConferences = new HashSet<string>();
+		static readonly HttpError ConferenceNotFound = HttpError.NotFound("Conference not found") as HttpError;
+		static readonly HashSet<string> NonExistingConferences = new HashSet<string>();
 
-		static HttpError SessionNotFound = HttpError.NotFound("Session not found") as HttpError;
-		static HashSet<string> NonExistingSessions = new HashSet<string>();
+		static readonly HttpError SessionNotFound = HttpError.NotFound("Session not found") as HttpError;
+		static readonly HashSet<string> NonExistingSessions = new HashSet<string>();
 
-		public SessionService(ITinyMessengerHub hub, IConfiguration configuration, IRepository<ConferenceEntity> conferenceRepository)
+		public SessionService(ITinyMessengerHub hub, IEntityConfiguration configuration, IConferenceRepository conferenceRepository)
 		{
 			_hub = hub;
 			_configuration = configuration;
@@ -74,16 +73,14 @@ namespace TekConf.UI.Api.Services.v1
 
 		public object Put(AddSession request)
 		{
-			var conference = _conferenceRepository.AsQueryable().FirstOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
-
-			var session = conference.sessions.FirstOrDefault(s => s.slug.ToLower() == request.slug.ToLower());
-			session.TrimAllProperties();
-			Mapper.Map<AddSession, SessionEntity>(request, session);
-
-			conference.Save();
+			var session = Mapper.Map<AddSession, SessionEntity>(request);
+			var sessionEntity = _conferenceRepository.SaveSession(request.conferenceSlug, request.slug, session);
 			this.CacheClient.FlushAll();
 
-			var sessionDto = Mapper.Map<SessionEntity, SessionDto>(session);
+			var conference = _conferenceRepository.AsQueryable().First(x => x.slug == request.conferenceSlug);
+
+
+			var sessionDto = Mapper.Map<SessionEntity, SessionDto>(sessionEntity);
 			sessionDto.conferenceSlug = request.conferenceSlug;
 			sessionDto.conferenceName = conference.name;
 			return sessionDto;
@@ -116,7 +113,7 @@ namespace TekConf.UI.Api.Services.v1
 										.AsQueryable()
 									//.Where(s => s.slug.ToLower() == request.sessionSlug.ToLower())
 									//.Where(c => c.isLive)
-										.SingleOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
+										.FirstOrDefault(c => c.slug.ToLower() == request.conferenceSlug.ToLower());
 
 								if (conference.IsNull())
 								{
