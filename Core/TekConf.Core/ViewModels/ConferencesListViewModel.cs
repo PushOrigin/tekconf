@@ -27,6 +27,10 @@ namespace TekConf.Core.ViewModels
 		private MvxSubscriptionToken _authenticationMessageToken;
 		private MvxSubscriptionToken _favoritesUpdatedMessageToken;
 
+		public ConferencesListViewModel()
+		{
+			
+		}
 		public ConferencesListViewModel(IRemoteDataService remoteDataService,
 																		ILocalConferencesRepository localConferencesRepository,
 																		IAnalytics analytics,
@@ -252,7 +256,10 @@ namespace TekConf.Core.ViewModels
 		{
 			get
 			{
-				return new MvxCommand<ConferencesListViewDto>(conference => ShowViewModel<ConferenceDetailViewModel>(new {slug = conference.slug}));
+				return new MvxCommand<ConferencesListViewDto>(conference => 
+					ShowViewModel<ConferenceDetailViewModel>(new {slug = conference.slug}
+					)
+					);
 			}
 		}
 
