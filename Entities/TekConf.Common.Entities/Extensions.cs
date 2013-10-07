@@ -5,14 +5,23 @@ using System.Threading.Tasks;
 
 namespace TekConf.Common.Entities
 {
-	public static class Extensions
+    using AutoMapper;
+
+    public static class Extensions
 	{
 		public static bool IsNotNull(this object value)
 		{
 			return value != null;
 		}
 
-		public static Task<List<T>> ToListAsync<T>(this IQueryable<T> list)
+        public static Destination Map<Destination>(this object source)
+	    {
+            var result = Mapper.Map<Destination>(source);
+
+            return result;
+	    }
+
+		public static Task<List<T>> ToGenericListAsync<T>(this IQueryable<T> list)
 		{
 			return Task.Run(() => list.ToList());
 		}

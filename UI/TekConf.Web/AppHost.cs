@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Common.Logging;
 using ServiceStack.CacheAccess;
 using ServiceStack.CacheAccess.Providers;
-using ServiceStack.Mvc;
 using ServiceStack.ServiceInterface;
 using ServiceStack.WebHost.Endpoints;
 using TekConf.Common.Entities;
@@ -22,7 +21,9 @@ namespace TekConf.Web
 	using Microsoft.AspNet.Identity.EntityFramework;
 	using Microsoft.AspNet.Identity.Owin;
 
-	public class AppHost : AppHostBase
+	using ServiceStack.Mvc;
+
+    public class AppHost : AppHostBase
 	{
 		public AppHost()
 			: base("TekConf", typeof(ConferencesController).Assembly) { }
