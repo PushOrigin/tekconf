@@ -9,6 +9,10 @@ using System.Web.Routing;
 
 namespace TekConf.Web
 {
+    using System.Data.Entity;
+
+    using TekConf.Web.Controllers.API;
+
     // Note: For instructions on enabling IIS7 classic mode, 
     // visit http://go.microsoft.com/fwlink/?LinkId=301868
     public class MvcApplication : System.Web.HttpApplication
@@ -27,6 +31,9 @@ namespace TekConf.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            Database.SetInitializer<TekConfContext>(new DropCreateDatabaseIfModelChanges<TekConfContext>());
+
         }
     }
 }
