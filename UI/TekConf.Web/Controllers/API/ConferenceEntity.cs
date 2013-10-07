@@ -129,10 +129,10 @@
         public int ConferenceId { get; set; }
         public AddressEntity Address { get; set; }
 
-        public DateTime CallForSpeakersCloses { get; set; }
-        public DateTime CallForSpeakersOpens { get; set; }
-        public DateTime DateAdded { get; set; }
-        public DateTime DatePublished { get; private set; }
+        public DateTime? CallForSpeakersCloses { get; set; }
+        public DateTime? CallForSpeakersOpens { get; set; }
+        public DateTime? DateAdded { get; set; }
+        public DateTime? DatePublished { get; private set; }
         public int DefaultTalkLength { get; set; }
 
         public string Description
@@ -298,8 +298,8 @@
         }
 
         public double[] Position { get; set; }
-        public DateTime RegistrationCloses { get; set; }
-        public DateTime RegistrationOpens { get; set; }
+        public DateTime? RegistrationCloses { get; set; }
+        public DateTime? RegistrationOpens { get; set; }
         public List<string> Rooms { get; set; }
         public List<string> SessionTypes { get; set; }
 

@@ -1,15 +1,17 @@
 ﻿namespace TekConf.Web.Controllers.API
 {
-    //using System.Collections.Generic;
-    ///using System.Data.Entity;
-    //using System.Threading.Tasks;
-    //using System.Web.Http;
+
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
 
     using AutoMapper;
+
+    using Ploeh.AutoFixture;
+
+    using TekConf.Common.Entities;
 
     public class TekConfContext : System.Data.Entity.DbContext
     {
@@ -24,6 +26,7 @@
 
     public class Conference
     {
+        public string Slug { get; set; }
     }
 
     public class ConferencesController : ApiController
@@ -34,13 +37,14 @@
 
         public async Task<IEnumerable<Conference>> Get()
         {
-            List<ConferenceEntity> conferenceEntities;
+            //List<ConferenceEntity> conferenceEntities;
+            IEnumerable<Conference> conferences;
             using (var db = new TekConfContext())
             {
-                conferenceEntities = await db.Conferences.ToListAsync();
+                conferences = await db.Conferences.OrderBy(x => x.Slug).Take(1000).Select(x => new Conference { Slug = x.Slug }).ToListAsync();
             }
 
-            var conferences = Mapper.Map<IEnumerable<Conference>>(conferenceEntities);
+            //var conferences = Mapper.Map<IEnumerable<Conference>>(conferenceEntities);
             return conferences;
         }
 
@@ -49,8 +53,18 @@
             return "value";
         }
 
-        public void Post([FromBody] string value)
+        public async Task<int> Post([FromBody] Conference value)
         {
+            var fixture = new Fixture();
+            int returnValue;
+            using (var db = new TekConfContext())
+            {
+                var conference = new ConferenceEntity() { Address = new AddressEntity(), Slug = fixture.Create<string>() };
+                db.Conferences.Add(conference);
+                returnValue = await db.SaveChangesAsync();
+            }
+
+            return returnValue;
         }
 
         public void Put(int id, [FromBody] string value)

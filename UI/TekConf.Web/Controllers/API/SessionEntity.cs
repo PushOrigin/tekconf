@@ -32,8 +32,8 @@
             set { _title = value.IsNullOrWhiteSpace() ? value : value.Trim(); }
         }
 
-        private DateTime _startDate;
-        public DateTime Start
+        private DateTime? _startDate;
+        public DateTime? Start
         {
             get { return _startDate; }
             set
@@ -42,7 +42,7 @@
                 {
                     if (StartDateChanged != null)
                     {
-                        var args = new StartDateChangedArgs(this.Slug, _startDate, value);
+                        //var args = new StartDateChangedArgs(this.Slug, _startDate, value);
 
                         //StartDateChanged(this, args);
                     }
@@ -51,8 +51,8 @@
             }
         }
 
-        private DateTime _endDate;
-        public DateTime End
+        private DateTime? _endDate;
+        public DateTime? End
         {
             get { return _endDate; }
             set
@@ -61,7 +61,7 @@
                 {
                     if (EndDateChanged != null)
                     {
-                        var args = new EndDateChangedArgs(this.Slug, _startDate, value);
+                        //var args = new EndDateChangedArgs(this.Slug, _startDate, value);
 
                         //EndDateChanged(this, args);
                     }
