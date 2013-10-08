@@ -10,6 +10,8 @@ namespace TekConf.Web
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            config.Formatters.RemoveAt(0);
+            config.Formatters.Insert(0, new ServiceStackTextFormatter());
 
             // Web API routes
             config.Routes.MapHttpRoute(
@@ -17,6 +19,7 @@ namespace TekConf.Web
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
         }
     }
 }

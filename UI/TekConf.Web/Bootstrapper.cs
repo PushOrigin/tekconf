@@ -34,7 +34,9 @@ namespace TekConf.Web
 
 		public void BootstrapAutomapper()
 		{
-            Mapper.CreateMap<Controllers.API.ConferenceEntity, TekConf.Web.Controllers.API.Conference>();
+            Mapper.CreateMap<Controllers.API.ConferenceEntity, Controllers.API.ConferenceApiModel>();
+		    Mapper.CreateMap<FullConferenceDto, Controllers.API.ConferenceEntity>();
+            Mapper.CreateMap<ConferenceEntity, Controllers.API.ConferenceEntity>().ForMember(x => x.Sessions, y=>y.Ignore()).ForSourceMember(x => x.sessions, y => y.Ignore());
 
 			Mapper.CreateMap<FullConferenceDto, CreateConference>()
 					.ForMember(dest => dest.latitude, opt => opt.ResolveUsing<LatitudeResolver>())

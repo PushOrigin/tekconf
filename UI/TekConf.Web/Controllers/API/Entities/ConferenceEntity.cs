@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Data.SqlTypes;
     using System.Linq;
 
     using MongoDB.Bson.Serialization.Attributes;
@@ -15,79 +16,54 @@
     public class ConferenceEntity : IEntity
     {
         private readonly List<ConferenceCreatedMessage> _conferenceCreatedMessages;
-
         private readonly List<ConferenceEndDateChangedMessage> _conferenceEndDateChangedMessages;
-
         private readonly List<ConferenceLocationChangedMessage> _conferenceLocationChangedMessages;
-
         private readonly List<ConferencePublishedMessage> _conferencePublishedMessages;
-
         private readonly List<ConferenceStartDateChangedMessage> _conferenceStartDateChangedMessages;
-
         private readonly List<ConferenceUpdatedMessage> _conferenceUpdatedMessages;
-
         private readonly ITinyMessengerHub _hub;
-
         private readonly IConferenceRepository _repository;
-
         private readonly List<SessionAddedMessage> _sessionAddedMessages;
-
         private readonly List<SessionEndDateChangedMessage> _sessionEndDateChangedMessages;
-
         private readonly List<SessionRemovedMessage> _sessionRemovedMessages;
-
         private readonly List<SessionRoomChangedMessage> _sessionRoomChangedMessages;
-
         private readonly List<SessionStartDateChangedMessage> _sessionStartDateChangedMessages;
-
         private readonly List<SpeakerAddedMessage> _speakerAddedMessages;
-
         private readonly List<SpeakerRemovedMessage> _speakerRemovedMessages;
-
         private string _description;
-
         private DateTime? _end;
-
         private string _facebookUrl;
-
         private string _githubUrl;
-
         private string _googlePlusUrl;
-
         private string _homepageUrl;
-
         private string _imageUrl;
-
         private bool _isInitializingFromBson;
-
         private string _lanyrdUrl;
-
         private string _linkedInUrl;
-
         private string _location;
-
         private string _meetupUrl;
-
         private string _name;
-
         private IList<SessionEntity> _sessions = new List<SessionEntity>();
-
         private DateTime? _start;
-
         private IList<string> _subjects = new List<string>();
-
         private string _tagLine;
-
         private IList<string> _tags = new List<string>();
-
         private string _twitterHashTag;
-
         private string _twitterName;
-
         private string _vimeoUrl;
-
         private string _youtubeUrl;
 
+        private DateTime? _registrationCloses;
+
+        private DateTime? _registrationOpens;
+
+        private DateTime? _callForSpeakersCloses;
+
+        private DateTime? _callForSpeakersOpens;
+
+        private DateTime? _dateAdded;
+
+        private DateTime? _datePublished;
 
         public string Name
         {
@@ -109,16 +85,21 @@
             }
             set
             {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
                 if (!_isInitializingFromBson && IsSaved && _start != value)
                 {
-                    _conferenceStartDateChangedMessages.Add(
-                        new ConferenceStartDateChangedMessage
-                        {
-                            ConferenceSlug = Slug,
-                            ConferenceName = this.Name,
-                            OldValue = _start,
-                            NewValue = value
-                        });
+                    //_conferenceStartDateChangedMessages.Add(
+                    //    new ConferenceStartDateChangedMessage
+                    //    {
+                    //        ConferenceSlug = Slug,
+                    //        ConferenceName = this.Name,
+                    //        OldValue = _start,
+                    //        NewValue = value
+                    //    });
                 }
 
                 _start = value;
@@ -129,10 +110,74 @@
         public int ConferenceId { get; set; }
         public AddressEntity Address { get; set; }
 
-        public DateTime? CallForSpeakersCloses { get; set; }
-        public DateTime? CallForSpeakersOpens { get; set; }
-        public DateTime? DateAdded { get; set; }
-        public DateTime? DatePublished { get; private set; }
+        public DateTime? CallForSpeakersCloses
+        {
+            get
+            {
+                return _callForSpeakersCloses;
+            }
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
+                _callForSpeakersCloses = value;
+            }
+        }
+
+        public DateTime? CallForSpeakersOpens
+        {
+            get
+            {
+                return _callForSpeakersOpens;
+            }
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
+                _callForSpeakersOpens = value;
+            }
+        }
+
+        public DateTime? DateAdded
+        {
+            get
+            {
+                return _dateAdded;
+            }
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
+                _dateAdded = value;
+            }
+        }
+
+        public DateTime? DatePublished
+        {
+            get
+            {
+                return _datePublished;
+            }
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
+                _datePublished = value;
+            }
+        }
+
         public int DefaultTalkLength { get; set; }
 
         public string Description
@@ -157,16 +202,20 @@
             }
             set
             {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
                 if (!_isInitializingFromBson && IsSaved && _end != value)
                 {
-                    _conferenceEndDateChangedMessages.Add(
-                        new ConferenceEndDateChangedMessage
-                        {
-                            ConferenceName = this.Name,
-                            ConferenceSlug = Slug,
-                            OldValue = _end,
-                            NewValue = value
-                        });
+                    //_conferenceEndDateChangedMessages.Add(
+                    //    new ConferenceEndDateChangedMessage
+                    //    {
+                    //        ConferenceName = this.Name,
+                    //        ConferenceSlug = Slug,
+                    //        OldValue = _end,
+                    //        NewValue = value
+                    //    });
                 }
 
                 _end = value;
@@ -271,14 +320,14 @@
             {
                 if (!_isInitializingFromBson && IsSaved && _location != value)
                 {
-                    _conferenceLocationChangedMessages.Add(
-                        new ConferenceLocationChangedMessage
-                        {
-                            ConferenceSlug = Slug,
-                            ConferenceName = this.Name,
-                            OldValue = _location,
-                            NewValue = value
-                        });
+                    //_conferenceLocationChangedMessages.Add(
+                    //    new ConferenceLocationChangedMessage
+                    //    {
+                    //        ConferenceSlug = Slug,
+                    //        ConferenceName = this.Name,
+                    //        OldValue = _location,
+                    //        NewValue = value
+                    //    });
                 }
 
                 _location = value.IsNullOrWhiteSpace() ? value : value.Trim();
@@ -298,8 +347,41 @@
         }
 
         public double[] Position { get; set; }
-        public DateTime? RegistrationCloses { get; set; }
-        public DateTime? RegistrationOpens { get; set; }
+
+        public DateTime? RegistrationCloses
+        {
+            get
+            {
+                return _registrationCloses;
+            }
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
+                _registrationCloses = value;
+            }
+        }
+
+        public DateTime? RegistrationOpens
+        {
+            get
+            {
+                return _registrationOpens;
+            }
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    value = null;
+                }
+
+                _registrationOpens = value;
+            }
+        }
+
         public List<string> Rooms { get; set; }
         public List<string> SessionTypes { get; set; }
 

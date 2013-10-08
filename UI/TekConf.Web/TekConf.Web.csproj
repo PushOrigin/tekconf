@@ -281,9 +281,12 @@
     <Compile Include="Controllers\AdminSessionController.cs" />
     <Compile Include="Controllers\AdminSpeakerController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
-    <Compile Include="Controllers\API\ConferenceEntity.cs" />
-    <Compile Include="Controllers\API\ConferencesController.cs" />
-    <Compile Include="Controllers\API\SessionEntity.cs" />
+    <Compile Include="Controllers\API\Models\ConferenceApiModel.cs" />
+    <Compile Include="Controllers\API\Entities\ConferenceEntity.cs" />
+    <Compile Include="Controllers\API\Controllers\ConferencesController.cs" />
+    <Compile Include="Controllers\API\Controllers\IConferencesController.cs" />
+    <Compile Include="Controllers\API\Entities\SessionEntity.cs" />
+    <Compile Include="Controllers\API\Context\TekConfContext.cs" />
     <Compile Include="Controllers\AppsController.cs" />
     <Compile Include="Controllers\ConferencesController.cs" />
     <Compile Include="Controllers\ConferencesFilter.cs" />
@@ -301,6 +304,8 @@
     <Compile Include="Controllers\SpeakersController.cs" />
     <Compile Include="EventsHub.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="FunqHttpControllerActivator.cs" />
+    <Compile Include="FunqWebApiDependencyResolver.cs" />
     <Compile Include="ga.ashx.cs">
       <DependentUpon>ga.ashx</DependentUpon>
     </Compile>
@@ -314,6 +319,7 @@
     <Compile Include="Models\ApiDocumentation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceStackTextFormatter.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AddPresentationHistoryViewModel.cs" />
     <Compile Include="ViewModels\AddPresentationViewModel.cs" />

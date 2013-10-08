@@ -11,17 +11,25 @@ using TekConf.Common.Entities.Repositories;
 using TekConf.RemoteData.v1;
 using TekConf.UI.Api;
 using TekConf.UI.Api.Services.v1;
-using TekConf.Web.Controllers;
+
 using TinyMessenger;
 
 namespace TekConf.Web
 {
-	using Funq;
+    using System.Web.Http;
+    using System.Web.Http.Dispatcher;
+
+    using Funq;
 
 	using Microsoft.AspNet.Identity.EntityFramework;
 	using Microsoft.AspNet.Identity.Owin;
 
 	using ServiceStack.Mvc;
+
+    using TekConf.Web.Controllers.API;
+
+	using ConferenceEntity = TekConf.Common.Entities.ConferenceEntity;
+	using ConferencesController = TekConf.Web.Controllers.ConferencesController;
 
     public class AppHost : AppHostBase
 	{
@@ -37,6 +45,7 @@ namespace TekConf.Web
 			container.Register<IEntityConfiguration>(entityConfiguration);
 			var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
 
+		    container.Register<ITekConfContext>(c => new TekConfContext()).ReusedWithin(ReuseScope.Request);
 			container.Register<IRemoteDataRepository>(c => new RemoteDataRepository(baseUrl));
 
 			container.Register<IConferenceRepository>(new ConferenceRepository(entityConfiguration));
@@ -70,10 +79,10 @@ namespace TekConf.Web
 			var hub = new TinyMessengerHub();
 			container.Register<ITinyMessengerHub>(hub);
 			container.Register<IConferencesService>(new ConferencesService(container.Resolve<ITinyMessengerHub>(), 
-																																			container.Resolve<IConferenceRepository>(), 
-																																			container.Resolve<IRepository<GeoLocationEntity>>(),
-																																			container.Resolve<IRepository<ScheduleEntity>>(), 
-																																			container.Resolve<IEntityConfiguration>()));
+															container.Resolve<IConferenceRepository>(), 
+															container.Resolve<IRepository<GeoLocationEntity>>(),
+															container.Resolve<IRepository<ScheduleEntity>>(), 
+															container.Resolve<IEntityConfiguration>()));
 
 			var subscriptions = new HubSubscriptions(hub,
 				container.Resolve<IRepository<SessionRoomChangedMessage>>(),
@@ -103,12 +112,18 @@ namespace TekConf.Web
 				new SessionFactory(c.Resolve<ICacheClient>()));
 
 			container.Register(LogManager.GetLogger(typeof(AppHost)));
+            container.Register(c => new Controllers.API.ConferencesController(container.Resolve<ITekConfContext>(), container.Resolve<IConferenceRepository>())).ReusedWithin(ReuseScope.Request);
 
 			var bootstrapper = new Bootstrapper(container);
 			bootstrapper.BootstrapAutomapper();
 			bootstrapper.BootstrapMongoDb();
 
+            container.Register<IHttpControllerActivator>(new FunqHttpControllerActivator(container));
 			ControllerBuilder.Current.SetControllerFactory(new FunqControllerFactory(container));
+		    var resolver = new FunqWebApiDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = resolver;
+
 		}
+
 	}
 }
