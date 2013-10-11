@@ -48,10 +48,10 @@ namespace TekConf.Core.ViewModels
 			_favoritesUpdatedMessageToken = _messenger.Subscribe<FavoriteConferencesUpdatedMessage>(OnFavoritesUpdatedMessage);
 		}
 
-		public async void Init(string searchTerm)
+		public async void Init(Parameters parameters)
 		{
-			var allConferences = await StartGetAll();
-			var favorites = await StartGetFavorites();
+			var allConferences = await StartGetAll(isRefreshing: parameters.IsRefreshing);
+			var favorites = await StartGetFavorites(isRefreshing: parameters.IsRefreshing);
 
 			InvokeOnMainThread(() =>
 				{
@@ -191,7 +191,7 @@ namespace TekConf.Core.ViewModels
 			{
 				_isLoadingConferences = value;
 				IsAuthenticated = _authentication.IsAuthenticated;
-				RaisePropertyChanged(() => IsLoadingConferences);
+				RaisePropertyChanged("IsLoadingConferences");
 			}
 		}
 
@@ -211,9 +211,24 @@ namespace TekConf.Core.ViewModels
 
 		public bool IsLoadingFavorites { get; set; }
 		public bool IsAuthenticated { get; set; }
-		public List<ConferencesListViewDto> Conferences { get; set; }
+
+		public List<ConferencesListViewDto> Conferences
+		{
+			get
+			{
+				return _conferences;
+			}
+			set
+			{
+				_conferences = value;
+				RaisePropertyChanged("Conferences");
+			}
+		}
+
 		public FullConferenceDto SelectedFavorite { get; set; }
 		private List<ConferencesListViewDto> _favorites;
+
+		private List<ConferencesListViewDto> _conferences;
 
 		public List<ConferencesListViewDto> Favorites
 		{
@@ -224,30 +239,42 @@ namespace TekConf.Core.ViewModels
 			set
 			{
 				_favorites = value;
-				RaisePropertyChanged(() => Favorites);
-				RaisePropertyChanged(() => ShouldAddFavorites);
+				RaisePropertyChanged("Favorites");
+				RaisePropertyChanged("ShouldAddFavorites");
 				IsLoadingFavorites = false;
 			}
 		}
 
 		public ICommand ShowSettingsCommand { get { return new MvxCommand(() => ShowViewModel<SettingsViewModel>()); } }
 		public ICommand ShowSearchCommand { get { return new MvxCommand(() => ShowViewModel<ConferencesSearchViewModel>()); } }
-		public ICommand ShowDetailCommand { get { return new MvxCommand<string>(slug => ShowViewModel<ConferenceDetailViewModel>(new { slug })); } }
+
+		public ICommand ShowDetailCommand
+		{
+			get
+			{
+				return new MvxCommand<ConferencesListViewDto>(conference => ShowViewModel<ConferenceDetailViewModel>(new {slug = conference.slug}));
+			}
+		}
 
 		private void OnFavoritesUpdatedMessage(FavoriteConferencesUpdatedMessage message)
 		{
 			DisplayFavoritesConferences(message.Conferences);
 		}
 
-		private async void OnAuthenticateMessage(AuthenticationMessage message)
+		private void OnAuthenticateMessage(AuthenticationMessage message)
 		{
 			if (message != null && !string.IsNullOrWhiteSpace(message.UserName))
 			{
 				_authentication.UserName = message.UserName;
 				IsAuthenticated = true;
-				var favorites = await StartGetFavorites(true);
-				InvokeOnMainThread(() => DisplayFavoritesConferences(favorites));
+				ShowViewModel<ConferencesListViewModel>(new ConferencesListViewModel.Parameters() { IsRefreshing = true } );
 			}
 		}
+
+		public class Parameters
+		{
+			public bool IsRefreshing { get; set; }
+		}
 	}
+
 }

@@ -97,7 +97,7 @@ namespace TekConf.UI.WinStore.Views
 			var conference = e.ClickedItem as ConferencesListViewDto;
 			if (vm != null && conference != null)
 			{
-				vm.ShowDetailCommand.Execute(conference.slug);
+				vm.ShowDetailCommand.Execute(conference);
 			}
 		}
 
@@ -129,21 +129,6 @@ namespace TekConf.UI.WinStore.Views
 			}
 		}
 
-		private void Settings_OnClick(object sender, EventArgs e)
-		{
-			var vm = DataContext as ConferencesListViewModel;
-			if (vm != null) vm.ShowSettingsCommand.Execute(null);
-		}
-
-		private void Refresh_OnClick(object sender, EventArgs e)
-		{
-			var vm = DataContext as ConferencesListViewModel;
-			if (vm != null)
-			{
-				vm.Refresh();
-			}
-		}
-
 		private void Search_OnClick(object sender, EventArgs e)
 		{
 			var vm = DataContext as ConferencesListViewModel;
@@ -154,6 +139,22 @@ namespace TekConf.UI.WinStore.Views
 		private void GoBack(object sender, RoutedEventArgs e)
 		{
 			//TODO : 
+		}
+
+		private void OnRefresh(object sender, RoutedEventArgs e)
+		{
+			var vm = DataContext as ConferencesListViewModel;
+			if (vm != null)
+			{
+				vm.Refresh();
+			}
+		}
+
+		private void OnSettings(object sender, RoutedEventArgs e)
+		{
+			var vm = DataContext as ConferencesListViewModel;
+			if (vm != null) 
+				vm.ShowSettingsCommand.Execute(null);
 		}
 	}
 }

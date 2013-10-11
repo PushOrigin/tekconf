@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="bee3d88e-cc8c-44f1-821f-6bee3d44a535" Publisher="CN=Rob" Version="1.0.0.0" />
+  <Identity Name="bee3d88e-cc8c-44f1-821f-6bee3d44a535" Publisher="CN=Rob" Version="1.0.0.3" />
   <Properties>
     <DisplayName>TekConf.UI.WinStore</DisplayName>
     <PublisherDisplayName>Rob</PublisherDisplayName>
@@ -16,8 +16,8 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TekConf.UI.WinStore.App">
       <VisualElements DisplayName="TekConf" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="TekConf.UI.WinStore" ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="allLogos" />
-        <SplashScreen Image="Assets\SplashScreen.png" />
+        <DefaultTile ShowName="allLogos" ShortName="TekConf" />
+        <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#81994D" />
       </VisualElements>
     </Application>
   </Applications>

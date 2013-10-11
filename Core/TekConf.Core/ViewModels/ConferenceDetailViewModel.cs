@@ -16,6 +16,9 @@ namespace TekConf.Core.ViewModels
 	using System.Threading.Tasks;
 
 	using Cirrious.MvvmCross.Plugins.File;
+	using Cirrious.MvvmCross.Plugins.Sqlite;
+
+	using TekConf.Core.Entities;
 
 	public class ConferenceDetailViewModel : MvxViewModel
 	{
@@ -28,9 +31,12 @@ namespace TekConf.Core.ViewModels
 		private readonly IMessageBox _messageBox;
 		private readonly INetworkConnection _networkConnection;
 
-		public ConferenceDetailViewModel(IRemoteDataService remoteDataService, ILocalConferencesRepository localConferencesRepository, 
+		private readonly ISQLiteConnection _sqLiteConnection;
+
+		public ConferenceDetailViewModel(IRemoteDataService remoteDataService, 
+		                                 ILocalConferencesRepository localConferencesRepository, 
 			IAnalytics analytics, IAuthentication authentication, IMvxMessenger messenger, IMvxFileStore fileStore, 
-			IMessageBox messageBox, INetworkConnection networkConnection)
+			IMessageBox messageBox, INetworkConnection networkConnection, ISQLiteConnection sqLiteConnection)
 		{
 			_remoteDataService = remoteDataService;
 			_localConferencesRepository = localConferencesRepository;
@@ -40,6 +46,7 @@ namespace TekConf.Core.ViewModels
 			_fileStore = fileStore;
 			_messageBox = messageBox;
 			_networkConnection = networkConnection;
+			_sqLiteConnection = sqLiteConnection;
 		}
 
 		public async void Init(string slug)
@@ -97,8 +104,45 @@ namespace TekConf.Core.ViewModels
 			return conferenceDto;
 		}
 
+		public IEnumerable<SessionEntity> Sessions { get; set; }
+
+		public List<FullSessionGroup> SessionsByTime
+		{
+			get
+			{
+				if (Sessions == null)
+					return new List<FullSessionGroup>();
+
+				var fullSessions = Sessions.Select(session => new FullSessionDto(session)).ToList();
+				var grouped = fullSessions
+												.OrderBy(x => x.start)
+												.GroupBy(session => session.start.ToString("ddd, h:mm tt"))
+												.Select(slot => new FullSessionGroup(
+																				slot.Key,
+																				slot.OrderBy(session => session.start).ThenBy(t => t.title)));
+
+				var groupList = grouped.ToList();
+				return groupList;
+			}
+		}
+
 		private void Success(ConferenceDetailViewDto conference)
 		{
+			var conferenceEntity = _localConferencesRepository.Get(conference.slug);
+			if (conferenceEntity != null)
+			{
+				IEnumerable<SessionEntity> sessions = conferenceEntity.Sessions(_sqLiteConnection);
+				if (sessions != null)
+				{
+					InvokeOnMainThread(
+						() =>
+						{
+							Sessions = sessions;
+						});
+
+				}
+			}
+
 			InvokeOnMainThread(() => DisplayConference(conference));
 		}
 
@@ -146,9 +190,9 @@ namespace TekConf.Core.ViewModels
 					if (value != null)
 						PageTitle = value.name;
 
-					RaisePropertyChanged(() => Conference);
-					RaisePropertyChanged(() => ConnectItems);
-					RaisePropertyChanged(() => HasConnectItems);
+					RaisePropertyChanged("Conference");
+					RaisePropertyChanged("ConnectItems");
+					RaisePropertyChanged("HasConnectItems");
 				}
 			}
 		}
@@ -259,87 +303,84 @@ namespace TekConf.Core.ViewModels
 
 		private async void AddConferenceToFavorites()
 		{
-			if (_authentication.IsAuthenticated)
-			{
-				var addSuccess = new Action<ScheduleDto>(dto =>
+			if (_authentication.IsAuthenticated) {
+				var addSuccess = new Action<ScheduleDto> (dto =>
 				{
 					Conference.isAddedToSchedule = true;
-					RaisePropertyChanged(() => Conference);
-					_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
+					RaisePropertyChanged ("Conference");
+					_messenger.Publish (new RefreshConferenceFavoriteIconMessage (this));
 				});
 
-				var addError = new Action<Exception>(ex =>
+				var addError = new Action<Exception> (ex =>
 				{
 					Conference.isAddedToSchedule = false;
-					RaisePropertyChanged(() => Conference);
-					_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
+					RaisePropertyChanged ("Conference");
+					_messenger.Publish (new RefreshConferenceFavoriteIconMessage (this));
 				});
 
-				var removeSuccess = new Action<ScheduleDto>(dto =>
+				var removeSuccess = new Action<ScheduleDto> (dto =>
 				{
 					Conference.isAddedToSchedule = false;
-					RaisePropertyChanged(() => Conference);
-					_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
+					RaisePropertyChanged ("Conference");
+					_messenger.Publish (new RefreshConferenceFavoriteIconMessage (this));
 				});
 
-				var removeError = new Action<Exception>(ex =>
+				var removeError = new Action<Exception> (ex =>
 				{
 					Conference.isAddedToSchedule = true;
-					RaisePropertyChanged(() => Conference);
-					_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
+					RaisePropertyChanged ("Conference");
+					_messenger.Publish (new RefreshConferenceFavoriteIconMessage (this));
 				});
 
-				var conference = _localConferencesRepository.Get(Conference.slug);
+				var conference = _localConferencesRepository.Get (Conference.slug);
 
-				if (Conference.isAddedToSchedule == true)
-				{
-					removeSuccess(null);
+				if (Conference.isAddedToSchedule == true) {
+					removeSuccess (null);
 					
 					conference.IsAddedToSchedule = false;
-					_localConferencesRepository.Save(conference);
+					_localConferencesRepository.Save (conference);
 
-					var conferences = await _localConferencesRepository.ListFavoritesAsync();
+					var conferences = await _localConferencesRepository.ListFavoritesAsync ();
 
-					if (conferences != null && conferences.Any())
-					{
-						var dtos = conferences.Select(c => new ConferencesListViewDto(c, _fileStore)).ToList();
-						_messenger.Publish(new FavoriteConferencesUpdatedMessage(this, dtos));
-						_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
+					if (conferences != null && conferences.Any ()) {
+						var dtos = conferences.Select (c => new ConferencesListViewDto (c, _fileStore)).ToList ();
+						_messenger.Publish (new FavoriteConferencesUpdatedMessage (this, dtos));
+						_messenger.Publish (new RefreshConferenceFavoriteIconMessage (this));
 					}
 
-					if (!_networkConnection.IsNetworkConnected())
-					{
-						InvokeOnMainThread(() => _messageBox.Show(_networkConnection.NetworkDownMessage));
+					if (!_networkConnection.IsNetworkConnected ()) {
+						InvokeOnMainThread (() => _messageBox.Show (_networkConnection.NetworkDownMessage));
+					} else {
+						var scheduleDto = await _remoteDataService.RemoveFromScheduleAsync (_authentication.UserName, Conference.slug);
 					}
-					else
-					{
-						var scheduleDto = await _remoteDataService.RemoveFromScheduleAsync(_authentication.UserName, Conference.slug);
-					}
-				}
-				else
-				{
-					var schedule = new ScheduleDto() { conferenceSlug = Conference.slug, sessions = new List<FullSessionDto>(), url = "", userSlug = _authentication.UserName };
+				} else {
+					var schedule = new ScheduleDto () {
+						conferenceSlug = Conference.slug,
+						sessions = new List<FullSessionDto> (),
+						url = "",
+						userSlug = _authentication.UserName
+					};
 					conference.IsAddedToSchedule = true;
-					_localConferencesRepository.Save(conference);
-					var conferences = await _localConferencesRepository.ListFavoritesAsync();
-					if (conferences != null && conferences.Any())
-					{
-						var dtos = conferences.Select(c => new ConferencesListViewDto(c, _fileStore)).ToList();
-						_messenger.Publish(new FavoriteConferencesUpdatedMessage(this, dtos));
-						_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
+					_localConferencesRepository.Save (conference);
+					var conferences = await _localConferencesRepository.ListFavoritesAsync ();
+					if (conferences != null && conferences.Any ()) {
+						var dtos = conferences.Select (c => new ConferencesListViewDto (c, _fileStore)).ToList ();
+						_messenger.Publish (new FavoriteConferencesUpdatedMessage (this, dtos));
+						_messenger.Publish (new RefreshConferenceFavoriteIconMessage (this));
 					}
 
-					addSuccess(schedule);
+					addSuccess (schedule);
 
-					if (!_networkConnection.IsNetworkConnected())
-					{
-						InvokeOnMainThread(() => _messageBox.Show(_networkConnection.NetworkDownMessage));
-					}
-					else
-					{
-						_remoteDataService.AddToSchedule(_authentication.UserName, Conference.slug, addSuccess, addError);
+					if (!_networkConnection.IsNetworkConnected ()) {
+						InvokeOnMainThread (() => _messageBox.Show (_networkConnection.NetworkDownMessage));
+					} else {
+						_remoteDataService.AddToSchedule (_authentication.UserName, Conference.slug, addSuccess, addError);
 					}
 				}
+			} 
+			else 
+			{
+				_messageBox.Show ("You must be logged in to favorite a conference");
 			}
 		}
 

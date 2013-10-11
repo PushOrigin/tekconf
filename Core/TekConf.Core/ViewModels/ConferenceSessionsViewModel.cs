@@ -78,7 +78,7 @@ namespace TekConf.Core.ViewModels
 				bool shouldAddFavorites = false;
 				if (_authentication.IsAuthenticated)
 				{
-					shouldAddFavorites = HasSessions && (Schedule == null || Schedule.sessions == null || !Schedule.sessions.Any());
+					shouldAddFavorites = (Schedule == null || Schedule.sessions == null || !Schedule.sessions.Any());
 				}
 
 				return shouldAddFavorites;
@@ -108,8 +108,7 @@ namespace TekConf.Core.ViewModels
 				var conference = _localConferencesRepository.Get(slug);
 				if (conference != null)
 				{
-					IEnumerable<SessionEntity> sessions = null;
-					sessions = conference.Sessions(_connection);
+					IEnumerable<SessionEntity> sessions = conference.Sessions(_connection);
 					if (sessions != null)
 					{
 						var conferenceSessionsListViewDto = new ConferenceSessionsListViewDto(sessions)
@@ -178,7 +177,7 @@ namespace TekConf.Core.ViewModels
 			{
 				_isLoadingConference = value;
 				IsAuthenticated = _authentication.IsAuthenticated;
-				RaisePropertyChanged(() => IsLoadingConference);
+				RaisePropertyChanged("IsLoadingConference");
 			}
 		}
 
@@ -193,8 +192,8 @@ namespace TekConf.Core.ViewModels
 			{
 				_conference = value;
 				PageTitle = _conference.name;
-				RaisePropertyChanged(() => Conference);
-				RaisePropertyChanged(() => HasSessions);
+				RaisePropertyChanged("Conference");
+				RaisePropertyChanged("HasSessions");
 
 				IsLoadingConference = false;
 
@@ -269,18 +268,28 @@ namespace TekConf.Core.ViewModels
 			}
 			set
 			{
-				RaisePropertyChanged(() => HasSessions);
+				RaisePropertyChanged("HasSessions");
 			}
 		}
 
-		public List<FullSessionDto> Sessions
+		public List<FullSessionGroup> Sessions
 		{
 			get
 			{
 				if (Schedule != null && Schedule.sessions != null)
-					return Schedule.sessions;
+				{
+					var grouped = Schedule.sessions
+						.OrderBy(x => x.start)
+						.GroupBy(session => session.start.ToString("ddd, h:mm tt"))
+						.Select(slot => new FullSessionGroup(
+							slot.Key,
+							slot.OrderBy(session => session.start).ThenBy(t => t.title)));
+
+					var groupList = grouped.ToList();
+					return groupList;
+				}
 				else
-					return new List<FullSessionDto>();
+					return new List<FullSessionGroup>();
 			}
 		}
 
@@ -294,9 +303,9 @@ namespace TekConf.Core.ViewModels
 			set
 			{
 				_schedule = value;
-				RaisePropertyChanged(() => Schedule);
-				RaisePropertyChanged(() => Sessions);
-				RaisePropertyChanged(() => ShouldAddFavorites);
+				RaisePropertyChanged("Schedule");
+				RaisePropertyChanged("Sessions");
+				RaisePropertyChanged("ShouldAddFavorites");
 				IsLoadingSchedule = false;
 			}
 		}
@@ -321,8 +330,13 @@ namespace TekConf.Core.ViewModels
 		{
 			get
 			{
-				return new MvxCommand<SessionDetailViewModel.Navigation>(navigation =>
-					ShowViewModel<SessionDetailViewModel>(navigation)
+				return new MvxCommand<ConferenceSessionListDto>(dto =>
+				                                                     ShowViewModel<SessionDetailViewModel>(
+																		new SessionDetailViewModel.Navigation() {
+																			ConferenceSlug =  Conference.slug,
+																			SessionSlug = dto.slug
+																		} 
+																     )
 					);
 			}
 		}

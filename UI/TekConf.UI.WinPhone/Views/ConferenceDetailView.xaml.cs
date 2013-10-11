@@ -27,6 +27,12 @@ namespace TekConf.UI.WinPhone.Views
 		public ConferenceDetailView()
 		{
 			InitializeComponent();
+			LocationMap.Loaded += (sender, args) =>
+			{
+				Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "9078e309-8113-4ea7-9061-75d1a392743c";
+				Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "Th8jcERPJgUlwBJDdtHs6w";
+			};
+
 			var messenger = Mvx.Resolve<IMvxMessenger>();
 
 
@@ -39,8 +45,6 @@ namespace TekConf.UI.WinPhone.Views
 							{
 								const string errorMessage = "Could not connect to remote server. Please check your network connection and try again.";
 								MessageBox.Show(errorMessage);
-								//ConferenceDetailExceptionMessage.Text = "Could not connect to remote server. Please check your network connection and try again.";
-								//ConferenceDetailExceptionMessage.Visibility = Visibility.Visible;
 							}
 						}));
 
@@ -118,19 +122,19 @@ namespace TekConf.UI.WinPhone.Views
 
 		private void AddFavorite_OnClick(object sender, EventArgs e)
 		{
-			var authentication = Mvx.Resolve<IAuthentication>();
+			//var authentication = Mvx.Resolve<IAuthentication>();
 
-			if (authentication.IsAuthenticated)
-			{
+			//if (authentication.IsAuthenticated)
+			//{
 				var vm = DataContext as ConferenceDetailViewModel;
 
 				if (vm != null)
 					vm.AddFavoriteCommand.Execute(vm.Conference.slug);
-			}
-			else
-			{
-				MessageBox.Show("You must be logged in to favorite a conference");
-			}
+			//}
+			//else
+			//{
+				//MessageBox.Show("You must be logged in to favorite a conference");
+			//}
 		}
 
 		private void Settings_OnClick(object sender, EventArgs e)
