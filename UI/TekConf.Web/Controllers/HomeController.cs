@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using TekConf.Common.Entities.Repositories;
 using TekConf.RemoteData.Dtos.v1;
 using TekConf.RemoteData.v1;
-using TekConf.UI.Api;
 using TekConf.Web.App_Start;
 using System.Linq;
 
 namespace TekConf.Web.Controllers
 {
 	using TekConf.Common.Entities;
+
+    public class AngController : Controller
+    {
+        public ActionResult Index()
+        {
+            return View();
+        }
+    }
 
 	public class HomeController : Controller
 	{
