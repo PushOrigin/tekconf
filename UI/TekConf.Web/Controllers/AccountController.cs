@@ -13,23 +13,30 @@ using TekConf.Web.Models;
 
 namespace TekConf.Web.Controllers
 {
+    using TekConf.Common.Entities;
+    using TekConf.Common.Entities.Repositories;
+
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController() 
-        {
-            IdentityManager = new AuthenticationIdentityManager(new IdentityStore());
-        }
-
-				public AccountController(AuthenticationIdentityManager manager)
-				{
-					IdentityManager = manager;
-				}
+        private readonly IRepository<UserEntity> _userRepository;
 
         public AuthenticationIdentityManager IdentityManager { get; private set; }
 
-        private Microsoft.Owin.Security.IAuthenticationManager AuthenticationManager {
-            get {
+        public AccountController() : this(new AuthenticationIdentityManager(new IdentityStore()), new UserRepository(new EntityConfiguration()))
+        {
+        }
+
+        public AccountController(AuthenticationIdentityManager manager, IRepository<UserEntity> userRepository)
+        {
+            _userRepository = userRepository;
+            IdentityManager = manager;
+        }
+
+        private Microsoft.Owin.Security.IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
@@ -37,7 +44,7 @@ namespace TekConf.Web.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-				[HttpGet]
+        [HttpGet]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -57,6 +64,15 @@ namespace TekConf.Web.Controllers
                 IdentityResult result = await IdentityManager.Authentication.CheckPasswordAndSignInAsync(AuthenticationManager, model.UserName, model.Password, model.RememberMe);
                 if (result.Success)
                 {
+                    if (!_userRepository.AsQueryable().Any(x => x.userName == model.UserName))
+                    {
+                        var userEntity = new UserEntity
+                        {
+                            _id = new Guid(),
+                            userName = model.UserName,
+                        };
+                        _userRepository.Save(userEntity);
+                    }
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -92,6 +108,15 @@ namespace TekConf.Web.Controllers
                 if (result.Success)
                 {
                     await IdentityManager.Authentication.SignInAsync(AuthenticationManager, user.Id, isPersistent: false);
+                    if (!_userRepository.AsQueryable().Any(x => x.userName == model.UserName))
+                    {
+                        var userEntity = new UserEntity
+                                                {
+                                                    _id = new Guid(),
+                                                    userName = model.UserName,
+                                                };
+                        _userRepository.Save(userEntity);
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -145,7 +170,7 @@ namespace TekConf.Web.Controllers
             ViewBag.HasLocalPassword = hasLocalLogin;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasLocalLogin)
-            {               
+            {
                 if (ModelState.IsValid)
                 {
                     IdentityResult result = await IdentityManager.Passwords.ChangePasswordAsync(User.Identity.GetUserName(), model.OldPassword, model.NewPassword);
@@ -204,10 +229,20 @@ namespace TekConf.Web.Controllers
         public async Task<ActionResult> ExternalLoginCallback(string loginProvider, string returnUrl)
         {
             ClaimsIdentity id = await IdentityManager.Authentication.GetExternalIdentityAsync(AuthenticationManager);
+            var userName = id.GetUserName();
             // Sign in this external identity if its already linked
             IdentityResult result = await IdentityManager.Authentication.SignInExternalIdentityAsync(AuthenticationManager, id);
-            if (result.Success) 
+            if (result.Success)
             {
+                if (!_userRepository.AsQueryable().Any(x => x.userName == userName))
+                {
+                    var userEntity = new UserEntity
+                    {
+                        _id = new Guid(),
+                        userName = userName,
+                    };
+                    _userRepository.Save(userEntity);
+                }
                 return RedirectToLocal(returnUrl);
             }
             else if (User.Identity.IsAuthenticated)
@@ -216,9 +251,18 @@ namespace TekConf.Web.Controllers
                 result = await IdentityManager.Authentication.LinkExternalIdentityAsync(id, User.Identity.GetUserId());
                 if (result.Success)
                 {
+                    if (!_userRepository.AsQueryable().Any(x => x.userName == userName))
+                    {
+                        var userEntity = new UserEntity
+                        {
+                            _id = new Guid(),
+                            userName = userName,
+                        };
+                        _userRepository.Save(userEntity);
+                    }
                     return RedirectToLocal(returnUrl);
                 }
-                else 
+                else
                 {
                     return View("ExternalLoginFailure");
                 }
@@ -243,13 +287,22 @@ namespace TekConf.Web.Controllers
             {
                 return RedirectToAction("Manage");
             }
-            
+
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
                 IdentityResult result = await IdentityManager.Authentication.CreateAndSignInExternalUserAsync(AuthenticationManager, new User(model.UserName));
                 if (result.Success)
                 {
+                    if (!_userRepository.AsQueryable().Any(x => x.userName == model.UserName))
+                    {
+                        var userEntity = new UserEntity
+                        {
+                            _id = new Guid(),
+                            userName = model.UserName,
+                        };
+                        _userRepository.Save(userEntity);
+                    }
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -299,8 +352,10 @@ namespace TekConf.Web.Controllers
             }).Result;
         }
 
-        protected override void Dispose(bool disposing) {
-            if (disposing && IdentityManager != null) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && IdentityManager != null)
+            {
                 IdentityManager.Dispose();
                 IdentityManager = null;
             }
@@ -308,8 +363,10 @@ namespace TekConf.Web.Controllers
         }
 
         #region Helpers
-        private void AddErrors(IdentityResult result) {
-            foreach (var error in result.Errors) {
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError("", error);
             }
         }

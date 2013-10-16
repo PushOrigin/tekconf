@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using AutoMapper;
-using MongoDB.Driver;
 using ServiceStack.Messaging;
 using ServiceStack.Redis;
-using ServiceStack.ServiceInterface;
-using ServiceStack.WebHost.Endpoints;
 using TekConf.Common.Entities;
 using TekConf.RemoteData.Dtos.v1;
 using TekConf.UI.Api.Services.Requests.v1;
@@ -20,7 +16,7 @@ using TinyMessenger;
 
 namespace TekConf.UI.Api.Services.v1
 {
-	public interface IConferencesService
+    public interface IConferencesService
 	{
 		ICacheClient CacheClient { get; set; }
 		IRequestContext RequestContext { get; set; }
@@ -59,6 +55,13 @@ namespace TekConf.UI.Api.Services.v1
 
 		public object Get(ConferencesCount request)
 		{
+		    List<AspNetUsers> users = null;
+		    using (var context = new UsersContext())
+		    {
+		      users = context.AspNetUsers.ToList();
+		      var user = users.FirstOrDefault();
+		    }
+
 			var count = _conferenceRepository.GetConferenceCount(request.searchTerm, request.showPastConferences);
 
 			return count;

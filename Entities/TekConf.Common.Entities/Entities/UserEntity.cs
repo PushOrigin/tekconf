@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
-using TekConf.Common.Entities;
 using TinyMessenger;
 
 namespace TekConf.Common.Entities
@@ -13,6 +12,7 @@ namespace TekConf.Common.Entities
 		public UserEntity()
 		{
 			WindowsPhoneEndpointUris = new List<string>();
+            roles = new List<RoleEntity>();
 		}
 
 		[BsonIgnore]
@@ -87,5 +87,7 @@ namespace TekConf.Common.Entities
 				return name;
 			}
 		}
+
+        public List<RoleEntity> roles { get; set; } 
 	}
 }

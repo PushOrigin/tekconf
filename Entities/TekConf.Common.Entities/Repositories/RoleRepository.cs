@@ -1,43 +1,53 @@
 ﻿using System;
 using System.Linq;
-
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 
 namespace TekConf.Common.Entities.Repositories
 {
-    using MongoDB.Driver;
-    using MongoDB.Driver.Builders;
+    public interface IRoleRepository : IRepository<RoleEntity>
+    {
 
-    public class UserRepository : IRepository<UserEntity>
+    }
+
+    public class RoleRepository : IRoleRepository
     {
         private readonly IEntityConfiguration _entityConfiguration;
 
-        public UserRepository(IEntityConfiguration entityConfiguration)
+        public RoleRepository(IEntityConfiguration entityConfiguration)
         {
             this._entityConfiguration = entityConfiguration;
+            CreateIndexes();
         }
 
-        public void Save(UserEntity entity)
+        public void Save(RoleEntity entity)
         {
             var collection = MongoCollection();
             collection.Save(entity);
         }
 
-        public IQueryable<UserEntity> AsQueryable()
+        public IQueryable<RoleEntity> AsQueryable()
         {
             var collection = MongoCollection();
             return collection.AsQueryable();
         }
 
+        private void CreateIndexes()
+        {
+            var collection = this.LocalDatabase.GetCollection<RoleEntity>("roles");
+            collection.EnsureIndex(new string[] { "Name" });
+
+        }
         public void Remove(Guid id)
         {
-            var collection = this.LocalDatabase.GetCollection<UserEntity>("users");
+            var collection = this.LocalDatabase.GetCollection<RoleEntity>("roles");
             collection.Remove(Query.EQ("_id", id));
         }
 
-        private MongoCollection<UserEntity> MongoCollection()
+        private MongoCollection<RoleEntity> MongoCollection()
         {
-            var collection = this.LocalDatabase.GetCollection<UserEntity>("users");
+            var collection = this.LocalDatabase.GetCollection<RoleEntity>("roles");
             return collection;
         }
 

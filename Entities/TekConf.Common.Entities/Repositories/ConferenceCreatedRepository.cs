@@ -7,7 +7,7 @@ using MongoDB.Driver.Linq;
 
 namespace TekConf.Common.Entities
 {
-	public class ConferenceCreatedRepository : IRepository<ConferenceCreatedMessage>
+    public class ConferenceCreatedRepository : IRepository<ConferenceCreatedMessage>
 	{
 		private readonly IEntityConfiguration _entityConfiguration;
 
