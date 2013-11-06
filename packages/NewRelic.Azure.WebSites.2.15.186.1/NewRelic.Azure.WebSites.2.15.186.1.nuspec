@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>NewRelic.Azure.WebSites</id>
+    <version>2.15.186.1</version>
+    <title>New Relic for Windows Azure Web Sites (x86)</title>
+    <authors>Nick Floyd</authors>
+    <owners>Nick Floyd</owners>
+    <projectUrl>https://newrelic.com/windowsazure</projectUrl>
+    <iconUrl>http://newrelic.com/images/avatar-newrelic.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Go to New Relic to sign up and get your license key at http://newrelic.com or you can get a license key through the Windows Azure management portal via Add-On store.</description>
+    <summary>This package will add all of the resources needed to profile your Windows Azure Web Site. For more information on this package visit: https://newrelic.com/docs/dotnet/azure-web-sites</summary>
+    <releaseNotes>New Features
+
+* Removes prompting for the license key from the install process.  In a recent release of the Microsoft Azure Portal an update has been made so that users can go to the WebSite Project in the portal &gt; Configuration &gt; Developer Analytics and either choose the New Relic add on there or simply add a license key.  All previous methods of using the license key still work but this feature allows a "no touch" package-install for Azure Web Sites</releaseNotes>
+    <copyright />
+    <language />
+  </metadata>
+</package>
