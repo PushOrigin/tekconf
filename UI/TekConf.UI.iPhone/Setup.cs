@@ -12,33 +12,7 @@ using TekConf.Core.Services;
 
 namespace TekConf.UI.iPhone
 {
-	public class iPhoneNetworkConnection : INetworkConnection
-	{
-		public bool IsNetworkConnected()
-		{
-			return true; //TODO
-		}
-
-		public string NetworkDownMessage
-		{
-			get
-			{
-				return "";
-			}
-		}
-	}
-
-	public class iPhoneMessageBox : IMessageBox
-	{
-		public void Show(string message)
-		{
-			var uiAlertView = new UIAlertView();
-			uiAlertView.Message = message;
-			uiAlertView.Show();
-		}
-	}
-
-	public class Setup : MvxTouchSetup
+    public class Setup : MvxTouchSetup
 	{
 		public Setup(MvxApplicationDelegate applicationDelegate, UIWindow window)
 			: base(applicationDelegate, window)
@@ -67,37 +41,6 @@ namespace TekConf.UI.iPhone
 		protected override IMvxTrace CreateDebugTrace()
 		{
 			return new DebugTrace();
-		}
-	}
-
-	public class Authentication : IAuthentication
-	{
-		public Authentication(ISQLiteConnection connection)
-		{
-			
-		}
-		public bool IsAuthenticated { get; private set; }
-		public string OAuthProvider { get; private set; }
-		public string UserName { get; set; }
-	}
-
-	public class iPhoneAnalytics : IAnalytics
-	{
-		public void SendView(string view)
-		{
-			//TODO
-		}
-	}
-	public class PushSharpClient : IPushSharpClient
-	{
-		public void Unregister()
-		{
-			//TODO
-		}
-
-		public void Register()
-		{
-			//TODO
 		}
 	}
 }

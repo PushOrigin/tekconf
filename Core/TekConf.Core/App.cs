@@ -1,4 +1,5 @@
 using Cirrious.CrossCore.IoC;
+using TekConf.Core.ViewModels;
 
 namespace TekConf.Core
 {
@@ -17,7 +18,7 @@ namespace TekConf.Core
 					.AsInterfaces()
 					.RegisterAsLazySingleton();
 
-			RegisterAppStart<ViewModels.ConferencesListViewModel>();
+			RegisterAppStart<ConferencesListViewModel>();
 		}
 	}
 }

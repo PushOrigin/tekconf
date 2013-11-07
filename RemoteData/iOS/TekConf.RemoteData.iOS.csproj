@@ -46,23 +46,9 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties ProjectLinkReference="1439b0ec-5c15-4b18-b4eb-8a2787abdfde" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" ProjectLinkReference="1439b0ec-5c15-4b18-b4eb-8a2787abdfde" />
     </VisualStudio>
   </ProjectExtensions>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\ServiceStack.Text\src\ServiceStack.Text.MonoTouch\ServiceStack.Text.MonoTouch\ServiceStack.Text.MonoTouch.csproj">
-      <Project>{1137B5AC-2259-413C-A473-93721D2A7551}</Project>
-      <Name>ServiceStack.Text.MonoTouch</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ServiceStack\src\ServiceStack.MonoTouch\ServiceStack.Interfaces.MonoTouch\ServiceStack.Interfaces.MonoTouch.csproj">
-      <Project>{4E0544B6-8D34-45D2-AB27-605F51BF4C55}</Project>
-      <Name>ServiceStack.Interfaces.MonoTouch</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ServiceStack\src\ServiceStack.MonoTouch\ServiceStack.Common.MonoTouch\ServiceStack.Common.MonoTouch.csproj">
-      <Project>{105AD659-A41C-4063-A57B-E3EB31026445}</Project>
-      <Name>ServiceStack.Common.MonoTouch</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Compile Include="..\Shared\v1\Helpers.cs">

@@ -36,6 +36,195 @@
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\TekConf.Core\ActionCommand.cs">
+      <Link>ActionCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Annotations.cs">
+      <Link>Annotations.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\App.cs">
+      <Link>App.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ConnectItem.cs">
+      <Link>ConnectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\AddressDto.cs">
+      <Link>Dtos\AddressDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\FullConferenceDto.cs">
+      <Link>Dtos\FullConferenceDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\FullSessionDto.cs">
+      <Link>Dtos\FullSessionDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\FullSpeakerDto.cs">
+      <Link>Dtos\FullSpeakerDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\MobileLoginResultDto.cs">
+      <Link>Dtos\MobileLoginResultDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\OAuthUserDto.cs">
+      <Link>Dtos\OAuthUserDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\ScheduleDto.cs">
+      <Link>Dtos\ScheduleDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Dtos\SpeakerDto.cs">
+      <Link>Dtos\SpeakerDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Entities\ConferenceEntity.cs">
+      <Link>Entities\ConferenceEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Entities\ScheduleEntity.cs">
+      <Link>Entities\ScheduleEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Entities\SessionEntity.cs">
+      <Link>Entities\SessionEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Entities\SpeakerEntity.cs">
+      <Link>Entities\SpeakerEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Entities\UserEntity.cs">
+      <Link>Entities\UserEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Interfaces\IAnalytics.cs">
+      <Link>Interfaces\IAnalytics.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\AuthenticationMessage.cs">
+      <Link>Messages\AuthenticationMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\DownloadConferenceImageMessage.cs">
+      <Link>Messages\DownloadConferenceImageMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\ExceptionMessage.cs">
+      <Link>Messages\ExceptionMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\FavoriteConferencesUpdatedMessage.cs">
+      <Link>Messages\FavoriteConferencesUpdatedMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\FavoriteSessionAddedMessage.cs">
+      <Link>Messages\FavoriteSessionAddedMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\RefreshConferenceFavoriteIconMessage.cs">
+      <Link>Messages\RefreshConferenceFavoriteIconMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\RefreshSessionFavoriteIconMessage.cs">
+      <Link>Messages\RefreshSessionFavoriteIconMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Messages\UserNameChangedMessage.cs">
+      <Link>Messages\UserNameChangedMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Models\Extensions.cs">
+      <Link>Models\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Models\ImageService.cs">
+      <Link>Models\ImageService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Models\IRestService.cs">
+      <Link>Models\IRestService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Models\PushService.cs">
+      <Link>Models\PushService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Models\RestService.cs">
+      <Link>Models\RestService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Models\ScheduleService.cs">
+      <Link>Models\ScheduleService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ConferenceDetailViewDto.cs">
+      <Link>Repositories\ConferenceDetailViewDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ConferenceFavoriteSessionDto.cs">
+      <Link>Repositories\ConferenceFavoriteSessionDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ConferenceSessionGroup.cs">
+      <Link>Repositories\ConferenceSessionGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ConferenceSessionListDto.cs">
+      <Link>Repositories\ConferenceSessionListDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ConferenceSessionsListViewDto.cs">
+      <Link>Repositories\ConferenceSessionsListViewDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ConferencesListViewDto.cs">
+      <Link>Repositories\ConferencesListViewDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\FullSessionGroup.cs">
+      <Link>Repositories\FullSessionGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\ILocalConferencesRepository.cs">
+      <Link>Repositories\ILocalConferencesRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\LocalConferencesRepository.cs">
+      <Link>Repositories\LocalConferencesRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\LocalNotificationsRepository.cs">
+      <Link>Repositories\LocalNotificationsRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\LocalSessionRepository.cs">
+      <Link>Repositories\LocalSessionRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\SessionDetailDto.cs">
+      <Link>Repositories\SessionDetailDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\SessionEntityGroup.cs">
+      <Link>Repositories\SessionEntityGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Repositories\SpeakerDetailViewDto.cs">
+      <Link>Repositories\SpeakerDetailViewDto.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\IAuthentication.cs">
+      <Link>Services\IAuthentication.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\ICacheProvider.cs">
+      <Link>Services\ICacheProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\IMessageBox.cs">
+      <Link>Services\IMessageBox.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\INetworkConnection.cs">
+      <Link>Services\INetworkConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\IPushSharpClient.cs">
+      <Link>Services\IPushSharpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\IRemoteDataService.cs">
+      <Link>Services\IRemoteDataService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\Services\RemoteDataService.cs">
+      <Link>Services\RemoteDataService.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ValueConverters\InverseBoolValueConverter.cs">
+      <Link>ValueConverters\InverseBoolValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\ConferenceDetailViewModel.cs">
+      <Link>ViewModels\ConferenceDetailViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\ConferenceSearchViewModel.cs">
+      <Link>ViewModels\ConferenceSearchViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\ConferenceSessionsViewModel.cs">
+      <Link>ViewModels\ConferenceSessionsViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\ConferencesListViewModel.cs">
+      <Link>ViewModels\ConferencesListViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\ConferencesSearchViewModel.cs">
+      <Link>ViewModels\ConferencesSearchViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\OAuthRegisterViewModel.cs">
+      <Link>ViewModels\OAuthRegisterViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\SessionDetailViewModel.cs">
+      <Link>ViewModels\SessionDetailViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\SettingsViewModel.cs">
+      <Link>ViewModels\SettingsViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\TekConf.Core\ViewModels\TekConfLoginViewModel.cs">
+      <Link>ViewModels\TekConfLoginViewModel.cs</Link>
+    </Compile>
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
     <Compile Include="Bootstrap\FilePluginBootstrap.cs" />
     <Compile Include="Bootstrap\JsonPluginBootstrap.cs" />
@@ -45,123 +234,116 @@
     <Compile Include="Bootstrap\ThreadUtilsPluginBootstrap.cs" />
     <Compile Include="Bootstrap\VisibilityPluginBootstrap.cs" />
     <Compile Include="Bootstrap\WebBrowserPluginBootstrap.cs" />
-    <Compile Include="DebugTrace.cs" />
-    <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setup.cs" />
-    <Compile Include="Views\FirstView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\TekConf.Core\Fody.targets">
+      <Link>Fody.targets</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\MonoTouch40\Cirrious.CrossCore.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.14-beta2\lib\MonoTouch40\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.CrossCore.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\MonoTouch40\Cirrious.CrossCore.Touch.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.14-beta2\lib\MonoTouch40\Cirrious.CrossCore.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Binding.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Binding.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Dialog.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Touch.Dialog.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Touch.Dialog.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Localization">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Localization.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.File.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.File.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.File.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.File.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Json">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Json.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Json.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Messenger">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Network">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Network.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Network.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Network.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Network.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Network.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Network.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Network.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Network.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Network.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Sqlite.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Sqlite.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.ThreadUtils">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.ThreadUtils.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.ThreadUtils.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.ThreadUtils.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.ThreadUtils.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.ThreadUtils.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.ThreadUtils.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.ThreadUtils.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.ThreadUtils.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.ThreadUtils.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Visibility">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Visibility.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Visibility.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.Visibility.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.WebBrowser">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.WebBrowser.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.WebBrowser.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.WebBrowser.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.WebBrowser.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.WebBrowser.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.WebBrowser.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.WebBrowser.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.WebBrowser.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Plugins.WebBrowser.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.0.10\lib\MonoTouch40\Cirrious.MvvmCross.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.0.14-beta2\lib\MonoTouch40\Cirrious.MvvmCross.Touch.dll</HintPath>
     </Reference>
     <Reference Include="CrossUI.Core">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Touch.Dialog.3.0.10\lib\MonoTouch40\CrossUI.Core.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Touch.Dialog.3.0.14-beta2\lib\MonoTouch40\CrossUI.Core.dll</HintPath>
     </Reference>
     <Reference Include="CrossUI.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Touch.Dialog.3.0.10\lib\MonoTouch40\CrossUI.Touch.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Touch.Dialog.3.0.14-beta2\lib\MonoTouch40\CrossUI.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Json.3.0.10\lib\MonoTouch40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Json.3.0.14-beta2\lib\MonoTouch40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Net">
-      <HintPath>..\..\packages\MvvmCross.PortableSupport.3.0.10\lib\MonoTouch40\System.Net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows">
-      <HintPath>..\..\packages\MvvmCross.PortableSupport.3.0.10\lib\MonoTouch40\System.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="System.Xml.Serialization">
-      <HintPath>..\..\packages\MvvmCross.PortableSupport.3.0.10\lib\MonoTouch40\System.Xml.Serialization.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppDelegate.cs.txt" />
-    <Content Include="ToDo-MvvmCross\_ Touch UI.txt" />
+    <Content Include="..\TekConf.Core\FodyWeavers.xml">
+      <Link>FodyWeavers.xml</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ProjectLinkReference="e740f915-a0fc-4c66-9fd3-1d9a0dda527a" ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

@@ -13,6 +13,14 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>6.0</string>
+	<string>7.0</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleVersion</key>
+	<string></string>
+	<key>NSMainNibFile</key>
+	<string></string>
 </dict>
 </plist>
