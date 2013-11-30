@@ -13,6 +13,14 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>6.0</string>
+	<string></string>
+	<key>CFBundleDisplayName</key>
+	<string>TekConf</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.arteksoftware.tekconf</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.0.1</string>
+	<key>NSMainNibFile</key>
+	<string></string>
 </dict>
 </plist>

@@ -2,14 +2,23 @@
 using System.Web.Routing;
 using Microsoft.AspNet.SignalR;
 using TinyMessenger;
+using Microsoft.Owin;
+using Owin;
 
 namespace TekConf.UI.Api
 {
+    [assembly: OwinStartup(typeof(Startup))]
+    public class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
+            app.MapSignalR();
+        }
+    }
 	public class Global : System.Web.HttpApplication
 	{
 		void Application_Start(object sender, EventArgs e)
 		{
-			RouteTable.Routes.MapHubs();
 			new AppHost().Init();
 		}
 
