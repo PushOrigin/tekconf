@@ -1,74 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="conferences.io : " />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>tekconf by tekconf</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>conferences.io</title>
   </head>
-
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/tekconf/tekconf">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/tekconf/tekconf/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/tekconf/tekconf/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/conferencesio/conferencesio">View on GitHub</a>
+    <div class="wrapper">
 
-          <h1 id="project_title">conferences.io</h1>
-          <h2 id="project_tagline"></h2>
+      <section>
+        <div id="title">
+          <h1>tekconf</h1>
+          <p></p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/tekconf">tekconf</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/conferencesio/conferencesio/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/conferencesio/conferencesio/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
+        <h1>
+<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h1>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+<p>TekConf is a conference management solution, focused on technical conferences.  The main components include a quasi-RESTful API, the web front end, and mobile and desktop apps.</p>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><a href="http://tekConf.com" title="TekConf.com">http://tekConf.com</a><br><a href="http://api.tekconf.com" title="TekConf API">http://api.tekconf.com</a></p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<h1>
+<a name="requirements-for-buildinghosting" class="anchor" href="#requirements-for-buildinghosting"><span class="octicon octicon-link"></span></a>Requirements for building/hosting</h1>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<ul>
+<li>Windows</li>
+<li>Visual Studio 2012</li>
+<li>IISExpress</li>
+<li>MongoDB</li>
+</ul><h1>
+<a name="setting-up-environment-for-development" class="anchor" href="#setting-up-environment-for-development"><span class="octicon octicon-link"></span></a>Setting up environment for development</h1>
 
-<h3>Designer Templates</h3>
+<ol>
+<li>Pull code from develop</li>
+<li>MongoDB must be installed</li>
+<li>Restore db (coming soon)</li>
+<li>db.conferences.ensureIndex( { "position" : "2d" } )</li>
+</ol><h1>
+<a name="backlog" class="anchor" href="#backlog"><span class="octicon octicon-link"></span></a>Backlog</h1>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>See Trello <a href="https://trello.com/board/tekconf/50747c7b7dfbc8a32f0417b7" title="Trello">https://trello.com/board/tekconf/50747c7b7dfbc8a32f0417b7</a></p>
 
-<h3>Rather Drive Stick?</h3>
+<h1>
+<a name="use-cases" class="anchor" href="#use-cases"><span class="octicon octicon-link"></span></a>Use Cases</h1>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>Attendees</p>
 
-<h3>Authors and Contributors</h3>
+<ul>
+<li>Attendee can browse conferences</li>
+<li>Attendee can search for conferences</li>
+<li>Attendee can login</li>
+<li>Attendee can save a schedule for a conference</li>
+<li>Attendee is alerted to changes to a conference schedule</li>
+</ul><p>Speakers</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<ul>
+<li>Speakers can find conferences with open calls for speakers/presentations</li>
+<li>Speakers can maintain a speaker profile</li>
+<li>Speakers can upload their presentations</li>
+<li>Speakers can submit presentations to conferences</li>
+</ul><p>Organizers</p>
 
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ul>
+<li>Organizer can create a conference</li>
+<li>Organizer can add sessions</li>
+<li>Organizer can search for speaker presentations</li>
+<li>Organizer can create schedule</li>
+</ul>
       </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">conferences.io maintained by <a href="https://github.com/conferencesio">conferencesio</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
-
   </body>
 </html>
