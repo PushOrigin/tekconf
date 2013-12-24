@@ -74,9 +74,10 @@ namespace TekConf.Core.Services
 					list = localConferences.Select(entity => new ConferencesListViewDto(entity, _fileStore)).ToList();
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-
+				var xxxx = ex.Message;
+				throw;
 			}
 
 			return list;

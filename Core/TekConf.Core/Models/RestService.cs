@@ -1,4 +1,6 @@
-﻿namespace TekConf.Core.Models
+﻿using ModernHttpClient;
+
+namespace TekConf.Core.Models
 {
 	using System.Net.Http;
 	using System.Text;
@@ -17,15 +19,26 @@
 
 		public async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken) where T : new()
 		{
-			var client = new HttpClient();
-			var response = await client.GetAsync(url, cancellationToken);
-			var responseString = await response.Content.ReadAsStringAsync();
+			//var client = new HttpClient();
+			var client = new HttpClient(new OkHttpNetworkHandler());
 
-			if (!string.IsNullOrWhiteSpace(responseString))
-			{
-				var result = _converter.DeserializeObject<T>(responseString);
-				return result;
+			//var taskA = client.GetAsync (url, cancellationToken);
+			//taskA.Start ();
+			//var response = taskA.Result;
+
+			try {
+				var response = await client.GetAsync(url, cancellationToken);
+				var responseString = await response.Content.ReadAsStringAsync();
+
+				if (!string.IsNullOrWhiteSpace(responseString))
+				{
+					var result = _converter.DeserializeObject<T>(responseString);
+					return result;
+				}
+			} catch (System.Exception ex) {
+				var sdfdsaf = ex.Message;
 			}
+
 
 			return default(T);
 		}
@@ -33,6 +46,7 @@
 		public async Task<T> DeleteAsync<T>(string url, CancellationToken cancellationToken) where T : new()
 		{
 			var client = new HttpClient();
+			//var client = new HttpClient(new OkHttpNetworkHandler());
 			var response = await client.DeleteAsync(url, cancellationToken);
 			var responseString = await response.Content.ReadAsStringAsync();
 
@@ -48,6 +62,7 @@
 		public async Task<T> PostAsync<T>(string url, object postContent, CancellationToken cancellationToken) where T : new()
 		{
 			var client = new HttpClient();
+			//var client = new HttpClient(new OkHttpNetworkHandler());
 			var serializedContent = this._converter.SerializeObject(postContent);
 			HttpContent httpContent = new StringContent(serializedContent, Encoding.UTF8, "application/json");
 

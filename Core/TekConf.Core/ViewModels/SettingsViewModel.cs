@@ -65,7 +65,9 @@ namespace TekConf.Core.ViewModels
 
 		public bool IsAuthenticated
 		{
-			get { return _authentication.IsAuthenticated; }
+			get { 
+				return _authentication.IsAuthenticated; 
+			}
 		}
 
 		public bool IsOptedInToNotifications
