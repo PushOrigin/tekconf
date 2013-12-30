@@ -29,8 +29,15 @@ namespace TekConf.Core.Services
 		private readonly IRestService _restService;
 		private readonly IMvxReachability _reachability;
 
-		public RemoteDataService(IMvxFileStore fileStore, ICacheService cache, IAuthentication authentication, ILocalConferencesRepository localScheduleRepository,
-																										ILocalConferencesRepository localConferencesRepository, ISQLiteConnection connection, IMvxMessenger messenger, IRestService restService)
+		public RemoteDataService(IMvxFileStore fileStore,
+			ICacheService cache, 
+			IAuthentication authentication, 
+			ILocalConferencesRepository localScheduleRepository,
+			ILocalConferencesRepository localConferencesRepository,
+			ISQLiteConnection connection, 
+			IMvxMessenger messenger,
+			IRestService restService
+		)
 		{
 			_fileStore = fileStore;
 			_cache = cache;

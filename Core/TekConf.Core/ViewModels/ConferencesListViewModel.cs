@@ -34,7 +34,8 @@ namespace TekConf.Core.ViewModels
 																		IMvxFileStore fileStore,
 																		IMvxMessenger messenger,
 																		INetworkConnection networkConnection,
-																		IMessageBox messageBox)
+																		IMessageBox messageBox
+		)
 		{
 			_remoteDataService = remoteDataService;
 			_localConferencesRepository = localConferencesRepository;
@@ -59,7 +60,6 @@ namespace TekConf.Core.ViewModels
 					DisplayFavoritesConferences(favorites);
 				}
 			);
-
 		}
 
 		public async void Refresh()
@@ -72,8 +72,7 @@ namespace TekConf.Core.ViewModels
 			{
 				DisplayAllConferences(allConferences);
 				DisplayFavoritesConferences(favorites);
-			}
-				);
+			});
 		}
 
 		private async Task<IList<ConferencesListViewDto>> StartGetAll(string searchTerm = "", bool isRefreshing = false)

@@ -24,7 +24,8 @@
     <MtouchProfiling>True</MtouchProfiling>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -47,7 +48,8 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>True</MtouchDebug>
     <MtouchProfiling>True</MtouchProfiling>
-    <IpaPackageName />
+    <IpaPackageName>
+    </IpaPackageName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -131,20 +133,6 @@
     <InterfaceDefinition Include="MainStoryboard_iPad.storyboard" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\ServiceStack.Text\src\ServiceStack.Text.MonoTouch\ServiceStack.Text.MonoTouch\ServiceStack.Text.MonoTouch.csproj">
-      <Project>{1137B5AC-2259-413C-A473-93721D2A7551}</Project>
-      <Name>ServiceStack.Text.MonoTouch</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\TekConf.Mappers.IO\TekConf.Mappers.IO.csproj">
-      <Project>{8D10D14B-3B39-42B3-9767-1C6AAA44A79D}</Project>
-      <Name>TekConf.Mappers.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\RemoteData\iOS\TekConf.RemoteData.iOS.csproj">
-      <Project>{CF44A2C3-42DF-4970-9618-E6AE3AF31603}</Project>
-      <Name>TekConf.RemoteData.iOS</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Content Include="images\appview\bg.png" />
     <Content Include="images\appview\bg%402x.png" />
