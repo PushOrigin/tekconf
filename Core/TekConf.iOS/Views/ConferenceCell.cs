@@ -9,29 +9,32 @@ namespace TekConf.iOS
 {
 	public class ConferenceCell : MvxTableViewCell
 	{
-		private MvxImageViewLoader _imageViewLoader;
+		private readonly MvxImageViewLoader _imageViewLoader;
 
 		public ConferenceCell (IntPtr handle) : base(handle)
 		{
-			var imageView = new UIImageView(new RectangleF(0,0, 140, 140));
+			var imageView = new UIImageView(new RectangleF(5,3, 310, 185));
 			Add (imageView);
 			_imageViewLoader = new MvxImageViewLoader(() => imageView);
 
-			var nameField = new UILabel(new RectangleF(10, 140, 300, 40));
+			var nameField = new UILabel(new RectangleF(10, 180, 300, 40));
+			nameField.TextAlignment = UITextAlignment.Center;
 			Add(nameField);
 
-			var label = new UILabel(new RectangleF(10, 160, 300, 40));
-			Add(label);
+			var dateField = new UILabel(new RectangleF(10, 200, 300, 40));
+			dateField.TextAlignment = UITextAlignment.Center;
+			Add(dateField);
 
-			//var addressField = new UITextField (new RectangleF (10, 10, 300, 40));
-			//Add (addressField);
+			var cityField = new UILabel(new RectangleF(10, 220, 300, 40));
+			cityField.TextAlignment = UITextAlignment.Center;
+			Add(cityField);
 
 			this.DelayBind (() =>{
 				var set = this.CreateBindingSet<ConferenceCell, ConferencesListViewDto>();
-				set.Bind(_imageViewLoader).To(vm =>vm.imageUrl);
 				set.Bind(nameField).To(c=>c.name);
-				//	set.Bind(addressField).To(c=>c.FormattedAddress);
-				set.Bind(label).To(c=>c.FormattedCity);			
+				set.Bind(dateField).To(c=>c.DateRange);
+				set.Bind(cityField).To(c=>c.FormattedCity);			
+				set.Bind(_imageViewLoader).To(vm =>vm.imageUrl);
 				set.Apply();
 			});
 		}

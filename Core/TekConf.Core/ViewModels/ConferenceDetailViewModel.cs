@@ -271,7 +271,8 @@ namespace TekConf.Core.ViewModels
 		{
 			get
 			{
-				return new MvxCommand<string>(slug => ShowViewModel<ConferenceSessionsViewModel>(new { slug }));
+				return new MvxCommand<string>(slug => ShowViewModel<ConferenceSessionsViewModel>(new { Conference.slug }));
+				//return new MvxCommand<string>(slug => ShowViewModel<ConferenceSessionsViewModel>(new { slug }));
 			}
 		}
 

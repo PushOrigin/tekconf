@@ -1,8 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.0" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Core/TekConf.iOS/Views/ConferenceDetailView.cs">
+    <Files>
+      <File FileName="Core/TekConf.iOS/Views/ConferenceDetailView.cs" Line="29" Column="41" />
+      <File FileName="Core/TekConf.iOS/Views/ConferencesListView.cs" Line="15" Column="4" />
+      <File FileName="Core/TekConf.iOS/Views/ConferenceDetailsView.cs" Line="11" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/Repositories/LocalConferencesRepository.cs" line="233" column="1" />
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/Repositories/LocalConferencesRepository.cs" line="226" column="1" />
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.iOS/Views/SessionCell.cs" line="14" column="1" />
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.iOS/Views/SessionCell.cs" line="27" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

@@ -142,6 +142,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Json.3.0.14\lib\MonoTouch\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -173,9 +179,10 @@
     <Compile Include="Bootstrap\JsonPluginBootstrap.cs" />
     <Compile Include="Views\ConferenceCell.cs" />
     <Compile Include="Views\ConferenceDetailView.cs" />
-    <Compile Include="Views\ConferenceDetailView.designer.cs">
-      <DependentUpon>ConferenceDetailView.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Views\ConferenceSessionsView.cs" />
+    <Compile Include="Views\SessionCell.cs" />
+    <Compile Include="Views\ConferenceDetailsView.cs" />
+    <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -192,8 +199,5 @@
       <Version>1.1.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="Views\ConferenceDetailView.xib" />
   </ItemGroup>
 </Project>

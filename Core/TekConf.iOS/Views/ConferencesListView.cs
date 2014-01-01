@@ -17,7 +17,6 @@ namespace TekConf.iOS
 
 		public override void ViewDidLoad()
 		{
-			//View = new UIView(){ BackgroundColor = UIColor.White};
 			base.ViewDidLoad();
 
 			// ios7 layout
@@ -25,7 +24,7 @@ namespace TekConf.iOS
 				EdgesForExtendedLayout = UIRectEdge.None;
 
 			var source = new MvxSimpleTableViewSource (TableView, typeof(ConferenceCell));
-			TableView.RowHeight = 200;
+			TableView.RowHeight = 250;
 			TableView.Source = source;
 
 			var set = this.CreateBindingSet<ConferencesListView, ConferencesListViewModel>();
@@ -34,6 +33,9 @@ namespace TekConf.iOS
 			set.Apply();
 
 			TableView.ReloadData ();
+
+			//View = new UIView(){ BackgroundColor = UIColor.White};
+			//base.ViewDidLoad();
 			//var label = new UILabel(new RectangleF(10, 10, 300, 40));
 			//Add(label);
 			//var textField = new UITextField(new RectangleF(10, 50, 300, 40));
