@@ -29,25 +29,10 @@ namespace TekConf.iOS
 
 			var set = this.CreateBindingSet<ConferencesListView, ConferencesListViewModel>();
 			set.Bind (source).To (vm => vm.Conferences);
-			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ShowDetailCommand);
+			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ShowDetailTabCommand);
 			set.Apply();
 
 			TableView.ReloadData ();
-
-			//View = new UIView(){ BackgroundColor = UIColor.White};
-			//base.ViewDidLoad();
-			//var label = new UILabel(new RectangleF(10, 10, 300, 40));
-			//Add(label);
-			//var textField = new UITextField(new RectangleF(10, 50, 300, 40));
-			//Add(textField);
-
-			//var set = this.CreateBindingSet<FirstView, Core.ViewModels.FirstViewModel>();
-			//var set = this.CreateBindingSet<ConferencesListView, ConferencesListViewModel>();
-			//set.Apply();
-
-			//set.Bind(label).To(vm => vm.Hello);
-			//set.Bind(textField).To(vm => vm.Hello);
-			//set.Apply();
 		}
 
 	}

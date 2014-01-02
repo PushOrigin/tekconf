@@ -11,6 +11,8 @@ using TekConf.Core.Repositories;
 using Cirrious.MvvmCross.Binding;
 using Cirrious.MvvmCross.Plugins.Sqlite;
 using TekConf.Core.Models;
+using TekConf.Core.ViewModels;
+using TekConf.Core;
 
 namespace TekConf.iOS
 {
@@ -46,6 +48,10 @@ namespace TekConf.iOS
 			Mvx.RegisterType<IRemoteDataService, RemoteDataService> ();
 			Mvx.RegisterType<ICacheService, CacheService> ();
 			Mvx.RegisterType<IRestService, RestService> ();
+
+			Mvx.RegisterType<ConferenceDetailViewModel, ConferenceDetailViewModel> ();
+			Mvx.RegisterType<ConferenceSessionsViewModel, ConferenceSessionsViewModel> ();
+			Mvx.RegisterType<ConferenceLocationViewModel, ConferenceLocationViewModel> ();
 
 			return new Core.App();
 		}

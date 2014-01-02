@@ -255,6 +255,15 @@ namespace TekConf.Core.ViewModels
 			}
 		}
 
+		// AJ
+		public ICommand ShowDetailTabCommand
+		{
+			get
+			{
+				return new MvxCommand<ConferencesListViewDto>(conference => ShowViewModel<ConferenceDetailTabViewModel>(new {slug = conference.slug}));
+			}
+		}
+
 		private void OnFavoritesUpdatedMessage(FavoriteConferencesUpdatedMessage message)
 		{
 			DisplayFavoritesConferences(message.Conferences);

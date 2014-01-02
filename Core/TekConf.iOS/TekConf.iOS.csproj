@@ -148,9 +148,37 @@
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
       <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Visibility">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Visibility.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Visibility.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Network">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Network.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Network.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Network.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Network.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.JsonLocalisation">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.JsonLocalisation.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.JsonLocalisation.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.WebBrowser">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.WebBrowser.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.WebBrowser.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.WebBrowser.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.WebBrowser.3.0.14\lib\MonoTouch\Cirrious.MvvmCross.Plugins.WebBrowser.Touch.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="Images\Tabs\3d bar chart.png" />
+    <BundleResource Include="Images\Tabs\Alien.png" />
+    <BundleResource Include="Images\Tabs\Bomb.png" />
+    <BundleResource Include="Images\Tabs\Boss.png" />
+    <BundleResource Include="Images\Tabs\In-yang.png" />
+    <BundleResource Include="Images\Tabs\Liner.png" />
+    <BundleResource Include="Images\Tabs\Smile.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -181,8 +209,13 @@
     <Compile Include="Views\ConferenceDetailView.cs" />
     <Compile Include="Views\ConferenceSessionsView.cs" />
     <Compile Include="Views\SessionCell.cs" />
-    <Compile Include="Views\ConferenceDetailsView.cs" />
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
+    <Compile Include="Views\ConferenceDetailTabView.cs" />
+    <Compile Include="Bootstrap\VisibilityPluginBootstrap.cs" />
+    <Compile Include="Bootstrap\NetworkPluginBootstrap.cs" />
+    <Compile Include="Bootstrap\JsonLocalisationPluginBootstrap.cs" />
+    <Compile Include="Bootstrap\WebBrowserPluginBootstrap.cs" />
+    <Compile Include="Views\ConferenceLocationView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -193,6 +226,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
+    <Folder Include="Images\" />
+    <Folder Include="Images\Tabs\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="azure-mobile-services">

@@ -17,7 +17,6 @@ namespace TekConf.Core.ViewModels
 
 	using Cirrious.MvvmCross.Plugins.File;
 	using Cirrious.MvvmCross.Plugins.Sqlite;
-
 	using TekConf.Core.Entities;
 
 	public class ConferenceDetailViewModel : MvxViewModel
@@ -33,8 +32,8 @@ namespace TekConf.Core.ViewModels
 
 		private readonly ISQLiteConnection _sqLiteConnection;
 
-		public ConferenceDetailViewModel(IRemoteDataService remoteDataService, 
-		                                 ILocalConferencesRepository localConferencesRepository, 
+		public ConferenceDetailViewModel(
+			IRemoteDataService remoteDataService, ILocalConferencesRepository localConferencesRepository, 
 			IAnalytics analytics, IAuthentication authentication, IMvxMessenger messenger, IMvxFileStore fileStore, 
 			IMessageBox messageBox, INetworkConnection networkConnection, ISQLiteConnection sqLiteConnection)
 		{
