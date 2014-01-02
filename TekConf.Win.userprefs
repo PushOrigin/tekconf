@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.0" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI/TekConf.UI.Android/Views/ConferencesListView.cs">
+    <Files>
+      <File FileName="UI/TekConf.UI.iPhone/Views/ConferencesListView.cs" Line="1" Column="1" />
+      <File FileName="UI/TekConf.UI.Android/Views/ConferenceDetailView.cs" Line="1" Column="1" />
+      <File FileName="UI/TekConf.UI.Android/Views/ConferencesListView.cs" Line="41" Column="55" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
