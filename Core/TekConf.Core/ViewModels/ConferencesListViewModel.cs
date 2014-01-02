@@ -62,7 +62,7 @@ namespace TekConf.Core.ViewModels
 			);
 		}
 
-		public async void Refresh()
+		public async Task Refresh()
 		{
 
 			var allConferences = await StartGetAll(isRefreshing: true);
