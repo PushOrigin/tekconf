@@ -23,11 +23,11 @@ namespace TekConf.iOS
 				EdgesForExtendedLayout = UIRectEdge.None;
 
 			var source = new MvxSimpleTableViewSource (TableView, typeof(SessionCell));
-			TableView.RowHeight = 150;
+			TableView.RowHeight = 200;
 			TableView.Source = source;
 
 			var set = this.CreateBindingSet<ConferenceSessionsView, ConferenceSessionsViewModel>();
-			set.Bind (source).To (vm => vm.Schedule.sessions);
+			set.Bind (source).To (vm => vm.Conference.SessionsList);
 			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ShowSessionDetailCommand);
 			set.Apply();
 

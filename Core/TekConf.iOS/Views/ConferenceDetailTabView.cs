@@ -26,6 +26,7 @@ namespace TekConf.iOS
 
 			var detailVm = VM.DetailVm;
 			detailVm.Init(VM.Slug);
+			VM.SessionsVm.Init (VM.Slug);
 
 			var viewControllers = new UIViewController[] {
 				CreateTabFor ("Details", "3d bar chart", VM.DetailVm),
