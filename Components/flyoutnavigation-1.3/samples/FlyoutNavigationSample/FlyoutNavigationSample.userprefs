@@ -1,0 +1,32 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.0" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../../../Core/TekConf.iOS/Views/ConferencesListView.cs">
+    <Files>
+      <File FileName="../../../../Core/TekConf.iOS/Views/SettingsView.cs" Line="19" Column="1" />
+      <File FileName="../../../../Core/TekConf.iOS/Views/TekConfLoginView.cs" Line="1" Column="1" />
+      <File FileName="../../../../Core/TekConf.Core/ViewModels/SettingsViewModel.cs" Line="28" Column="33" />
+      <File FileName="../../../../Core/TekConf.iOS/Views/FlyoutItem.cs" Line="21" Column="1" />
+      <File FileName="../../../../Core/TekConf.Core/Repositories/LocalNotificationsRepository.cs" Line="11" Column="48" />
+      <File FileName="../../../../Core/TekConf.iOS/Setup.cs" Line="51" Column="52" />
+      <File FileName="../../../../Core/TekConf.Core/ViewModels/MainWindowViewModel.cs" Line="18" Column="73" />
+      <File FileName="../../../../Core/TekConf.iOS/Views/MainWindowView.cs" Line="12" Column="32" />
+      <File FileName="../../../../Core/TekConf.iOS/Views/ConferencesListView.cs" Line="44" Column="114" />
+      <File FileName="../../../../Core/TekConf.Core/App.cs" Line="20" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="FlyoutNavigationSample" expanded="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/Repositories/LocalConferencesRepository.cs" line="233" column="1" />
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/Repositories/LocalConferencesRepository.cs" line="226" column="1" />
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/ViewModels/ConferenceSessionsViewModel.cs" line="248" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

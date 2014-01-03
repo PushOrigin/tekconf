@@ -104,6 +104,8 @@
     <Compile Include="ViewModels\TekConfLoginViewModel.cs" />
     <Compile Include="ViewModels\ConferenceDetailTabViewModel.cs" />
     <Compile Include="ViewModels\ConferenceLocationViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\RightPanelViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cirrious.CrossCore">

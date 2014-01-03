@@ -8,20 +8,37 @@ using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using FlyoutNavigation;
 using MonoTouch.Dialog;
+using Cirrious.CrossCore;
+using SlidingPanels.Lib.PanelContainers;
+using SlidingPanels.Lib;
+using Cirrious.MvvmCross.Dialog.Touch;
 
 namespace TekConf.iOS
 {
-	public class ConferencesListView : MvxTableViewController
+	public class ConferencesListView : MvxDialogViewController
 	{
 		private LoadingOverlay _loadingOverlay;
 		private FlyoutNavigationController _navigation;
 		private bool _navigationDisplayed = false;
 
-		public ConferencesListView ()
-		{
+		public ConferencesListView () : base(UITableViewStyle.Plain)
+		{		
 		}
 
 		private ConferencesListViewModel VM { get { return this.ViewModel as ConferencesListViewModel; } } 
+
+		private UIBarButtonItem CreateSliderButton(string imageName, PanelType panelType)
+		{
+			UIButton button = new UIButton(new RectangleF(0, 0, 40f, 40f));
+			button.SetBackgroundImage(UIImage.FromBundle(imageName), UIControlState.Normal);
+			button.TouchUpInside += delegate
+			{
+				SlidingPanelsNavigationViewController navController = NavigationController as SlidingPanelsNavigationViewController;
+				navController.TogglePanel(panelType);
+			};
+
+			return new UIBarButtonItem(button);
+		}
 
 		public override void ViewDidLoad()
 		{
@@ -41,6 +58,12 @@ namespace TekConf.iOS
 			set.Apply();
 
 			this.NavigationItem.SetLeftBarButtonItem(new UIBarButtonItem(UIBarButtonSystemItem.Refresh, OnRefresh), true);
+			NavigationItem.RightBarButtonItem = CreateSliderButton ("Images/Tabs/Alien.png", PanelType.RightPanel);
+
+
+		
+			/*
+			this.NavigationItem.SetLeftBarButtonItem(new UIBarButtonItem(UIBarButtonSystemItem.Refresh, OnRefresh), true);
 			this.NavigationItem.SetRightBarButtonItem(new UIBarButtonItem(UIBarButtonSystemItem.Organize, OnFlyoutSelected), true);
 
 			_navigation = new FlyoutNavigationController {
@@ -54,14 +77,25 @@ namespace TekConf.iOS
 				},
 				// Supply view controllers corresponding to menu items:
 				ViewControllers = new [] {
-					new UIViewController { View = new UILabel { Text = "Animals (drag right)" } },
 					new UIViewController { View = new UILabel { Text = "Vegetables (drag right)" } },
+					new FlyoutItem { OnViewLoaded =  SettingsSelected},
 					new UIViewController { View = new UILabel { Text = "Minerals (drag right)" } },
 				},
 			};
 
+			*/
 			TableView.ReloadData ();
 		}
+
+		private void SettingsSelected()
+		{
+			HideFlyout ();
+			VM.ShowSettingsCommand.Execute (null);
+		}
+
+		// on select
+		// remove from parent
+		// call command on vm
 
 		private async void OnRefresh(object sender, EventArgs e)
 		{
@@ -78,8 +112,7 @@ namespace TekConf.iOS
 		{
 			if(_navigationDisplayed)
 			{
-				_navigation.View.RemoveFromSuperview();
-				_navigationDisplayed = false;
+				HideFlyout ();
 			}
 			else
 			{
@@ -87,6 +120,13 @@ namespace TekConf.iOS
 				View.AddSubview (_navigation.View);
 				_navigationDisplayed = true;
 			}
+		}
+
+		private void HideFlyout()
+		{
+			_navigation.View.RemoveFromSuperview();
+			_navigationDisplayed = false;
+
 		}
 	}
 }

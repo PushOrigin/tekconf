@@ -24,10 +24,14 @@ namespace TekConf.iOS
 		//	"NeMPYjchPdsFKlUqDdyAJYZtdrOPiJ11"
 		//);
 
+		private MvxApplicationDelegate _applicationDelegate; 
+		private UIWindow _window;
+
 		public Setup(MvxApplicationDelegate applicationDelegate, UIWindow window)
             : base(applicationDelegate, window)
 		{
-
+			_applicationDelegate = applicationDelegate;
+			_window = window;
 		}
 
 		protected override IMvxApplication CreateApp ()
@@ -48,6 +52,7 @@ namespace TekConf.iOS
 			Mvx.RegisterType<IRemoteDataService, RemoteDataService> ();
 			Mvx.RegisterType<ICacheService, CacheService> ();
 			Mvx.RegisterType<IRestService, RestService> ();
+			Mvx.RegisterType<ILocalNotificationsRepository, LocalNotificationsRepository> ();
 
 			Mvx.RegisterType<ConferenceDetailViewModel, ConferenceDetailViewModel> ();
 			Mvx.RegisterType<ConferenceSessionsViewModel, ConferenceSessionsViewModel> ();
@@ -60,5 +65,10 @@ namespace TekConf.iOS
         {
             return new DebugTrace();
         }
+
+		protected override Cirrious.MvvmCross.Touch.Views.Presenters.IMvxTouchViewPresenter CreatePresenter ()
+		{
+			return new MvxSlidingPanelsTouchViewPresenter (_applicationDelegate, _window);
+		}
 	}
 }

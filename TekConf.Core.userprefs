@@ -1,18 +1,22 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.0" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Core/TekConf.iOS/Views/ConferenceDetailView.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../SlidingPanels.Touch/SlidingPanels/SlidingPanels.Lib/SlidingPanelsNavigationViewController.cs">
     <Files>
-      <File FileName="Core/TekConf.iOS/Views/ConferenceDetailView.cs" Line="29" Column="41" />
-      <File FileName="Core/TekConf.iOS/Views/ConferencesListView.cs" Line="15" Column="4" />
-      <File FileName="Core/TekConf.iOS/Views/ConferenceDetailsView.cs" Line="11" Column="4" />
+      <File FileName="Core/TekConf.iOS/Views/SettingsView.cs" Line="28" Column="27" />
+      <File FileName="Core/TekConf.Core/ViewModels/SettingsViewModel.cs" Line="1" Column="1" />
+      <File FileName="Core/TekConf.iOS/Views/ConferencesListView.cs" Line="40" Column="4" />
+      <File FileName="Core/TekConf.iOS/MvxSliderViewPresenter.cs" Line="91" Column="4" />
+      <File FileName="Core/TekConf.iOS/Views/FirstView.cs" Line="22" Column="1" />
+      <File FileName="Core/TekConf.iOS/Setup.cs" Line="72" Column="4" />
+      <File FileName="Core/TekConf.iOS/AppDelegate.cs" Line="29" Column="16" />
+      <File FileName="../SlidingPanels.Touch/SlidingPanels/SlidingPanels.Lib/SlidingPanelsNavigationViewController.cs" Line="301" Column="45" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/Repositories/LocalConferencesRepository.cs" line="233" column="1" />
       <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/Repositories/LocalConferencesRepository.cs" line="226" column="1" />
-      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.iOS/Views/SessionCell.cs" line="14" column="1" />
-      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.iOS/Views/SessionCell.cs" line="27" column="1" />
+      <Breakpoint file="/Users/angelokeresztes/code/tekconf/Core/TekConf.Core/ViewModels/ConferenceSessionsViewModel.cs" line="248" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
