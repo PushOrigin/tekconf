@@ -38,12 +38,8 @@ namespace TekConf.iOS
 
 				binder.Bind(element)
 					.For(el => el.SelectedCommand)
-					.To(vm=>vm.ShowConferencesListCommand);
-				/*
-				binder.Bind(element)
-					.For(el => el.SelectedCommand)
 					.To(property);
-*/
+
 				return element;
 			};
 		
@@ -52,8 +48,8 @@ namespace TekConf.iOS
 				new CrossUI.Touch.Dialog.Elements.Section
 				{
 					createElement("Conferences", "Images/Tabs/Boss.png", vm => vm.ShowConferencesListCommand),
-					CreateItem("My Conferences", "Images/Tabs/Boss.png"),
-					CreateItem("Settings", "Images/Tabs/Boss.png")
+					createElement("My Conferences", "Images/Tabs/Boss.png", vm => vm.ShowSettingsCommand),
+					createElement("Settings", "Images/Tabs/Boss.png", vm => vm.ShowSettingsCommand)
 				}
 			};
 			binder.Apply ();
@@ -61,7 +57,7 @@ namespace TekConf.iOS
 			var headerView = new UIView(new RectangleF(0, 0, View.Frame.Width, 60));
 			headerView.Add(new UILabel(new RectangleF(15, 0, headerView.Frame.Width - 15, headerView.Frame.Height))
 				{
-					Text = "NYC Code Camp 8",
+					Text = "TekConf",
 					Font = UIFont.FromName("HelveticaNeue-Bold", 18),
 					BackgroundColor = UIColor.Clear,
 					TextColor = UIColor.Black

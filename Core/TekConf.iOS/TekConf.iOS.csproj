@@ -238,6 +238,7 @@
     <Compile Include="Views\MainWindowView.cs" />
     <Compile Include="MvxSliderViewPresenter.cs" />
     <Compile Include="Views\RightPanelView.cs" />
+    <Compile Include="Services\ViewExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

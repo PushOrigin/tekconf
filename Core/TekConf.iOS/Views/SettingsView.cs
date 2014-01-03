@@ -7,12 +7,13 @@ using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.ObjCRuntime;
 using SlidingPanels.Lib;
 using SlidingPanels.Lib.PanelContainers;
+using Cirrious.MvvmCross.Dialog.Touch;
 
 namespace TekConf.iOS
 {
-	public class SettingsView : MvxViewController
+	public class SettingsView : MvxDialogViewController
 	{
-		public SettingsView ()
+		public SettingsView () : base(UITableViewStyle.Plain)
 		{
 		}
 
@@ -23,6 +24,8 @@ namespace TekConf.iOS
 
 			if (RespondsToSelector(new Selector("edgesForExtendedLayout")))
 				EdgesForExtendedLayout = UIRectEdge.None;
+
+			NavigationItem.RightBarButtonItem = ViewExtensions.CreateSliderButton ("Images/menu.png", PanelType.RightPanel, NavigationController as SlidingPanelsNavigationViewController );
 
 			//var tmp = new UILabel { Text = "Vegetables (drag right)" };
 			//View.AddSubview(tmp);

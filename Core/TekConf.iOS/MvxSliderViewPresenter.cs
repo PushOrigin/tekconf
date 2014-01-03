@@ -24,7 +24,9 @@ namespace TekConf.iOS
 		/// </summary>
 		private UIWindow _window;
 		private IMvxTouchViewCreator _viewCreator;
-		private RightPanelContainer _menuPanelContainer;
+		private RightPanelContainer _rightPanelContainer;
+		private LeftPanelContainer _leftPanelContainer;
+		private BottomPanelContainer _bottomPanelContainer;
 
 		#endregion
 
@@ -93,15 +95,9 @@ namespace TekConf.iOS
 			RootController.AddChildViewController (SlidingPanelsController);
 			RootController.View.AddSubview (SlidingPanelsController.View);
 
-
-			var menuRequest = new MvxViewModelRequest<RightPanelViewModel>(new MvxBundle(null), null, MvxRequestedBy.UserAction);
-			var menuView = (UIViewController)ViewCreator.CreateView(menuRequest);
-			_menuPanelContainer = new RightPanelContainer(menuView) { EdgeTolerance = 100f };
-			SlidingPanelsController.InsertPanel(_menuPanelContainer);
-
 			// use the first view to create the sliding panels 
 			//AddPanel<RightPanelViewModel>(PanelType.LeftPanel, viewController as MvxViewController);
-			//AddPanel<RightPanelViewModel>(PanelType.RightPanel, viewController as MvxViewController);
+			AddPanel<RightPanelViewModel>(PanelType.RightPanel, viewController as MvxViewController);
 			//AddPanel<RightPanelViewModel>(PanelType.BottomPanel, viewController as MvxViewController);
 		}
 
@@ -118,27 +114,26 @@ namespace TekConf.iOS
 
 			// use the first view to create a view of the desired type
 			// We only do this because there's no convenient way to create a view from inside the presenter
-
-			// TODO:  According to Stuart, We c(sh)ould be doing something like this instead:
-			// var parameterBundle = new MvxBundle(null);
-			// var request = new MvxViewModelRequest<TTargetViewModel>(parameterBundle, null, MvxRequestedBy.UserAction);
-			// return Mvx.Resolve<IMvxTouchViewCreator>().CreateView(request);
-			UIViewController viewToAdd = (UIViewController) mvxController.CreateViewControllerFor<T>();
+			var menuRequest = new MvxViewModelRequest<RightPanelViewModel>(new MvxBundle(null), null, MvxRequestedBy.UserAction);
+			var viewToAdd = (UIViewController)ViewCreator.CreateView(menuRequest);		
 
 			// Insert the view into a new container (of the right type) and insert 
 			// that into the sliding panels controller
 			switch (panelType)
 			{
 			case PanelType.LeftPanel:
-				SlidingPanelsController.InsertPanel(new LeftPanelContainer(viewToAdd));
+				_leftPanelContainer = new LeftPanelContainer (viewToAdd);
+				SlidingPanelsController.InsertPanel(_leftPanelContainer);
 				break;
 
 			case PanelType.RightPanel:
-				SlidingPanelsController.InsertPanel(new RightPanelContainer(viewToAdd));
+				_rightPanelContainer = new RightPanelContainer (viewToAdd);
+				SlidingPanelsController.InsertPanel(_rightPanelContainer);
 				break;
 
 			case PanelType.BottomPanel:
-				SlidingPanelsController.InsertPanel(new BottomPanelContainer(viewToAdd));
+				_bottomPanelContainer = new BottomPanelContainer (viewToAdd);
+				SlidingPanelsController.InsertPanel(_bottomPanelContainer);
 				break;
 
 			default:
@@ -171,19 +166,34 @@ namespace TekConf.iOS
 
 		public override void Show(MvxViewModelRequest request)
 		{
-			if (_menuPanelContainer != null && _menuPanelContainer.IsVisible)
-				SlidingPanelsController.TogglePanel(PanelType.RightPanel);
+			if (_rightPanelContainer != null && _rightPanelContainer.IsVisible)
+				SlidingPanelsController.TogglePanel (PanelType.RightPanel);
+			else if (_leftPanelContainer != null && _leftPanelContainer.IsVisible)
+				SlidingPanelsController.TogglePanel (PanelType.LeftPanel);
+			else if (_bottomPanelContainer != null && _bottomPanelContainer.IsVisible)
+				SlidingPanelsController.TogglePanel (PanelType.BottomPanel);
 
 			if (request.PresentationValues != null)
 			{
-				//if (request.PresentationValues.ContainsKey(PresentationBundleFlagKeys.ClearStack))
-				//{
-				//	clearStackAndNavigate(request);
-				//	return;
-				//}
+				if (request.PresentationValues.ContainsKey(PresentationBundleFlagKeys.ClearStack))
+				{
+					clearStackAndNavigate(request);
+					return;
+				}
 			}
 
 			base.Show(request);
+		}
+
+		private void clearStackAndNavigate(MvxViewModelRequest request)
+		{
+			var nextViewController = (UIViewController)ViewCreator.CreateView(request);
+
+			if (MasterNavigationController.TopViewController.GetType() != nextViewController.GetType())
+			{
+				MasterNavigationController.PopToRootViewController(false);
+				MasterNavigationController.ViewControllers = new UIViewController[] { nextViewController };
+			}
 		}
 	}
 }
