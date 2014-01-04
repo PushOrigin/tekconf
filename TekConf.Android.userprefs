@@ -1,13 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Core/TekConf.Core/ViewModels/SettingsViewModel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Core/TekConf.Core/ViewModels/SessionDetailViewModel.cs">
     <Files>
-      <File FileName="Core/TekConf.Core/ViewModels/ConferencesListViewModel.cs" Line="117" Column="9" />
-      <File FileName="Core/TekConf.Core/Models/RestService.cs" Line="39" Column="1" />
-      <File FileName="Core/TekConf.Core/Services/RemoteDataService.cs" Line="54" Column="5" />
-      <File FileName="Core/TekConf.Core/ViewModels/OAuthRegisterViewModel.cs" Line="1" Column="1" />
-      <File FileName="Core/TekConf.Core/ViewModels/SettingsViewModel.cs" Line="72" Column="3" />
-      <File FileName="Core/TekConf.Core/ViewModels/ConferenceDetailViewModel.cs" Line="304" Column="3" />
+      <File FileName="UI/TekConf.UI.Android/Views/ConferenceDetailView.cs" Line="1" Column="1" />
+      <File FileName="UI/TekConf.UI.Android/Views/SessionDetailView.cs" Line="1" Column="1" />
+      <File FileName="Core/TekConf.Core/ViewModels/SessionDetailViewModel.cs" Line="241" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -18,13 +15,12 @@
       <Breakpoint file="/Users/rob/dev/Xam.NavDrawer/Mvx/MvxSample/Models/RestService.cs" line="23" column="1" />
       <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/Models/RestService.cs" line="39" column="30" />
       <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/Services/RemoteDataService.cs" line="79" column="27" />
-      <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/Models/RestService.cs" line="23" column="1" />
-      <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/ViewModels/SettingsViewModel.cs" line="53" column="1" />
-      <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/ViewModels/SettingsViewModel.cs" line="69" column="1" />
-      <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/ViewModels/ConferenceDetailViewModel.cs" line="290" column="1" />
-      <Breakpoint file="/Users/rob/dev/tekconf/Core/TekConf.Core/ViewModels/ConferenceDetailViewModel.cs" line="306" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.TekConf.UI.Android MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="192.168.56.103:5555" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="UI/TekConf.UI.Android/Views/ConferenceDetailView.cs" line="60" offsetX="351" offsetY="1180" expression="isFavorited" liveUpdate="False" />
+    <Watch file="UI/TekConf.UI.Android/Views/SessionDetailView.cs" line="51" offsetX="398" offsetY="952" expression="isFavorited" liveUpdate="False" />
+    <Watch file="UI/TekConf.UI.Android/Views/SessionDetailView.cs" line="51" offsetX="713" offsetY="902" expression="vm.Session.isAddedToSchedule" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MonoDevelop.Ide.ItemProperties.TekConf.UI.Android MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" />
 </Properties>

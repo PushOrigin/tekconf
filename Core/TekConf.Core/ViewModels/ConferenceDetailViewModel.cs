@@ -104,7 +104,17 @@ namespace TekConf.Core.ViewModels
 			return conferenceDto;
 		}
 
-		public IEnumerable<SessionEntity> Sessions { get; set; }
+		IEnumerable<SessionEntity> _sessions;
+		public IEnumerable<SessionEntity> Sessions {
+			get {
+				return _sessions;
+			}
+			set {
+				if (value != _sessions)
+					RaisePropertyChanged("Sessions");
+				_sessions = value;
+			}
+		}
 
 		public List<FullSessionGroup> SessionsByTime
 		{
@@ -154,7 +164,17 @@ namespace TekConf.Core.ViewModels
 			_messenger.Publish(new RefreshConferenceFavoriteIconMessage(this));
 		}
 
-		public bool IsLoading { get; set; }
+		bool isLoading;
+		public bool IsLoading {
+			get {
+				return isLoading;
+			}
+			set {
+				if (value != isLoading)
+					RaisePropertyChanged("IsLoading");
+				isLoading = value;
+			}
+		}
 		
 
 		public bool HasSessions
@@ -172,8 +192,28 @@ namespace TekConf.Core.ViewModels
 				return Conference != null && !string.IsNullOrWhiteSpace(Conference.FormattedAddress) && Conference.FormattedAddress.ToLower() == "online";
 			}
 		}
-		public bool IsAuthenticated { get; set; }
-		public string PageTitle { get; set; }
+		bool isAuthenticated;
+		public bool IsAuthenticated {
+			get {
+				return isAuthenticated;
+			}
+			set {
+				if (value != isAuthenticated)
+					RaisePropertyChanged("IsAuthenticated");
+				isAuthenticated = value;
+			}
+		}
+		string pageTitle;
+		public string PageTitle {
+			get {
+				return pageTitle;
+			}
+			set {
+				if (value != pageTitle)
+					RaisePropertyChanged("PageTitle");
+				pageTitle = value;
+			}
+		}
 
 		private ConferenceDetailViewDto _conference;
 		public ConferenceDetailViewDto Conference
@@ -361,6 +401,8 @@ namespace TekConf.Core.ViewModels
 						userSlug = _authentication.UserName
 					};
 					conference.IsAddedToSchedule = true;
+					this.Conference.isAddedToSchedule = true;
+
 					_localConferencesRepository.Save (conference);
 					var conferences = await _localConferencesRepository.ListFavoritesAsync ();
 					if (conferences != null && conferences.Any ()) {

@@ -4,6 +4,9 @@ using TekConf.Core.ViewModels;
 using Android.Graphics.Drawables;
 using Android.Graphics;
 using Android.Content;
+using Cirrious.MvvmCross.Plugins.Messenger;
+using Cirrious.CrossCore;
+using TekConf.Core.Messages;
 
 namespace TekConf.UI.Android.Views
 {
@@ -30,7 +33,29 @@ namespace TekConf.UI.Android.Views
 			ActionBar.SetDisplayShowHomeEnabled(false);
 
 			Setup.CurrentActivityContext = (Context)this;
+
+			var messenger = Mvx.Resolve<IMvxMessenger> ();
+
+			_favoriteRefreshMessageToken = messenger.Subscribe<RefreshSessionFavoriteIconMessage> (
+				message => RunOnUiThread (() => RefreshFavoriteIcon ())
+			);
 		}
+
+		private void RefreshFavoriteIcon ()
+		{
+			isFavorited = false;
+			var vm = DataContext as SessionDetailViewModel;
+			if (vm != null) {
+
+				if (vm.Session != null) {
+					isFavorited |= vm.Session.isAddedToSchedule == true;
+				}
+			}
+
+			InvalidateOptionsMenu ();
+		}
+
+		private MvxSubscriptionToken _favoriteRefreshMessageToken;
 
 		public override bool OnCreateOptionsMenu(IMenu menu)
 		{
@@ -68,5 +93,22 @@ namespace TekConf.UI.Android.Views
 
 			return false;
 		}
+	
+		private bool isFavorited;
+		public override bool OnPrepareOptionsMenu (IMenu menu)
+		{
+			var menuItem = menu.GetItem (1);
+			if (isFavorited)
+			{
+				menuItem.SetIcon(Resource.Drawable.heart_icon24);
+			}
+			else
+			{
+				menuItem.SetIcon(Resource.Drawable.heart_empty_icon24);
+			}
+
+			return base.OnPrepareOptionsMenu (menu);
+		}	
+	
 	}
 }

@@ -53,8 +53,38 @@ namespace TekConf.Core.ViewModels
 			ShowConferencesListCommand.Execute(null);
 		}
 
-		public bool IsLoggingIn { get; set; }
-		public string UserName { get; set; }
-		public string Password { get; set; }
+		bool isLoggingIn;
+		public bool IsLoggingIn {
+			get {
+				return isLoggingIn;
+			}
+			set {
+				if (value != isLoggingIn)
+					RaisePropertyChanged("IsLoggingIn");
+				isLoggingIn = value;
+			}
+		}
+		string userName;
+		public string UserName {
+			get {
+				return userName;
+			}
+			set {
+				if (value != userName)
+					RaisePropertyChanged("UserName");
+				userName = value;
+			}
+		}
+		string password;
+		public string Password {
+			get {
+				return password;
+			}
+			set {
+				if (value != password)
+					RaisePropertyChanged("Password");
+				password = value;
+			}
+		}
 	}
 }

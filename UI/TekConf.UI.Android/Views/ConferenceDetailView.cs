@@ -9,52 +9,70 @@ using Cirrious.MvvmCross.Binding.Droid.BindingContext;
 using System.Collections.Generic;
 using System;
 using Android.Graphics.Drawables;
+using Cirrious.MvvmCross.Plugins.Messenger;
+using Cirrious.CrossCore;
+using TekConf.Core.Messages;
 
 namespace TekConf.UI.Android.Views
 {
 	using Cirrious.MvvmCross.Droid.Views;
-
 	using global::Android.App;
 	using global::Android.OS;
-	
 
-	[Activity(Label = "Detail")]
+	[Activity (Label = "Detail")]
 	public class ConferenceDetailView : MvxActivity
 	{
-		protected override void OnCreate(Bundle bundle)
+		private MvxSubscriptionToken _favoriteRefreshMessageToken;
+
+		protected override void OnCreate (Bundle bundle)
 		{
-			RequestWindowFeature(WindowFeatures.ActionBar);
+			RequestWindowFeature (WindowFeatures.ActionBar);
 
-			base.OnCreate(bundle);
+			base.OnCreate (bundle);
 
-			SetContentView(Resource.Layout.ConferenceDetailView);
+			SetContentView (Resource.Layout.ConferenceDetailView);
 
-			var set = this.CreateBindingSet<ConferenceDetailView, ConferenceDetailViewModel>();
-			set.Apply();
+			var set = this.CreateBindingSet<ConferenceDetailView, ConferenceDetailViewModel> ();
+			set.Apply ();
 
-			ActionBar.SetBackgroundDrawable(new ColorDrawable(new Color(r:129,g:153,b:77)));
-			ActionBar.SetDisplayShowHomeEnabled(false);
+			ActionBar.SetBackgroundDrawable (new ColorDrawable (new Color (r: 129, g: 153, b: 77)));
+			ActionBar.SetDisplayShowHomeEnabled (false);
 
 			Setup.CurrentActivityContext = (Context)this;
+			var messenger = Mvx.Resolve<IMvxMessenger> ();
 
+			_favoriteRefreshMessageToken = messenger.Subscribe<RefreshConferenceFavoriteIconMessage> (
+				message => RunOnUiThread (() => RefreshFavoriteIcon ())
+			);
 		}
 
-		public override bool OnCreateOptionsMenu(IMenu menu)
+		public override bool OnCreateOptionsMenu (IMenu menu)
 		{
-			MenuInflater.Inflate(Resource.Menu.ConferenceDetailActionItems,menu);
+			MenuInflater.Inflate (Resource.Menu.ConferenceDetailActionItems, menu);
 			return true;
 		}
 
-		public override bool OnOptionsItemSelected(IMenuItem item)
+		public override bool OnPrepareOptionsMenu (IMenu menu)
+		{
+			var menuItem = menu.GetItem (1);
+			if (isFavorited) {
+				menuItem.SetIcon (Resource.Drawable.heart_icon24);
+			} else {
+				menuItem.SetIcon (Resource.Drawable.heart_empty_icon24);
+			}
+			return base.OnPrepareOptionsMenu (menu);
+		}
+
+		private bool isFavorited { get; set; }
+
+		public override bool OnOptionsItemSelected (IMenuItem item)
 		{
 			var vm = this.DataContext as ConferenceDetailViewModel;
-			if (vm != null) 
-			{
-				switch (item.ToString ()) 
-				{
-					case "Sessions":
-						vm.ShowSessionsCommand.Execute(vm.Conference.slug);
-						break;
+			if (vm != null) {
+				switch (item.ToString ()) {
+				case "Sessions":
+					vm.ShowSessionsCommand.Execute (vm.Conference.slug);
+					break;
 				case "Favorite":
 					vm.AddFavoriteCommand.Execute (null);
 					break;
@@ -70,9 +88,18 @@ namespace TekConf.UI.Android.Views
 			return false;
 		}
 
+		private void RefreshFavoriteIcon ()
+		{
+			isFavorited = false;
+			var vm = DataContext as ConferenceDetailViewModel;
+			if (vm != null) {
 
+				if (vm.Conference != null) {
+					isFavorited |= vm.Conference.isAddedToSchedule == true;
+				}
+			}
+
+			InvalidateOptionsMenu ();
+		}
 	}
-
-
-
 }

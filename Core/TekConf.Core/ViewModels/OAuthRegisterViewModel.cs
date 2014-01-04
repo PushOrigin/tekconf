@@ -42,8 +42,28 @@ namespace TekConf.Core.ViewModels
 			_userProviderId = providerId;
 		}
 
-		public bool IsRegistering { get; set; }
-		public string UserName { get; set; }
+		bool isRegistering;
+		public bool IsRegistering {
+			get {
+				return isRegistering;
+			}
+			set {
+				if (value != isRegistering)
+					RaisePropertyChanged("IsRegistering");
+				isRegistering = value;
+			}
+		}
+		string userName;
+		public string UserName {
+			get {
+				return userName;
+			}
+			set {
+				if (value != userName)
+					RaisePropertyChanged("UserName");
+				userName = value;
+			}
+		}
 
 		private string _userProviderId;
 		public async void CreateOAuthUser()

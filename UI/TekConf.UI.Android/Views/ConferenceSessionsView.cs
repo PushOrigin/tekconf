@@ -34,5 +34,21 @@ namespace TekConf.UI.Android.Views
 			ActionBar.SetDisplayShowHomeEnabled(false);
 
 		}
+
+
+		private bool isFavorited;
+//		public override bool OnPrepareOptionsMenu (IMenu menu)
+//		{
+//			var menuItem = menu.GetItem (1);
+//			if (isFavorited)
+//			{
+//				menuItem.SetIcon(Resource.Drawable.heart_icon24);
+//			}
+//			else
+//			{
+//				menuItem.SetIcon(Resource.Drawable.heart_empty_icon24);
+//			}
+//			return base.OnPrepareOptionsMenu (menu);
+//		}
 	}
 }

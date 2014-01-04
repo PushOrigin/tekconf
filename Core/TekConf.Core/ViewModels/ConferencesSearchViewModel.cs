@@ -9,7 +9,17 @@ namespace TekConf.Core.ViewModels
 		{
 		}
 
-		public string SearchText { get; set; }
+		string searchText;
+		public string SearchText {
+			get {
+				return searchText;
+			}
+			set {
+				if (value != searchText)
+					RaisePropertyChanged("SearchText");
+				searchText = value;
+			}
+		}
 
 		public ICommand SearchCommand
 		{

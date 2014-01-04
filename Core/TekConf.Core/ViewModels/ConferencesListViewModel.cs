@@ -209,8 +209,28 @@ namespace TekConf.Core.ViewModels
 			}
 		}
 
-		public bool IsLoadingFavorites { get; set; }
-		public bool IsAuthenticated { get; set; }
+		bool isLoadingFavorites;
+		public bool IsLoadingFavorites {
+			get {
+				return isLoadingFavorites;
+			}
+			set {
+				if (value != isLoadingFavorites)
+					RaisePropertyChanged("IsLoadingFavorites");
+				isLoadingFavorites = value;
+			}
+		}
+		bool isAuthenticated;
+		public bool IsAuthenticated {
+			get {
+				return isAuthenticated;
+			}
+			set {
+				if (value != isAuthenticated)
+					RaisePropertyChanged("IsAuthenticated");
+				isAuthenticated = value;
+			}
+		}
 
 		public List<ConferencesListViewDto> Conferences
 		{
@@ -225,7 +245,17 @@ namespace TekConf.Core.ViewModels
 			}
 		}
 
-		public FullConferenceDto SelectedFavorite { get; set; }
+		FullConferenceDto selectedFavorite;
+		public FullConferenceDto SelectedFavorite {
+			get {
+				return selectedFavorite;
+			}
+			set {
+				if (value != selectedFavorite)
+					RaisePropertyChanged("SelectedFavorite");
+				selectedFavorite = value;
+			}
+		}
 		private List<ConferencesListViewDto> _favorites;
 
 		private List<ConferencesListViewDto> _conferences;

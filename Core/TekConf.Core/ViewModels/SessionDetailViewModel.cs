@@ -191,6 +191,7 @@ namespace TekConf.Core.ViewModels
 					}
 				} else {
 					session.IsAddedToSchedule = true;
+					this.Session.isAddedToSchedule = true;
 					_localConferencesRepository.Save (ConferenceSlug, session);
 
 					var favorites = await _localConferencesRepository.ListFavoriteSessionsAsync (ConferenceSlug);

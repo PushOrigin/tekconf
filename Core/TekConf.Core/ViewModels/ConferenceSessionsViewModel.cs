@@ -57,9 +57,29 @@ namespace TekConf.Core.ViewModels
 			}
 		}
 
-		public string PageTitle { get; set; }
+		string pageTitle;
+		public string PageTitle {
+			get {
+				return pageTitle;
+			}
+			set {
+				if (value != pageTitle)
+					RaisePropertyChanged("PageTitle");
+				pageTitle = value;
+			}
+		}
 
-		public bool IsAuthenticated { get; set; }
+		bool isAuthenticated;
+		public bool IsAuthenticated {
+			get {
+				return isAuthenticated;
+			}
+			set {
+				if (value != isAuthenticated)
+					RaisePropertyChanged("IsAuthenticated");
+				isAuthenticated = value;
+			}
+		}
 
 		public void Refresh(string slug)
 		{
@@ -254,7 +274,17 @@ namespace TekConf.Core.ViewModels
 			Schedule = conference;
 		}
 
-		public bool IsLoadingSchedule { get; set; }
+		bool isLoadingSchedule;
+		public bool IsLoadingSchedule {
+			get {
+				return isLoadingSchedule;
+			}
+			set {
+				if (value != isLoadingSchedule)
+					RaisePropertyChanged("IsLoadingSchedule");
+				isLoadingSchedule = value;
+			}
+		}
 		
 
 		public bool HasSessions
