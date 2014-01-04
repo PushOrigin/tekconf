@@ -124,7 +124,7 @@ namespace TekConf.Core.ViewModels
 				}
 			}
 
-			return conferences.ToList();
+			return conferences.OrderBy(x => x.start).ToList();
 		}
 
 		private async Task<IList<ConferencesListViewDto>> StartGetFavorites(bool isRefreshing = false)
@@ -171,7 +171,7 @@ namespace TekConf.Core.ViewModels
 
 		private void DisplayAllConferences(IEnumerable<ConferencesListViewDto> conferences)
 		{
-			Conferences = conferences.ToList();
+			Conferences = conferences.OrderBy(x => x.start).ToList();
 			IsLoadingConferences = false;
 		}
 

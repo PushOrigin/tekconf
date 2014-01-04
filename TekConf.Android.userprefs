@@ -1,10 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Core/TekConf.Core/ViewModels/SessionDetailViewModel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI/TekConf.UI.Android/Views/SettingsView.cs">
     <Files>
       <File FileName="UI/TekConf.UI.Android/Views/ConferenceDetailView.cs" Line="1" Column="1" />
       <File FileName="UI/TekConf.UI.Android/Views/SessionDetailView.cs" Line="1" Column="1" />
       <File FileName="Core/TekConf.Core/ViewModels/SessionDetailViewModel.cs" Line="241" Column="5" />
+      <File FileName="Core/TekConf.Core/ViewModels/ConferencesListViewModel.cs" Line="176" Column="4" />
+      <File FileName="Core/TekConf.Core/ViewModels/ConferenceSessionsViewModel.cs" Line="189" Column="47" />
+      <File FileName="Core/TekConf.Core/Repositories/ConferenceSessionsListViewDto.cs" Line="23" Column="5" />
+      <File FileName="Core/TekConf.Core/ViewModels/SettingsViewModel.cs" Line="71" Column="4" />
+      <File FileName="Core/TekConf.Core/ViewModels/TekConfLoginViewModel.cs" Line="40" Column="45" />
+      <File FileName="UI/TekConf.UI.Android/Views/SettingsView.cs" Line="62" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

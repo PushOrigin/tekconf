@@ -186,6 +186,7 @@ namespace TekConf.Core.ViewModels
 		private void DisplayConference(ConferenceSessionsListViewDto conference)
 		{
 			IsLoadingConference = false;
+
 			Conference = conference;
 		}
 

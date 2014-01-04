@@ -20,7 +20,7 @@ namespace TekConf.Core.Repositories
 		{
 			if (sessions != null)
 			{
-				_sessions = sessions.Select(x => new ConferenceSessionListDto(x));
+				_sessions = sessions.Select(x => new ConferenceSessionListDto(x)).OrderBy(s => s.start);
 
 				var grouped = _sessions
 								.OrderBy(x => x.start)
@@ -29,7 +29,7 @@ namespace TekConf.Core.Repositories
 																slot.Key,
 																slot.OrderBy(session => session.start).ThenBy(t => t.title)));
 
-				var groupList = grouped.ToList();
+				var groupList = grouped.OrderBy(x => x.Key).ToList();
 
 				Sessions = groupList;
 			}
@@ -43,7 +43,7 @@ namespace TekConf.Core.Repositories
 		{
 			if (sessions != null)
 			{
-				_sessions = sessions.Select(x => new ConferenceSessionListDto(x));
+				_sessions = sessions.Select(x => new ConferenceSessionListDto(x)).OrderBy(s => s.start);
 
 				var grouped = _sessions
 								.OrderBy(x => x.start)
@@ -52,7 +52,7 @@ namespace TekConf.Core.Repositories
 																slot.Key,
 																slot.OrderBy(session => session.start).ThenBy(t => t.title)));
 
-				var groupList = grouped.ToList();
+				var groupList = grouped.OrderBy(x => x.Key).ToList();
 
 				Sessions = groupList;
 			}
