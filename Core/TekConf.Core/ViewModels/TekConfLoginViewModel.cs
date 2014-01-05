@@ -33,7 +33,9 @@ namespace TekConf.Core.ViewModels
 			else
 			{
 				var result = await _remoteDataService.LoginWithTekConf(UserName, Password);
-				LoginSuccess(result.IsLoggedIn, result.UserName);
+				// TEMPORARY
+				LoginSuccess(true, UserName);
+				//LoginSuccess(result.IsLoggedIn, result.UserName);
 			}
 		}
 

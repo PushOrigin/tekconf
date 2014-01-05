@@ -13,10 +13,13 @@ namespace TekConf.iOS
 	public class ConferenceDetailView : MvxViewController
 	{
 		private MvxImageViewLoader _imageViewLoader;
+		private UIButton _favoriteButton;
 
 		public ConferenceDetailView ()
 		{
 		}
+
+		private ConferenceDetailViewModel VM { get { return ViewModel as ConferenceDetailViewModel; } }
 
 		public override void ViewDidLoad ()
 		{
@@ -27,6 +30,16 @@ namespace TekConf.iOS
 			Add (imageView);
 			_imageViewLoader = new MvxImageViewLoader(() => imageView);
 
+
+			_favoriteButton = UIButton.FromType (UIButtonType.RoundedRect);
+			_favoriteButton.Frame = new RectangleF (5, 300, 310, 40);
+			Add (_favoriteButton);
+			RefreshFavoriteIcon ();
+			_favoriteButton.TouchUpInside += (object sender, EventArgs e) => {
+				if (VM != null)
+					VM.AddFavoriteCommand.Execute(VM.Conference.slug);
+				RefreshFavoriteIcon();
+			};
 
 			var nameField = new UILabel(new RectangleF(10, 340, 300, 40));
 			nameField.TextAlignment = UITextAlignment.Center;
@@ -48,6 +61,24 @@ namespace TekConf.iOS
 			set.Apply ();
 		}
 
+		private void RefreshFavoriteIcon()
+		{
+			if (VM != null)
+			{
+				string imageUrl = "Images/appbar.heart.png";
+				string imgText = "Add To Favorites";
+				if (VM.Conference != null)
+				{
+					if (VM.Conference.isAddedToSchedule == true)
+					{
+						imageUrl = "Images/appbar.heart.cross.png";
+						imgText = "Remove from Favorites";
+					}
+				}
+				_favoriteButton.SetImage (UIImage.FromFile (imageUrl), UIControlState.Normal);
+				_favoriteButton.SetTitle (imgText, UIControlState.Normal);
+			}
+		}
 	}
 }
 

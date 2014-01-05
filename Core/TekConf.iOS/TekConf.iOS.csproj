@@ -193,6 +193,8 @@
     <BundleResource Include="Images\Tabs\Liner.png" />
     <BundleResource Include="Images\Tabs\Smile.png" />
     <BundleResource Include="Images\menu.png" />
+    <BundleResource Include="Images\appbar.heart.cross.png" />
+    <BundleResource Include="Images\appbar.heart.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

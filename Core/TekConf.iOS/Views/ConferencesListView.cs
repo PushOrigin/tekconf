@@ -12,15 +12,37 @@ using Cirrious.CrossCore;
 using SlidingPanels.Lib.PanelContainers;
 using SlidingPanels.Lib;
 using Cirrious.MvvmCross.Dialog.Touch;
+using Cirrious.MvvmCross.Plugins.Messenger;
+using TekConf.Core.Messages;
+using TekConf.Core.Services;
 
 namespace TekConf.iOS
 {
 	public class ConferencesListView : MvxDialogViewController
 	{
+		private MvxSubscriptionToken _conferencesListAllExceptionToken;
+		private MvxSubscriptionToken _conferencesListFavoritesExceptionToken;
+
 		private LoadingOverlay _loadingOverlay;
 
 		public ConferencesListView () : base(UITableViewStyle.Plain)
 		{		
+			var messenger = Mvx.Resolve<IMvxMessenger>();
+			_conferencesListAllExceptionToken = messenger.Subscribe<ConferencesListAllExceptionMessage> (message => {
+				if (message.ExceptionObject.Message == "The remote server returned an error: NotFound.") {
+					const string errorMessage = "Could not connect to remote server. Please check your network connection and try again.";
+					var mb = Mvx.Resolve<IMessageBox> ();
+					mb.Show (errorMessage);
+				}
+			});
+
+			_conferencesListFavoritesExceptionToken = messenger.Subscribe<ConferencesListFavoritesExceptionMessage> (message => {
+				if (message.ExceptionObject.Message == "The remote server returned an error: NotFound.") {
+					const string errorMessage = "Could not connect to remote server. Please check your network connection and try again.";
+					var mb = Mvx.Resolve<IMessageBox> ();
+					mb.Show (errorMessage);
+				}
+			});
 		}
 
 		private ConferencesListViewModel VM { get { return this.ViewModel as ConferencesListViewModel; } } 
@@ -54,6 +76,7 @@ namespace TekConf.iOS
 
 			_loadingOverlay.Hide ();
 		}
+
 	}
 }
 
