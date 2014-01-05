@@ -90,7 +90,6 @@
     <Compile Include="ActionCommand.cs" />
     <Compile Include="Messages\AuthenticationMessage.cs" />
     <Compile Include="ViewModels\ConferenceDetailViewModel.cs" />
-    <Compile Include="ViewModels\ConferenceSessionsViewModel.cs" />
     <Compile Include="ViewModels\ConferencesListViewModel.cs" />
     <Compile Include="ViewModels\ConferencesSearchViewModel.cs" />
     <Compile Include="ConnectItem.cs" />
@@ -107,6 +106,8 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RightPanelViewModel.cs" />
     <Compile Include="Services\PresentationBundleFlagKeys.cs" />
+    <Compile Include="ViewModels\ConferenceSessionsViewModel.cs" />
+    <Compile Include="ViewModels\ConferenceFavoriteSessionsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cirrious.CrossCore">

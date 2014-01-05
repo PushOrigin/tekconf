@@ -10,6 +10,8 @@ namespace TekConf.iOS
 {
 	public sealed class ConferenceDetailTabView : MvxTabBarViewController 
 	{
+		private int _createdSoFarCount = 0;
+
 		public ConferenceDetailTabView ()
 		{
 			ViewDidLoad ();
@@ -19,26 +21,25 @@ namespace TekConf.iOS
 
 		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad();
+			base.ViewDidLoad ();
 
 			if (ViewModel == null)
 				return;
 
 			var detailVm = VM.DetailVm;
-			detailVm.Init(VM.Slug);
+			detailVm.Init (VM.Slug);
 			VM.SessionsVm.Init (VM.Slug);
 
 			var viewControllers = new UIViewController[] {
 				CreateTabFor ("Details", "3d bar chart", VM.DetailVm),
-				CreateTabFor("Sessions", "Bomb", VM.SessionsVm),
-				CreateTabFor("Location", "Liner", VM.LocationVm),
+				CreateTabFor ("Sessions", "Bomb", VM.SessionsVm),
+				CreateTabFor ("Favorites", "Liner", VM.FavoritesVm),
+				CreateTabFor ("Location", "Liner", VM.LocationVm),
 			};
 			ViewControllers = viewControllers;
 			CustomizableViewControllers = new UIViewController[] { };
-			SelectedViewController = ViewControllers[0];
+			SelectedViewController = ViewControllers [0];
 		}
-
-		private int _createdSoFarCount = 0;
 
 		private UIViewController CreateTabFor(string title, string imageName, IMvxViewModel viewModel)
 		{
@@ -56,12 +57,12 @@ namespace TekConf.iOS
 				_createdSoFarCount);
 			_createdSoFarCount++;
 		}
-
+		/*
 		public void ShowGrandChild(IMvxTouchView view)
 		{
 			var currentNav = SelectedViewController as UINavigationController;
 			currentNav.PushViewController(view as UIViewController, true);
-		}
+		}*/
 	}
 }
 
