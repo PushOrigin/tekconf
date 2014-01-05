@@ -48,7 +48,9 @@ namespace TekConf.iOS
 				new CrossUI.Touch.Dialog.Elements.Section
 				{
 					createElement("Conferences", "Images/Tabs/Boss.png", vm => vm.ShowConferencesListCommand),
+					createElement("Favorites", "Images/Tabs/Boss.png", vm => vm.ShowSettingsCommand),
 					createElement("My Conferences", "Images/Tabs/Boss.png", vm => vm.ShowSettingsCommand),
+					createElement("Search", "Images/Tabs/Boss.png", vm => vm.ShowSettingsCommand),
 					createElement("Settings", "Images/Tabs/Boss.png", vm => vm.ShowSettingsCommand)
 				}
 			};

@@ -18,8 +18,6 @@ namespace TekConf.iOS
 	public class ConferencesListView : MvxDialogViewController
 	{
 		private LoadingOverlay _loadingOverlay;
-		private FlyoutNavigationController _navigation;
-		private bool _navigationDisplayed = false;
 
 		public ConferencesListView () : base(UITableViewStyle.Plain)
 		{		
@@ -30,10 +28,6 @@ namespace TekConf.iOS
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-
-			// ios7 layout
-			if (RespondsToSelector(new Selector("edgesForExtendedLayout")))
-				EdgesForExtendedLayout = UIRectEdge.None;
 
 			var source = new MvxSimpleTableViewSource (TableView, typeof(ConferenceCell));
 			TableView.RowHeight = 250;

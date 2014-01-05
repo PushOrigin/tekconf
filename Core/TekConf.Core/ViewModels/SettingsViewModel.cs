@@ -164,9 +164,7 @@ namespace TekConf.Core.ViewModels
 		{
 			get
 			{
-				return new MvxCommand(() =>
-					ShowViewModel<TekConfLoginViewModel>()
-					);
+				return new MvxCommand(() =>	ShowViewModel<TekConfLoginViewModel>());
 			}
 		}
 	}

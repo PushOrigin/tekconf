@@ -27,9 +27,6 @@ namespace TekConf.iOS
 
 			NavigationItem.RightBarButtonItem = ViewExtensions.CreateSliderButton ("Images/menu.png", PanelType.RightPanel, NavigationController as SlidingPanelsNavigationViewController );
 
-			//var tmp = new UILabel { Text = "Vegetables (drag right)" };
-			//View.AddSubview(tmp);
-
 			var label = new UILabel (new RectangleF (0, 40, 300, 40));
 			label.Text = "TEST";
 			Add (label);
@@ -37,11 +34,11 @@ namespace TekConf.iOS
 			var loginButton = UIButton.FromType(UIButtonType.RoundedRect);
 			loginButton.Frame = new RectangleF (0, 10, 300, 40);
 			loginButton.SetTitle ("Login Settings", UIControlState.Normal);
-
 			Add (loginButton);
 
 			var set = this.CreateBindingSet<SettingsView, SettingsViewModel> ();
 			set.Bind (loginButton).To (vm => vm.ShowTekConfLoginCommand);
+			set.Apply ();
 		}
 	}
 }

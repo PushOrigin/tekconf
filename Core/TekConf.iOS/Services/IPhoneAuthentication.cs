@@ -23,7 +23,7 @@ namespace TekConf.iOS
 		{
 			get
 			{
-				return false;
+				return !string.IsNullOrWhiteSpace(UserName);
 				//return Setup.MobileService.CurrentUser != null || !string.IsNullOrWhiteSpace(UserName);
 			}
 		}
