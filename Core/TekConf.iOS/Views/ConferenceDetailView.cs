@@ -7,16 +7,29 @@ using Cirrious.MvvmCross.Binding.BindingContext;
 using TekConf.Core.ViewModels;
 using Cirrious.MvvmCross.ViewModels;
 using Cirrious.MvvmCross.Binding.Touch.Views;
+using Cirrious.MvvmCross.Plugins.Messenger;
+using Cirrious.CrossCore;
+using TekConf.Core.Services;
+using TekConf.Core.Messages;
 
 namespace TekConf.iOS
 {
 	public class ConferenceDetailView : MvxViewController
 	{
+		private MvxSubscriptionToken _conferenceDetailExceptionMessageToken;
 		private MvxImageViewLoader _imageViewLoader;
 		private UIButton _favoriteButton;
 
 		public ConferenceDetailView ()
 		{
+			var messenger = Mvx.Resolve<IMvxMessenger> ();
+			_conferenceDetailExceptionMessageToken = messenger.Subscribe<ConferenceDetailExceptionMessage> (message => {
+				if (message.ExceptionObject.Message == "The remote server returned an error: NotFound.") {
+					const string errorMessage = "Could not connect to remote server. Please check your network connection and try again.";
+					var mb = Mvx.Resolve<IMessageBox> ();
+					mb.Show (errorMessage);
+				}
+			});
 		}
 
 		private ConferenceDetailViewModel VM { get { return ViewModel as ConferenceDetailViewModel; } }

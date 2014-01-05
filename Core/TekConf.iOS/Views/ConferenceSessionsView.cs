@@ -6,13 +6,28 @@ using MonoTouch.ObjCRuntime;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using TekConf.Core.ViewModels;
 using Cirrious.MvvmCross.Dialog.Touch;
+using Cirrious.MvvmCross.Plugins.Messenger;
+using Cirrious.CrossCore;
+using TekConf.Core.Messages;
+using TekConf.Core.Services;
 
 namespace TekConf.iOS
 {
 	public class ConferenceSessionsView : MvxTableViewController 
 	{
+		private MvxSubscriptionToken _conferencesListAllExceptionToken;
+
 		public ConferenceSessionsView () //: base(UITableViewStyle.Plain)
 		{
+			var messenger = Mvx.Resolve<IMvxMessenger>();
+			_conferencesListAllExceptionToken = messenger.Subscribe<ConferenceSessionsExceptionMessage> (message => {
+				if (message.ExceptionObject.Message == "The remote server returned an error: NotFound.")
+				{
+					const string errorMessage = "Could not connect to remote server. Please check your network connection and try again.";
+					var mb = Mvx.Resolve<IMessageBox> ();
+					mb.Show (errorMessage);
+				}
+			});
 		}
 
 		public override void ViewDidLoad ()
