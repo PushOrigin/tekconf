@@ -2,6 +2,7 @@ using System;
 using Cirrious.MvvmCross.Touch.Views;
 using TekConf.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 
 namespace TekConf.iOS
 {
@@ -15,7 +16,7 @@ namespace TekConf.iOS
 		{
 			base.ViewDidLoad();
 
-			var source = new MvxSessionTableViewSource (TableView, typeof(FullSessionDtoCell));
+			var source = new MvxSimpleTableViewSource (TableView, typeof(FullSessionDtoCell));
 			TableView.RowHeight = 200;
 			TableView.Source = source;
 
