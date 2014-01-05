@@ -244,6 +244,8 @@
     <Compile Include="Uitlities\MvxSessionTableViewSource.cs" />
     <Compile Include="Views\ConferenceFavoriteSessionsView.cs" />
     <Compile Include="Views\FullSessionDtoCell.cs" />
+    <Compile Include="Views\ConferencesTabView.cs" />
+    <Compile Include="Views\ConferenceFavoriteListView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

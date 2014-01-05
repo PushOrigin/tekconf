@@ -16,7 +16,7 @@ namespace TekConf.Core
 		{
 			get
 			{
-				return new MvxCommand(() => clearStackAndShow<ConferencesListViewModel>());
+				return new MvxCommand(() => clearStackAndShow<ConferencesTabViewModel>());
 			}
 		}
 

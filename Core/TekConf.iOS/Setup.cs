@@ -57,6 +57,7 @@ namespace TekConf.iOS
 			Mvx.RegisterType<ConferenceDetailViewModel, ConferenceDetailViewModel> ();
 			Mvx.RegisterType<ConferenceSessionsViewModel, ConferenceSessionsViewModel> ();
 			Mvx.RegisterType<ConferenceLocationViewModel, ConferenceLocationViewModel> ();
+			Mvx.RegisterType<ConferencesListViewModel, ConferencesListViewModel> ();
 
 			return new Core.App();
 		}

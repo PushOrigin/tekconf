@@ -108,6 +108,8 @@
     <Compile Include="Services\PresentationBundleFlagKeys.cs" />
     <Compile Include="ViewModels\ConferenceSessionsViewModel.cs" />
     <Compile Include="ViewModels\ConferenceFavoriteSessionsViewModel.cs" />
+    <Compile Include="ViewModels\ConferenceFavoriteListViewModel.cs" />
+    <Compile Include="ViewModels\ConferencesTabViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cirrious.CrossCore">

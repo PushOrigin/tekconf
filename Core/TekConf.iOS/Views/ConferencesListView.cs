@@ -23,8 +23,6 @@ namespace TekConf.iOS
 		private MvxSubscriptionToken _conferencesListAllExceptionToken;
 		private MvxSubscriptionToken _conferencesListFavoritesExceptionToken;
 
-		private LoadingOverlay _loadingOverlay;
-
 		public ConferencesListView () : base(UITableViewStyle.Plain)
 		{		
 			var messenger = Mvx.Resolve<IMvxMessenger>();
@@ -60,23 +58,10 @@ namespace TekConf.iOS
 			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ShowDetailTabCommand);
 			set.Apply();
 
-			this.NavigationItem.SetLeftBarButtonItem(new UIBarButtonItem(UIBarButtonSystemItem.Refresh, OnRefresh), true);
-			NavigationItem.RightBarButtonItem = ViewExtensions.CreateSliderButton ("Images/menu.png", PanelType.RightPanel, NavigationController as SlidingPanelsNavigationViewController );
+			//NavigationItem.RightBarButtonItem = ViewExtensions.CreateSliderButton ("Images/menu.png", PanelType.RightPanel, NavigationController as SlidingPanelsNavigationViewController );
 
 			TableView.ReloadData ();
 		}
-
-		private async void OnRefresh(object sender, EventArgs e)
-		{
-			_loadingOverlay = new LoadingOverlay (UIScreen.MainScreen.Bounds);
-			View.Add (_loadingOverlay);
-
-			await VM.Refresh();
-			TableView.ReloadData ();
-
-			_loadingOverlay.Hide ();
-		}
-
 	}
 }
 
