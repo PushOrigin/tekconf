@@ -46,11 +46,11 @@ namespace TekConf.iOS
 				RefreshFavoriteIcon();
 			};
 
-			var titleField = new UILabel(new RectangleF(10, 60, 300, 40));
+			var titleField = new UITextView(new RectangleF(10, 60, 300, 40));
 			titleField.TextAlignment = UITextAlignment.Center;
 			Add(titleField);
 
-			var speakerField = new UILabel(new RectangleF(10, 80, 300, 40));
+			var speakerField = new UITextView(new RectangleF(10, 80, 300, 40));
 			speakerField.TextAlignment = UITextAlignment.Center;
 			Add(speakerField);
 
@@ -58,7 +58,7 @@ namespace TekConf.iOS
 			//startField.TextAlignment = UITextAlignment.Center;
 			//Add(startField);
 
-			var roomField = new UILabel(new RectangleF(10, 100, 300, 40));
+			var roomField = new UITextView(new RectangleF(10, 100, 300, 40));
 			roomField.TextAlignment = UITextAlignment.Center;
 			Add(roomField);
 
