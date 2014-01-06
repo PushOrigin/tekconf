@@ -35,11 +35,10 @@ namespace TekConf.iOS
 			base.ViewDidLoad();
 
 			var source = new MvxSessionTableViewSource (TableView, typeof(SessionCell));
-			TableView.RowHeight = 200;
+			TableView.RowHeight = 110;
 			TableView.Source = source;
 
 			var set = this.CreateBindingSet<ConferenceSessionsView, ConferenceSessionsViewModel>();
-			//set.Bind (source).To (vm => vm.Conference.SessionsList);
 			set.Bind (source).To (vm => vm.Conference.Sessions);
 			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ShowSessionDetailCommand);
 			set.Apply();

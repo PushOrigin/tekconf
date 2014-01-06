@@ -6,6 +6,8 @@ using TekConf.Core.ViewModels;
 using Cirrious.MvvmCross.Plugins.Messenger;
 using Cirrious.CrossCore;
 using TekConf.Core.Messages;
+using System.Windows.Input;
+using TekConf.Core.Repositories;
 
 namespace TekConf.Core
 {
@@ -49,6 +51,22 @@ namespace TekConf.Core
 				RaisePropertyChanged (() => FavoriteSessions);
 			}
 		}
+
+		public ICommand ShowSessionDetailCommand
+		{
+			get
+			{
+				return new MvxCommand<FullSessionDto>(dto => 
+					ShowViewModel<SessionDetailViewModel>(
+						new SessionDetailViewModel.Navigation() {
+							ConferenceSlug =  _sessionsVm.Conference.slug,
+							SessionSlug = dto.slug
+						} 
+					)
+				);
+			}
+		}
+
 	}
 }
 

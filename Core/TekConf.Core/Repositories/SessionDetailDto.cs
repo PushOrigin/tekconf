@@ -8,6 +8,7 @@ using TekConf.Core.Annotations;
 using TekConf.Core.Entities;
 using TekConf.Core.Models;
 using TekConf.RemoteData.Dtos.v1;
+using System.Text;
 
 namespace TekConf.Core.Repositories
 {
@@ -61,6 +62,22 @@ namespace TekConf.Core.Repositories
 			{
 				_speakers = value;
 			}
+		}
+
+		public string SpeakersString {
+			get	
+			{
+				var sb = new StringBuilder (); 
+				if (speakers != null) {
+					for (int i = 0; i < speakers.Count; i++) {
+						sb.Append (speakers[i].fullName);
+						if (speakers.Count > i + 1)
+							sb.Append (", ");
+					}
+				}
+				return sb.ToString ();
+			}
+			set { throw new InvalidOperationException (); } 
 		}
 
 		public bool isAddedToSchedule { get; set; }

@@ -17,11 +17,12 @@ namespace TekConf.iOS
 			base.ViewDidLoad();
 
 			var source = new MvxSimpleTableViewSource (TableView, typeof(FullSessionDtoCell));
-			TableView.RowHeight = 200;
+			TableView.RowHeight = 110;
 			TableView.Source = source;
 
 			var set = this.CreateBindingSet<ConferenceFavoriteSessionsView, ConferenceFavoriteSessionsViewModel> ();
 			set.Bind (source).To (vm => vm.FavoriteSessions);
+			set.Bind (source).For (s => s.SelectionChangedCommand).To (vm => vm.ShowSessionDetailCommand);
 			set.Apply();
 
 			TableView.ReloadData ();

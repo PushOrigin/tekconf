@@ -36,16 +36,8 @@ namespace TekConf.iOS
 			View = new UIView () { BackgroundColor = UIColor.White };
 			base.ViewDidLoad ();
 
-			var titleField = new UILabel (new RectangleF (10, 20, 300, 40));
-			titleField.TextAlignment = UITextAlignment.Center;
-			Add (titleField);
-
-			var speakerField = new UILabel (new RectangleF (10, 40, 300, 40));
-			speakerField.TextAlignment = UITextAlignment.Center;
-			Add (speakerField);
-
 			_favoriteButton = UIButton.FromType (UIButtonType.RoundedRect);
-			_favoriteButton.Frame = new RectangleF (5, 300, 310, 40);
+			_favoriteButton.Frame = new RectangleF (5, 440, 310, 40);
 			Add (_favoriteButton);
 			RefreshFavoriteIcon ();
 			_favoriteButton.TouchUpInside += (object sender, EventArgs e) => {
@@ -54,29 +46,32 @@ namespace TekConf.iOS
 				RefreshFavoriteIcon();
 			};
 
-			var descriptionField = new UILabel (new RectangleF (10, 60, 300, 40));
-			descriptionField.TextAlignment = UITextAlignment.Center;
-			Add (descriptionField);
+			var titleField = new UILabel(new RectangleF(10, 60, 300, 40));
+			titleField.TextAlignment = UITextAlignment.Center;
+			Add(titleField);
 
-			var difficultyField = new UILabel (new RectangleF (10, 80, 300, 40));
-			difficultyField.TextAlignment = UITextAlignment.Center;
-			Add (difficultyField);
+			var speakerField = new UILabel(new RectangleF(10, 80, 300, 40));
+			speakerField.TextAlignment = UITextAlignment.Center;
+			Add(speakerField);
 
-			var roomField = new UILabel (new RectangleF (10, 100, 300, 40));
+			//var startField = new UILabel(new RectangleF(10, 50, 300, 40));
+			//startField.TextAlignment = UITextAlignment.Center;
+			//Add(startField);
+
+			var roomField = new UILabel(new RectangleF(10, 100, 300, 40));
 			roomField.TextAlignment = UITextAlignment.Center;
-			Add (roomField);
+			Add(roomField);
 
-			var startField = new UILabel (new RectangleF (10, 120, 300, 40));
-			startField.TextAlignment = UITextAlignment.Center;
-			Add (startField);
+			var descriptionField = new UITextView(new RectangleF(10, 130, 300, 310));
+			descriptionField.Editable = false;
+			descriptionField.TextAlignment = UITextAlignment.Center;
+			Add(descriptionField);
 
 			var set = this.CreateBindingSet<SessionDetailView, SessionDetailViewModel> ();
 			set.Bind (titleField).To (c => c.Session.title);
-			//set.Bind(speakerField).To(c=>c.Session.speakers);
-			set.Bind (descriptionField).To (c => c.Session.description);
-			//set.Bind(difficultyField).To(c=>c.Session.difficulty);
+			set.Bind(speakerField).To(c=>c.Session.SpeakersString);
 			set.Bind (roomField).To (c => c.Session.room);		
-			set.Bind (startField).To (c => c.Session.startDescription);
+			set.Bind (descriptionField).To (c => c.Session.description);
 			set.Apply ();
 		}
 
