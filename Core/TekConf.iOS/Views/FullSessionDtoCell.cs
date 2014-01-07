@@ -11,28 +11,29 @@ namespace TekConf.iOS
 	{
 		public FullSessionDtoCell (IntPtr handle) : base(handle)
 		{
-			var titleField = new UILabel(new RectangleF(10, 5, 300, 40));
-			titleField.TextAlignment = UITextAlignment.Center;
+			var titleField = new UITextView(new RectangleF(10, 5, 300, 40));
+			titleField.TextAlignment = UITextAlignment.Left;
 			Add(titleField);
 
-			var speakerField = new UILabel(new RectangleF(10, 30, 300, 40));
-			speakerField.TextAlignment = UITextAlignment.Center;
+			var speakerField = new UITextView(new RectangleF(10, 30, 300, 40));
+			speakerField.TextAlignment = UITextAlignment.Left;
 			Add(speakerField);
 
-			var startField = new UILabel(new RectangleF(10, 50, 300, 40));
-			startField.TextAlignment = UITextAlignment.Center;
+			var startField = new UITextView(new RectangleF(10, 50, 300, 40));
+			startField.TextAlignment = UITextAlignment.Left;
 			Add(startField);
 
-			var roomField = new UILabel(new RectangleF(10, 70, 300, 40));
-			roomField.TextAlignment = UITextAlignment.Center;
+			var roomField = new UITextView(new RectangleF(10, 70, 300, 40));
+			roomField.TextAlignment = UITextAlignment.Left;
+			roomField.TextColor = UIColor.Blue;
 			Add(roomField);
 
-			var difficultyField = new UILabel(new RectangleF(10, 90, 300, 40));
-			difficultyField.TextAlignment = UITextAlignment.Center;
+			var difficultyField = new UITextView(new RectangleF(10, 90, 300, 40));
+			difficultyField.TextAlignment = UITextAlignment.Left;
 			Add(difficultyField);
 
-			var descriptionField = new UILabel(new RectangleF(10, 110, 300, 40));
-			descriptionField.TextAlignment = UITextAlignment.Center;
+			var descriptionField = new UITextView(new RectangleF(10, 110, 300, 40));
+			descriptionField.TextAlignment = UITextAlignment.Left;
 			Add(descriptionField);
 
 

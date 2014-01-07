@@ -14,6 +14,7 @@ namespace TekConf.iOS
 		{
 			var titleField = new UITextView(new RectangleF(10, 5, 300, 40));
 			titleField.TextAlignment = UITextAlignment.Left;
+
 			Add(titleField);
 
 			var speakerField = new UITextView(new RectangleF(10, 30, 300, 20));
