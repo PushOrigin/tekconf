@@ -1,5 +1,4 @@
 using Cirrious.MvvmCross.ViewModels;
-using System.Windows.Input;
 
 namespace TekConf.Core.ViewModels
 {
@@ -12,14 +11,5 @@ namespace TekConf.Core.ViewModels
 			get { return _hello; }
 			set { _hello = value; RaisePropertyChanged(() => Hello); }
 		}
-
-		public ICommand ShowConferencesListCommand
-		{
-			get
-			{
-				return new MvxCommand(() => ShowViewModel<ConferencesListViewModel>());
-			}
-		}
-
     }
 }
