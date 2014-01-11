@@ -41,10 +41,4 @@
     <Compile Include="SessionDtoToSessionEntityMapper.cs" />
     <Compile Include="ConferenceDtoToConferenceEntityMapper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\RemoteData\iOS\TekConf.RemoteData.iOS.csproj">
-      <Project>{CF44A2C3-42DF-4970-9618-E6AE3AF31603}</Project>
-      <Name>TekConf.RemoteData.iOS</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

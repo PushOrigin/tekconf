@@ -27,8 +27,9 @@ namespace TekConf.Core.ViewModels
 		private MvxSubscriptionToken _authenticationMessageToken;
 		private MvxSubscriptionToken _favoritesUpdatedMessageToken;
 
-		public ConferencesListViewModel(IRemoteDataService remoteDataService,
-																		ILocalConferencesRepository localConferencesRepository,
+		public ConferencesListViewModel(
+										IRemoteDataService remoteDataService,
+		    															ILocalConferencesRepository localConferencesRepository,
 																		IAnalytics analytics,
 																		IAuthentication authentication,
 																		IMvxFileStore fileStore,

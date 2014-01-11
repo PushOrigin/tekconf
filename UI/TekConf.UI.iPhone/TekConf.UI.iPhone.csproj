@@ -281,12 +281,6 @@
     <Content Include="AppDelegate.cs.txt" />
     <Content Include="ToDo-MvvmCross\_ Touch UI.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\TekConf.Core\TekConf.Core.csproj">
-      <Project>{E740F915-A0FC-4C66-9FD3-1D9A0DDA527A}</Project>
-      <Name>TekConf.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
