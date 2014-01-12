@@ -212,6 +212,10 @@
     <BundleResource Include="Resources\Icon-60%402x.png" />
     <BundleResource Include="Resources\Default.png" />
     <BundleResource Include="Resources\Default%402x.png" />
+    <BundleResource Include="Images\facebook_001.jpg" />
+    <BundleResource Include="Images\Google_Plus_001.jpg" />
+    <BundleResource Include="Images\TekConf.png" />
+    <BundleResource Include="Images\Twitter_001.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -263,6 +267,7 @@
     <Compile Include="Views\FullSessionDtoCell.cs" />
     <Compile Include="Views\ConferencesTabView.cs" />
     <Compile Include="Views\ConferenceFavoriteListView.cs" />
+    <Compile Include="Views\OAuthRegisterView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

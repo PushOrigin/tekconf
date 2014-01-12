@@ -6,6 +6,7 @@ using TekConf.Core.Interfaces;
 using TekConf.Core.Messages;
 using TekConf.Core.Repositories;
 using TekConf.Core.Services;
+using System.Threading.Tasks;
 
 namespace TekConf.Core.ViewModels
 {
@@ -46,7 +47,7 @@ namespace TekConf.Core.ViewModels
 		public string UserName { get; set; }
 
 		private string _userProviderId;
-		public async void CreateOAuthUser()
+		public async Task CreateOAuthUser()
 		{
 			if (!_networkConnection.IsNetworkConnected())
 			{

@@ -308,18 +308,24 @@ namespace TekConf.Core.Services
 				if (providerId.ToLower().Contains("twitter"))
 				{
 					providerName = "twitter";
-					userId = providerId.ToLower().Replace("twitter:", "");
+					if(string.IsNullOrWhiteSpace(userName))
+						userId = providerId.ToLower().Replace("twitter:", "");
+					else 
+						userId = userName;
 				}
 				else if (providerId.ToLower().Contains("facebook"))
 				{
 					providerName = "facebook";
-					userName = providerId.ToLower().Replace("facebook:", "");
+					if(string.IsNullOrWhiteSpace(userName))
+						userName = providerId.ToLower().Replace("facebook:", "");
 				}
 				else if (providerId.ToLower().Contains("google"))
 				{
 					providerName = "google";
-					userName = providerId.ToLower().Replace("google:", "");
+					if(string.IsNullOrWhiteSpace(userName))
+						userName = providerId.ToLower().Replace("google:", "");
 				}
+
 
 				var uri = string.Format(App.WebRootUri + "account/CreateOauthUser?providerName={0}&userId={1}&userName={2}", providerName, userId, userName);
 
